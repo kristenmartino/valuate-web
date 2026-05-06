@@ -179,9 +179,12 @@ export default function Workspace({ ticker }: { ticker: string }) {
             </p>
           </div>
           {flagCount > 0 && (
-            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-              {flagCount} extraction flag{flagCount === 1 ? "" : "s"}
-            </span>
+            <a
+              href="#extraction-flags"
+              className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
+            >
+              {flagCount} extraction flag{flagCount === 1 ? "" : "s"} →
+            </a>
           )}
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -192,12 +195,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
         </dl>
       </section>
 
-      <FlagsPanel
-        ticker={ticker}
-        flags={company.extraction_flags}
-        company={company}
-        onOverride={handleOverride}
-      />
+      <div id="extraction-flags" className="scroll-mt-4">
+        <FlagsPanel
+          ticker={ticker}
+          flags={company.extraction_flags}
+          company={company}
+          onOverride={handleOverride}
+        />
+      </div>
 
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-baseline justify-between">
@@ -370,6 +375,14 @@ function ExtractStat({
           title={item.source_quote}
         >
           “{item.source_quote.replace(/\s+/g, " ").trim()}”
+        </dd>
+      )}
+      {item?.xbrl_tag && !item.source_quote && (
+        <dd
+          className="mt-1 truncate font-mono text-[10px] text-zinc-600 dark:text-zinc-400"
+          title={item.xbrl_tag}
+        >
+          {item.xbrl_tag}
         </dd>
       )}
     </div>

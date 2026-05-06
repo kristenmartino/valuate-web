@@ -10,6 +10,32 @@ import {
   putOverride,
 } from "@/lib/api";
 
+// Accept formatted dollar amounts like "$25,596,000,000", "25596000000", or
+// "25.6B" / "25.6b" shorthand. Returns the integer USD string the API expects,
+// or null if the input doesn't look like a number.
+function parseUsdInput(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  const lower = trimmed.toLowerCase().replace(/[$,\s]/g, "");
+  let multiplier = 1;
+  let body = lower;
+  if (body.endsWith("b")) {
+    multiplier = 1_000_000_000;
+    body = body.slice(0, -1);
+  } else if (body.endsWith("m")) {
+    multiplier = 1_000_000;
+    body = body.slice(0, -1);
+  } else if (body.endsWith("k")) {
+    multiplier = 1_000;
+    body = body.slice(0, -1);
+  }
+  if (!/^-?\d+(\.\d+)?$/.test(body)) return null;
+  const value = Number(body) * multiplier;
+  if (!Number.isFinite(value)) return null;
+  // Round to integer USD; the schema's Decimal accepts string form.
+  return Math.round(value).toString();
+}
+
 type Props = {
   ticker: string;
   flags: ExtractionFlag[];
@@ -67,13 +93,23 @@ function FlagRow({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const parsed = parseUsdInput(value);
+  const previewBillions =
+    parsed !== null && Number(parsed) >= 1e6
+      ? formatBillions(parsed)
+      : null;
+
   async function submit() {
+    if (parsed === null) {
+      setError("Couldn't parse a number from that input.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
       const updated = await putOverride(ticker, {
         field_path: flag.field_path,
-        value,
+        value: parsed,
         source_quote: sourceQuote || null,
       });
       onOverride(updated);
@@ -136,14 +172,23 @@ function FlagRow({
           >
             <label className="block">
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                Corrected value (USD, e.g. <code>25596000000</code>)
+                Corrected value — accepts <code>25596000000</code>,{" "}
+                <code>$25,596,000,000</code>, or <code>25.6B</code>
               </span>
               <input
                 type="text"
+                inputMode="decimal"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
               />
+              <span className="mt-1 block text-[11px] text-zinc-500 dark:text-zinc-500">
+                {previewBillions !== null
+                  ? `Will be sent as ${parsed} (${previewBillions})`
+                  : value
+                  ? "Couldn't parse a number from that"
+                  : ""}
+              </span>
             </label>
             <label className="block">
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
