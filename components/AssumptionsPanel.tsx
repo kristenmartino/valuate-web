@@ -1,0 +1,126 @@
+"use client";
+
+import type { Assumptions } from "@/lib/api";
+import { formatPercent } from "@/lib/api";
+
+type SliderConfig = {
+  key: keyof Assumptions;
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+};
+
+// Two groups: forward-looking (the four MC drivers, surfaced first) and
+// historical-derived ratios (surfaced second).
+const DRIVER_SLIDERS: SliderConfig[] = [
+  { key: "revenue_growth", label: "Revenue growth", min: -0.1, max: 0.25, step: 0.005 },
+  { key: "operating_margin", label: "Operating margin", min: 0, max: 0.6, step: 0.005 },
+  { key: "terminal_growth", label: "Terminal growth", min: 0, max: 0.05, step: 0.001 },
+  { key: "wacc", label: "WACC", min: 0.04, max: 0.18, step: 0.001 },
+];
+
+const RATIO_SLIDERS: SliderConfig[] = [
+  { key: "tax_rate", label: "Tax rate", min: 0, max: 0.45, step: 0.005 },
+  { key: "capex_ratio", label: "Capex / revenue", min: 0, max: 0.2, step: 0.001 },
+  { key: "da_ratio", label: "D&A / revenue", min: 0, max: 0.15, step: 0.001 },
+  {
+    key: "working_capital_ratio",
+    label: "ΔWC / ΔRevenue",
+    min: -0.2,
+    max: 0.3,
+    step: 0.005,
+  },
+];
+
+export default function AssumptionsPanel({
+  value,
+  onChange,
+}: {
+  value: Assumptions;
+  onChange: (next: Assumptions) => void;
+}) {
+  const update = (key: keyof Assumptions, n: number) => {
+    onChange({ ...value, [key]: n });
+  };
+
+  return (
+    <div className="space-y-8">
+      <Group title="Forward-looking drivers (Monte Carlo inputs)" sliders={DRIVER_SLIDERS} value={value} update={update} />
+      <Group title="Historical ratios" sliders={RATIO_SLIDERS} value={value} update={update} />
+    </div>
+  );
+}
+
+function Group({
+  title,
+  sliders,
+  value,
+  update,
+}: {
+  title: string;
+  sliders: SliderConfig[];
+  value: Assumptions;
+  update: (key: keyof Assumptions, n: number) => void;
+}) {
+  return (
+    <div>
+      <h4 className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
+        {title}
+      </h4>
+      <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
+        {sliders.map((s) => (
+          <Slider
+            key={s.key}
+            label={s.label}
+            min={s.min}
+            max={s.max}
+            step={s.step}
+            value={value[s.key]}
+            onChange={(n) => update(s.key, n)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Slider({
+  label,
+  min,
+  max,
+  step,
+  value,
+  onChange,
+}: {
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <label className="block">
+      <div className="flex items-baseline justify-between">
+        <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span>
+        <span className="font-mono text-sm tabular-nums text-zinc-900 dark:text-zinc-50">
+          {formatPercent(value, 2)}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="mt-1.5 w-full accent-zinc-900 dark:accent-zinc-100"
+      />
+      <div className="mt-0.5 flex justify-between font-mono text-[10px] text-zinc-400 dark:text-zinc-500">
+        <span>{formatPercent(min, 1)}</span>
+        <span>{formatPercent(max, 1)}</span>
+      </div>
+    </label>
+  );
+}
