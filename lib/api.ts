@@ -188,6 +188,40 @@ export function postValue(
   });
 }
 
+export function putOverride(
+  ticker: string,
+  body: {
+    field_path: string;
+    value: string;
+    source_quote?: string | null;
+  },
+): Promise<Company> {
+  return request<Company>(`/company/${ticker}/override`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+// --- accessors ---------------------------------------------------------------
+
+/**
+ * Look up a LineItem by ExtractionFlag-style path ("income_statement.revenue").
+ * Returns null if the path doesn't resolve to a populated field.
+ */
+export function lookupLineItem(
+  company: Company,
+  fieldPath: string,
+): LineItem | null {
+  const [stmtName, fieldName] = fieldPath.split(".");
+  if (!stmtName || !fieldName) return null;
+  const period = company.periods[0];
+  if (!period) return null;
+  const statement = (period as unknown as Record<string, unknown>)[stmtName];
+  if (!statement || typeof statement !== "object") return null;
+  const item = (statement as Record<string, LineItem | null>)[fieldName];
+  return item ?? null;
+}
+
 // --- formatters --------------------------------------------------------------
 
 export function formatBillions(value: number | string): string {

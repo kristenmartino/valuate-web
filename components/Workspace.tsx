@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   type Assumptions,
   type Company,
+  type LineItem,
   type ValuationResponse,
   formatBillions,
   formatPercent,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/api";
 
 import AssumptionsPanel from "./AssumptionsPanel";
+import FlagsPanel from "./FlagsPanel";
 import MonteCarloChart from "./MonteCarloChart";
 import SensitivityHeatmap from "./SensitivityHeatmap";
 
@@ -77,31 +79,44 @@ export default function Workspace({ ticker }: { ticker: string }) {
     };
   }, [ticker]);
 
+  // Recompute helper used by both the debounced assumptions watcher and
+  // the override flow (where the underlying line items just changed).
+  async function recompute(currentAssumptions: Assumptions) {
+    setRecomputing(true);
+    try {
+      const v = await postValue(ticker, {
+        assumptions: currentAssumptions,
+        monte_carlo: { iterations: 10000, seed: 42 },
+        sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
+      });
+      setValuation(v);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRecomputing(false);
+    }
+  }
+
   // Debounced re-valuation when assumptions change post-load.
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!company || !assumptions || status.phase !== "ready") return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(async () => {
-      setRecomputing(true);
-      try {
-        const v = await postValue(ticker, {
-          assumptions,
-          monte_carlo: { iterations: 10000, seed: 42 },
-          sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
-        });
-        setValuation(v);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setRecomputing(false);
-      }
+    debounceRef.current = setTimeout(() => {
+      recompute(assumptions);
     }, 300);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assumptions]);
+
+  // After a HITL override, swap in the updated Company and re-run /value
+  // so the fair value, Monte Carlo, and sensitivity all reflect the change.
+  function handleOverride(updated: Company) {
+    setCompany(updated);
+    if (assumptions) recompute(assumptions);
+  }
 
   const period = company?.periods[0];
   const flagCount = company?.extraction_flags.length ?? 0;
@@ -111,10 +126,6 @@ export default function Workspace({ ticker }: { ticker: string }) {
     const p = valuation.projection;
     const mc = valuation.monte_carlo;
     return {
-      revenue: period.income_statement.revenue.value,
-      op_income: period.income_statement.operating_income.value,
-      net_income: period.income_statement.net_income.value,
-      total_assets: period.balance_sheet.total_assets.value,
       enterprise_value: p.enterprise_value,
       equity_value: p.equity_value,
       net_debt: p.net_debt,
@@ -174,12 +185,19 @@ export default function Workspace({ ticker }: { ticker: string }) {
           )}
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <Stat label="Revenue" value={formatBillions(summary.revenue)} />
-          <Stat label="Operating income" value={formatBillions(summary.op_income)} />
-          <Stat label="Net income" value={formatBillions(summary.net_income)} />
-          <Stat label="Total assets" value={formatBillions(summary.total_assets)} />
+          <ExtractStat label="Revenue" item={period.income_statement.revenue} />
+          <ExtractStat label="Operating income" item={period.income_statement.operating_income} />
+          <ExtractStat label="Net income" item={period.income_statement.net_income} />
+          <ExtractStat label="Total assets" item={period.balance_sheet.total_assets} />
         </dl>
       </section>
+
+      <FlagsPanel
+        ticker={ticker}
+        flags={company.extraction_flags}
+        company={company}
+        onOverride={handleOverride}
+      />
 
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-baseline justify-between">
@@ -322,6 +340,38 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dd className="mt-1 text-lg font-medium tabular-nums text-zinc-900 dark:text-zinc-50">
         {value}
       </dd>
+    </div>
+  );
+}
+
+function ExtractStat({
+  label,
+  item,
+}: {
+  label: string;
+  item: LineItem | null;
+}) {
+  return (
+    <div>
+      <dt className="text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
+        {label}
+      </dt>
+      <dd className="mt-1 text-lg font-medium tabular-nums text-zinc-900 dark:text-zinc-50">
+        {item ? formatBillions(item.value) : "—"}
+      </dd>
+      {item && (
+        <dd className="mt-1 font-mono text-[10px] text-zinc-500 dark:text-zinc-500">
+          {item.source} · conf {item.confidence.toFixed(2)}
+        </dd>
+      )}
+      {item?.source_quote && (
+        <dd
+          className="mt-1 truncate text-[11px] italic text-zinc-600 dark:text-zinc-400"
+          title={item.source_quote}
+        >
+          “{item.source_quote.replace(/\s+/g, " ").trim()}”
+        </dd>
+      )}
     </div>
   );
 }
