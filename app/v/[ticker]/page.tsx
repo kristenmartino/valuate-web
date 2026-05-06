@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import Workspace from "@/components/Workspace";
 
 // Next 16: params is a Promise; must await.
 type Props = { params: Promise<{ ticker: string }> };
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { ticker } = await props.params;
+  return { title: ticker.toUpperCase() };
+}
 
 export default async function Page(props: Props) {
   const { ticker } = await props.params;
