@@ -17,7 +17,14 @@ export type RevenueSegment = {
   revenue: LineItem;
 };
 
+export type Industry = "standard" | "bank" | "insurer" | "reit" | "energy";
+
+// Discriminated union: each variant has a `kind` literal that lets TypeScript
+// narrow the type after a check. Standard = industrials/tech (default);
+// banks have a fundamentally different shape (no revenue, no operating margin).
+
 export type IncomeStatement = {
+  kind: "standard";
   revenue: LineItem;
   cost_of_revenue: LineItem | null;
   gross_profit: LineItem | null;
@@ -33,7 +40,24 @@ export type IncomeStatement = {
   revenue_segments: RevenueSegment[] | null;
 };
 
+export type BankIncomeStatement = {
+  kind: "bank";
+  interest_income: LineItem | null;
+  interest_expense: LineItem | null;
+  net_interest_income: LineItem;
+  provision_for_credit_losses: LineItem | null;
+  non_interest_income: LineItem | null;
+  non_interest_expense: LineItem | null;
+  income_before_tax: LineItem;
+  income_tax_expense: LineItem;
+  net_income: LineItem;
+  diluted_shares_outstanding: LineItem;
+};
+
+export type AnyIncomeStatement = IncomeStatement | BankIncomeStatement;
+
 export type BalanceSheet = {
+  kind: "standard";
   cash_and_equivalents: LineItem;
   short_term_investments: LineItem | null;
   accounts_receivable: LineItem | null;
@@ -49,22 +73,52 @@ export type BalanceSheet = {
   shareholders_equity: LineItem;
 };
 
+export type BankBalanceSheet = {
+  kind: "bank";
+  cash_and_equivalents: LineItem;
+  securities: LineItem | null;
+  total_loans: LineItem;
+  allowance_for_loan_losses: LineItem | null;
+  total_deposits: LineItem;
+  long_term_debt: LineItem | null;
+  total_assets: LineItem;
+  total_liabilities: LineItem;
+  shareholders_equity: LineItem;
+};
+
+export type AnyBalanceSheet = BalanceSheet | BankBalanceSheet;
+
 export type CashFlowStatement = {
+  kind: "standard";
   depreciation_amortization: LineItem;
   cash_from_operations: LineItem;
   capital_expenditures: LineItem;
   cash_from_investing: LineItem | null;
   cash_from_financing: LineItem | null;
+  dividends_paid: LineItem | null;
 };
+
+export type BankCashFlowStatement = {
+  kind: "bank";
+  cash_from_operations: LineItem;
+  cash_from_investing: LineItem | null;
+  cash_from_financing: LineItem | null;
+  dividends_paid: LineItem | null;
+  depreciation_amortization: LineItem | null;
+  capital_expenditures: LineItem | null;
+};
+
+export type AnyCashFlowStatement = CashFlowStatement | BankCashFlowStatement;
 
 export type FinancialPeriod = {
   fiscal_year: number;
   fiscal_period_end: string;
   filing_accession: string;
   filing_type: string;
-  income_statement: IncomeStatement;
-  balance_sheet: BalanceSheet;
-  cash_flow_statement: CashFlowStatement;
+  industry: Industry;
+  income_statement: AnyIncomeStatement;
+  balance_sheet: AnyBalanceSheet;
+  cash_flow_statement: AnyCashFlowStatement;
 };
 
 export type ExtractionFlag = {

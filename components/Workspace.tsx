@@ -151,9 +151,13 @@ export default function Workspace({ ticker }: { ticker: string }) {
   }, [period, valuation]);
 
   // What the DCF's equity/enterprise values translate to as multiples,
-  // so the user can compare against peer medians directly.
+  // so the user can compare against peer medians directly. Only computable
+  // for standard-industry filers — banks don't have a "revenue" or
+  // "EBITDA" line in the comparable sense.
   const dcfImplied = useMemo(() => {
     if (!period || !valuation) return null;
+    if (period.income_statement.kind !== "standard") return null;
+    if (period.cash_flow_statement.kind !== "standard") return null;
     const p = valuation.projection;
     const rev = Number(period.income_statement.revenue.value);
     const ni = Number(period.income_statement.net_income.value);
@@ -223,10 +227,36 @@ export default function Workspace({ ticker }: { ticker: string }) {
           )}
         </div>
         <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <ExtractStat label="Revenue" item={period.income_statement.revenue} />
-          <ExtractStat label="Operating income" item={period.income_statement.operating_income} />
-          <ExtractStat label="Net income" item={period.income_statement.net_income} />
-          <ExtractStat label="Total assets" item={period.balance_sheet.total_assets} />
+          {period.income_statement.kind === "bank" ? (
+            <>
+              <ExtractStat
+                label="Net interest income"
+                item={period.income_statement.net_interest_income}
+              />
+              <ExtractStat
+                label="Income before tax"
+                item={period.income_statement.income_before_tax}
+              />
+              <ExtractStat
+                label="Net income"
+                item={period.income_statement.net_income}
+              />
+              <ExtractStat
+                label="Total assets"
+                item={period.balance_sheet.total_assets}
+              />
+            </>
+          ) : (
+            <>
+              <ExtractStat label="Revenue" item={period.income_statement.revenue} />
+              <ExtractStat
+                label="Operating income"
+                item={period.income_statement.operating_income}
+              />
+              <ExtractStat label="Net income" item={period.income_statement.net_income} />
+              <ExtractStat label="Total assets" item={period.balance_sheet.total_assets} />
+            </>
+          )}
         </dl>
       </section>
 
@@ -239,7 +269,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
         />
       </div>
 
-      {period.income_statement.revenue_segments &&
+      {period.income_statement.kind === "standard" &&
+        period.income_statement.revenue_segments &&
         period.income_statement.revenue_segments.length > 0 && (
           <SegmentsPanel
             segments={period.income_statement.revenue_segments}
@@ -295,17 +326,27 @@ export default function Workspace({ ticker }: { ticker: string }) {
           automatically.
         </p>
         <div className="mt-6">
-          <AssumptionsPanel value={assumptions} onChange={setAssumptions} />
+          <AssumptionsPanel
+            value={assumptions}
+            onChange={setAssumptions}
+            industry={period.industry}
+          />
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div
+        className={`grid grid-cols-1 gap-6 ${
+          period.industry === "bank" ? "" : "lg:grid-cols-2"
+        }`}
+      >
         <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             Monte Carlo distribution
           </h3>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            10,000 iterations across the 4 key drivers
+            {period.industry === "bank"
+              ? "10,000 iterations sampling cost of equity and dividend growth"
+              : "10,000 iterations across the 4 key drivers"}
           </p>
           <div className="mt-4">
             {valuation.monte_carlo && (
@@ -313,21 +354,26 @@ export default function Workspace({ ticker }: { ticker: string }) {
             )}
           </div>
         </section>
-        <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            Sensitivity (revenue growth × operating margin)
-          </h3>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Per-share fair value at each cell
-          </p>
-          <div className="mt-4">
-            {valuation.sensitivity && (
-              <SensitivityHeatmap grid={valuation.sensitivity} />
-            )}
-          </div>
-        </section>
+        {/* Sensitivity (rev growth × op margin) only meaningful for FCFF DCF;
+            for banks the DDM doesn't depend on those axes, so hide. */}
+        {period.industry !== "bank" && (
+          <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              Sensitivity (revenue growth × operating margin)
+            </h3>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              Per-share fair value at each cell
+            </p>
+            <div className="mt-4">
+              {valuation.sensitivity && (
+                <SensitivityHeatmap grid={valuation.sensitivity} />
+              )}
+            </div>
+          </section>
+        )}
       </div>
 
+      {valuation.projection.years.length > 0 && (
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           5-year projection
@@ -380,6 +426,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
           </p>
         </div>
       </section>
+      )}
 
       <StatementsPanel periods={company.periods} />
     </div>

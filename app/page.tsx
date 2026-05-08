@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const TICKERS: Array<{ ticker: string; name: string }> = [
+const TICKERS: Array<{ ticker: string; name: string; sector?: string }> = [
   { ticker: "AAPL", name: "Apple Inc." },
   { ticker: "MSFT", name: "Microsoft Corporation" },
   { ticker: "GOOGL", name: "Alphabet Inc." },
@@ -11,6 +11,7 @@ const TICKERS: Array<{ ticker: string; name: string }> = [
   { ticker: "JNJ", name: "Johnson & Johnson" },
   { ticker: "KO", name: "The Coca-Cola Company" },
   { ticker: "CAT", name: "Caterpillar Inc." },
+  { ticker: "JPM", name: "JPMorgan Chase & Co.", sector: "Bank · DDM" },
 ];
 
 export default function Home() {
@@ -26,15 +27,22 @@ export default function Home() {
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {TICKERS.map(({ ticker, name }) => (
+          {TICKERS.map(({ ticker, name, sector }) => (
             <Link
               key={ticker}
               href={`/v/${ticker}`}
               className="group flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-3 transition-colors hover:border-zinc-400 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
             >
               <div>
-                <div className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                  {ticker}
+                <div className="flex items-baseline gap-2">
+                  <span className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                    {ticker}
+                  </span>
+                  {sector && (
+                    <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                      {sector}
+                    </span>
+                  )}
                 </div>
                 <div className="text-sm text-zinc-600 dark:text-zinc-400">
                   {name}

@@ -3,51 +3,93 @@
 import { type FinancialPeriod, type LineItem, formatBillions } from "@/lib/api";
 
 type Props = {
-  periods: FinancialPeriod[]; // newest-first
+  periods: FinancialPeriod[]; // newest-first; all share the same industry
 };
 
-// Display order + human labels per statement. Order matches the standard
-// 10-K presentation rather than the schema's internal ordering.
-const INCOME_FIELDS: Array<[keyof FinancialPeriod["income_statement"], string]> = [
-  ["revenue", "Revenue"],
-  ["cost_of_revenue", "Cost of revenue"],
-  ["gross_profit", "Gross profit"],
-  ["research_and_development", "Research and development"],
-  ["selling_general_administrative", "Selling, general and administrative"],
-  ["depreciation_amortization", "Depreciation and amortization"],
-  ["operating_income", "Operating income"],
-  ["interest_expense", "Interest expense"],
-  ["income_before_tax", "Income before tax"],
-  ["income_tax_expense", "Income tax expense"],
-  ["net_income", "Net income"],
-  ["diluted_shares_outstanding", "Diluted shares outstanding"],
-];
+// Display order + human labels per statement, per industry. Order matches
+// the standard 10-K presentation rather than the schema's internal ordering.
 
-const BALANCE_FIELDS: Array<[keyof FinancialPeriod["balance_sheet"], string]> = [
-  ["cash_and_equivalents", "Cash and equivalents"],
-  ["short_term_investments", "Short-term investments"],
-  ["accounts_receivable", "Accounts receivable"],
-  ["inventory", "Inventory"],
-  ["total_current_assets", "Total current assets"],
-  ["property_plant_equipment_net", "Property, plant & equipment (net)"],
-  ["total_assets", "Total assets"],
-  ["accounts_payable", "Accounts payable"],
-  ["short_term_debt", "Short-term debt"],
-  ["total_current_liabilities", "Total current liabilities"],
-  ["long_term_debt", "Long-term debt"],
-  ["total_liabilities", "Total liabilities"],
-  ["shareholders_equity", "Shareholders' equity"],
-];
+const STANDARD_FIELDS: {
+  income: Array<[string, string]>;
+  balance: Array<[string, string]>;
+  cashflow: Array<[string, string]>;
+} = {
+  income: [
+    ["revenue", "Revenue"],
+    ["cost_of_revenue", "Cost of revenue"],
+    ["gross_profit", "Gross profit"],
+    ["research_and_development", "Research and development"],
+    ["selling_general_administrative", "Selling, general and administrative"],
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["operating_income", "Operating income"],
+    ["interest_expense", "Interest expense"],
+    ["income_before_tax", "Income before tax"],
+    ["income_tax_expense", "Income tax expense"],
+    ["net_income", "Net income"],
+    ["diluted_shares_outstanding", "Diluted shares outstanding"],
+  ],
+  balance: [
+    ["cash_and_equivalents", "Cash and equivalents"],
+    ["short_term_investments", "Short-term investments"],
+    ["accounts_receivable", "Accounts receivable"],
+    ["inventory", "Inventory"],
+    ["total_current_assets", "Total current assets"],
+    ["property_plant_equipment_net", "Property, plant & equipment (net)"],
+    ["total_assets", "Total assets"],
+    ["accounts_payable", "Accounts payable"],
+    ["short_term_debt", "Short-term debt"],
+    ["total_current_liabilities", "Total current liabilities"],
+    ["long_term_debt", "Long-term debt"],
+    ["total_liabilities", "Total liabilities"],
+    ["shareholders_equity", "Shareholders' equity"],
+  ],
+  cashflow: [
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["cash_from_operations", "Cash from operations"],
+    ["capital_expenditures", "Capital expenditures"],
+    ["cash_from_investing", "Cash from investing"],
+    ["cash_from_financing", "Cash from financing"],
+    ["dividends_paid", "Dividends paid"],
+  ],
+};
 
-const CASHFLOW_FIELDS: Array<
-  [keyof FinancialPeriod["cash_flow_statement"], string]
-> = [
-  ["depreciation_amortization", "Depreciation and amortization"],
-  ["cash_from_operations", "Cash from operations"],
-  ["capital_expenditures", "Capital expenditures"],
-  ["cash_from_investing", "Cash from investing"],
-  ["cash_from_financing", "Cash from financing"],
-];
+const BANK_FIELDS: {
+  income: Array<[string, string]>;
+  balance: Array<[string, string]>;
+  cashflow: Array<[string, string]>;
+} = {
+  income: [
+    ["interest_income", "Interest income"],
+    ["interest_expense", "Interest expense"],
+    ["net_interest_income", "Net interest income"],
+    ["provision_for_credit_losses", "Provision for credit losses"],
+    ["non_interest_income", "Non-interest income"],
+    ["non_interest_expense", "Non-interest expense"],
+    ["income_before_tax", "Income before tax"],
+    ["income_tax_expense", "Income tax expense"],
+    ["net_income", "Net income"],
+    ["diluted_shares_outstanding", "Diluted shares outstanding"],
+  ],
+  balance: [
+    ["cash_and_equivalents", "Cash and equivalents"],
+    ["securities", "Securities"],
+    ["total_loans", "Total loans (net of allowance)"],
+    ["allowance_for_loan_losses", "Allowance for loan losses"],
+    ["total_deposits", "Total deposits"],
+    ["long_term_debt", "Long-term debt"],
+    ["total_assets", "Total assets"],
+    ["total_liabilities", "Total liabilities"],
+    ["shareholders_equity", "Shareholders' equity"],
+  ],
+  cashflow: [
+    ["cash_from_operations", "Cash from operations"],
+    ["cash_from_investing", "Cash from investing"],
+    ["cash_from_financing", "Cash from financing"],
+    ["dividends_paid", "Dividends paid"],
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["capital_expenditures", "Capital expenditures"],
+  ],
+};
 
 function tooltipFor(item: LineItem): string {
   const lines = [
@@ -64,17 +106,8 @@ function tooltipFor(item: LineItem): string {
 function ProvenanceCell({ item }: { item: LineItem | null }) {
   if (!item) return <span className="text-zinc-400">—</span>;
   return (
-    <div
-      className="text-right"
-      title={tooltipFor(item)}
-    >
-      <div className="tabular-nums">
-        {item.value === "0" || item.value === "0.00"
-          ? "0"
-          : item.source === "user_override" || item.source === "derived"
-          ? formatBillions(item.value)
-          : formatBillions(item.value)}
-      </div>
+    <div className="text-right" title={tooltipFor(item)}>
+      <div className="tabular-nums">{formatBillions(item.value)}</div>
       <div className="font-mono text-[10px] uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
         {item.source} · {item.confidence.toFixed(2)}
       </div>
@@ -82,16 +115,31 @@ function ProvenanceCell({ item }: { item: LineItem | null }) {
   );
 }
 
-function StatementTable<K extends string>({
+function pickItem(
+  period: FinancialPeriod,
+  statement: "income" | "balance" | "cashflow",
+  key: string,
+): LineItem | null {
+  const stmt =
+    statement === "income"
+      ? period.income_statement
+      : statement === "balance"
+      ? period.balance_sheet
+      : period.cash_flow_statement;
+  // Fields not present on this variant come back as undefined; treat as null.
+  return ((stmt as unknown as Record<string, LineItem | null | undefined>)[key]) ?? null;
+}
+
+function StatementTable({
   title,
   fields,
   periods,
-  pickItem,
+  statement,
 }: {
   title: string;
-  fields: Array<[K, string]>;
+  fields: Array<[string, string]>;
   periods: FinancialPeriod[];
-  pickItem: (period: FinancialPeriod, key: K) => LineItem | null;
+  statement: "income" | "balance" | "cashflow";
 }) {
   return (
     <div>
@@ -104,10 +152,7 @@ function StatementTable<K extends string>({
             <tr className="border-b border-zinc-200 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
               <th className="py-2 pr-4 text-left font-medium">Line item</th>
               {periods.map((p) => (
-                <th
-                  key={p.fiscal_year}
-                  className="py-2 pl-4 text-right font-medium"
-                >
+                <th key={p.fiscal_year} className="py-2 pl-4 text-right font-medium">
                   FY{p.fiscal_year}
                 </th>
               ))}
@@ -124,7 +169,7 @@ function StatementTable<K extends string>({
                 </td>
                 {periods.map((p) => (
                   <td key={p.fiscal_year} className="py-2 pl-4">
-                    <ProvenanceCell item={pickItem(p, key)} />
+                    <ProvenanceCell item={pickItem(p, statement, key)} />
                   </td>
                 ))}
               </tr>
@@ -138,6 +183,12 @@ function StatementTable<K extends string>({
 
 export default function StatementsPanel({ periods }: Props) {
   if (periods.length === 0) return null;
+  const fields = periods[0].industry === "bank" ? BANK_FIELDS : STANDARD_FIELDS;
+  const incomeTitle =
+    periods[0].industry === "bank" ? "Income statement (bank)" : "Income statement";
+  const balanceTitle =
+    periods[0].industry === "bank" ? "Balance sheet (bank)" : "Balance sheet";
+
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
       <header>
@@ -153,32 +204,22 @@ export default function StatementsPanel({ periods }: Props) {
 
       <div className="mt-6 space-y-8">
         <StatementTable
-          title="Income statement"
-          fields={INCOME_FIELDS}
+          title={incomeTitle}
+          fields={fields.income}
           periods={periods}
-          pickItem={(p, k) =>
-            p.income_statement[
-              k as keyof typeof p.income_statement
-            ] as LineItem | null
-          }
+          statement="income"
         />
         <StatementTable
-          title="Balance sheet"
-          fields={BALANCE_FIELDS}
+          title={balanceTitle}
+          fields={fields.balance}
           periods={periods}
-          pickItem={(p, k) =>
-            p.balance_sheet[k as keyof typeof p.balance_sheet] as LineItem | null
-          }
+          statement="balance"
         />
         <StatementTable
           title="Cash flow statement"
-          fields={CASHFLOW_FIELDS}
+          fields={fields.cashflow}
           periods={periods}
-          pickItem={(p, k) =>
-            p.cash_flow_statement[
-              k as keyof typeof p.cash_flow_statement
-            ] as LineItem | null
-          }
+          statement="cashflow"
         />
       </div>
     </section>
