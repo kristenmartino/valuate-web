@@ -24,6 +24,7 @@ import FlagsPanel from "./FlagsPanel";
 import MonteCarloChart from "./MonteCarloChart";
 import SegmentsPanel from "./SegmentsPanel";
 import SensitivityHeatmap from "./SensitivityHeatmap";
+import StatementsPanel from "./StatementsPanel";
 
 type LoadStatus =
   | { phase: "idle" }
@@ -379,6 +380,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
           </p>
         </div>
       </section>
+
+      <StatementsPanel periods={company.periods} />
     </div>
   );
 }
