@@ -5,18 +5,21 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   type Assumptions,
   type Company,
+  type CompsResponse,
   type LineItem,
   type ValuationResponse,
   formatBillions,
   formatPercent,
   formatUSD,
   getCompany,
+  getComps,
   getDefaults,
   postExtract,
   postValue,
 } from "@/lib/api";
 
 import AssumptionsPanel from "./AssumptionsPanel";
+import CompsPanel from "./CompsPanel";
 import FlagsPanel from "./FlagsPanel";
 import MonteCarloChart from "./MonteCarloChart";
 import SegmentsPanel from "./SegmentsPanel";
@@ -33,6 +36,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   const [company, setCompany] = useState<Company | null>(null);
   const [assumptions, setAssumptions] = useState<Assumptions | null>(null);
   const [valuation, setValuation] = useState<ValuationResponse | null>(null);
+  const [comps, setComps] = useState<CompsResponse | null>(null);
   const [recomputing, setRecomputing] = useState(false);
 
   // Initial load: ensure /company exists, fetch defaults, run first valuation.
@@ -67,6 +71,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
         if (cancelled) return;
         setValuation(v);
         setStatus({ phase: "ready" });
+
+        // Comps are independent of /extract; fetch in parallel-ish, after
+        // the workspace is interactive. Failures don't block the rest.
+        getComps(ticker)
+          .then((c) => {
+            if (!cancelled) setComps(c);
+          })
+          .catch((e) => console.error("comps fetch failed:", e));
       } catch (err) {
         if (cancelled) return;
         setStatus({
@@ -134,6 +146,27 @@ export default function Workspace({ ticker }: { ticker: string }) {
       mc_p10: mc?.p10 ?? null,
       mc_p90: mc?.p90 ?? null,
       mc_median: mc?.median ?? null,
+    };
+  }, [period, valuation]);
+
+  // What the DCF's equity/enterprise values translate to as multiples,
+  // so the user can compare against peer medians directly.
+  const dcfImplied = useMemo(() => {
+    if (!period || !valuation) return null;
+    const p = valuation.projection;
+    const rev = Number(period.income_statement.revenue.value);
+    const ni = Number(period.income_statement.net_income.value);
+    const op = Number(period.income_statement.operating_income.value);
+    const da = Number(
+      period.cash_flow_statement.depreciation_amortization.value,
+    );
+    const ebitda = op + da;
+    return {
+      market_cap: p.equity_value,
+      enterprise_value: p.enterprise_value,
+      pe_ratio: ni > 0 ? p.equity_value / ni : null,
+      ev_revenue: rev > 0 ? p.enterprise_value / rev : null,
+      ev_ebitda: ebitda > 0 ? p.enterprise_value / ebitda : null,
     };
   }, [period, valuation]);
 
@@ -213,6 +246,10 @@ export default function Workspace({ ticker }: { ticker: string }) {
             fiscalYear={period.fiscal_year}
           />
         )}
+
+      {comps && (comps.peers.length > 0 || comps.target_market) && (
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} />
+      )}
 
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-baseline justify-between">

@@ -142,6 +142,27 @@ export type ValuationResponse = {
   sensitivity: SensitivityGrid | null;
 };
 
+export type PeerMultiples = {
+  ticker: string;
+  name: string;
+  market_cap: number | null;
+  enterprise_value: number | null;
+  revenue: number | null;
+  ebitda: number | null;
+  pe_ratio: number | null;
+  ev_revenue: number | null;
+  ev_ebitda: number | null;
+};
+
+export type CompsResponse = {
+  target_ticker: string;
+  target_market: PeerMultiples | null;
+  peers: PeerMultiples[];
+  median_pe: number | null;
+  median_ev_revenue: number | null;
+  median_ev_ebitda: number | null;
+};
+
 // --- fetchers ----------------------------------------------------------------
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -206,6 +227,10 @@ export function putOverride(
     method: "PUT",
     body: JSON.stringify(body),
   });
+}
+
+export function getComps(ticker: string): Promise<CompsResponse> {
+  return request<CompsResponse>(`/comps/${ticker}`);
 }
 
 // --- accessors ---------------------------------------------------------------
