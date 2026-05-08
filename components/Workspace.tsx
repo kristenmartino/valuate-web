@@ -19,6 +19,7 @@ import {
 import AssumptionsPanel from "./AssumptionsPanel";
 import FlagsPanel from "./FlagsPanel";
 import MonteCarloChart from "./MonteCarloChart";
+import SegmentsPanel from "./SegmentsPanel";
 import SensitivityHeatmap from "./SensitivityHeatmap";
 
 type LoadStatus =
@@ -203,6 +204,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
           onOverride={handleOverride}
         />
       </div>
+
+      {period.income_statement.revenue_segments &&
+        period.income_statement.revenue_segments.length > 0 && (
+          <SegmentsPanel
+            segments={period.income_statement.revenue_segments}
+            totalRevenue={period.income_statement.revenue.value}
+            fiscalYear={period.fiscal_year}
+          />
+        )}
 
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-baseline justify-between">

@@ -12,6 +12,11 @@ export type LineItem = {
   xbrl_tag: string | null;
 };
 
+export type RevenueSegment = {
+  name: string;
+  revenue: LineItem;
+};
+
 export type IncomeStatement = {
   revenue: LineItem;
   cost_of_revenue: LineItem | null;
@@ -25,6 +30,7 @@ export type IncomeStatement = {
   income_tax_expense: LineItem | null;
   net_income: LineItem;
   diluted_shares_outstanding: LineItem;
+  revenue_segments: RevenueSegment[] | null;
 };
 
 export type BalanceSheet = {
