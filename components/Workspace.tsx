@@ -378,7 +378,9 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
       <div
         className={`grid grid-cols-1 gap-6 ${
-          period.industry === "standard" ? "lg:grid-cols-2" : ""
+          period.industry === "standard" || period.industry === "energy"
+            ? "lg:grid-cols-2"
+            : ""
         }`}
       >
         <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
@@ -392,6 +394,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
               ? "10,000 iterations sampling cost of equity, growth, and ROE"
               : period.industry === "reit"
               ? "10,000 iterations sampling cost of equity and FFO growth"
+              : period.industry === "energy"
+              ? "10,000 iterations sampling production growth, op margin, and WACC"
               : "10,000 iterations across the 4 key drivers"}
           </p>
           <div className="mt-4">
@@ -400,13 +404,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
             )}
           </div>
         </section>
-        {/* Sensitivity (rev growth × op margin) is only meaningful for FCFF
-            DCF. For banks (DDM) and insurers (justified P/B) those axes
-            don't enter the model, so the heatmap would be uniform — hide. */}
-        {period.industry === "standard" && (
+        {/* Sensitivity (rev growth × op margin) is only meaningful for FCFF-
+            shaped DCFs. For banks (DDM), insurers (justified P/B), and REITs
+            (FFO multiple) those axes don't enter the model, so the heatmap
+            would be uniform — hide. Energy E&P uses standard FCFF math (just
+            with no terminal value), so the heatmap is meaningful. */}
+        {(period.industry === "standard" || period.industry === "energy") && (
           <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              Sensitivity (revenue growth × operating margin)
+              Sensitivity ({period.industry === "energy" ? "production" : "revenue"} growth × operating margin)
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               Per-share fair value at each cell
@@ -423,7 +429,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       {valuation.projection.years.length > 0 && (
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          5-year projection
+          {valuation.projection.years.length}-year projection
         </h3>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -468,8 +474,17 @@ export default function Workspace({ ticker }: { ticker: string }) {
             </tbody>
           </table>
           <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-500">
-            Terminal value: {formatBillions(valuation.projection.terminal_value)}{" "}
-            (Gordon growth at {formatPercent(assumptions.terminal_growth)})
+            {period.industry === "energy" ? (
+              <>
+                Terminal value: {formatBillions(valuation.projection.terminal_value)}{" "}
+                (none — reserves deplete past the projection horizon)
+              </>
+            ) : (
+              <>
+                Terminal value: {formatBillions(valuation.projection.terminal_value)}{" "}
+                (Gordon growth at {formatPercent(assumptions.terminal_growth)})
+              </>
+            )}
           </p>
         </div>
       </section>

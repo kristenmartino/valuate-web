@@ -111,6 +111,37 @@ const REIT_CONTEXT: SliderConfig[] = [
   { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
 ];
 
+// Energy E&P sliders: same FCFF math as standard, but with two semantic
+// shifts — `revenue_growth` is production growth/decline (E&P revenue
+// follows volume × commodity-price; volume declines as wells deplete absent
+// drilling reinvestment), and `terminal_growth` is unused (no terminal
+// value at all in compute_energy_projection — reserves deplete, so
+// Gordon-growth-to-infinity is conceptually wrong for E&P).
+const ENERGY_DRIVERS: SliderConfig[] = [
+  {
+    key: "revenue_growth",
+    label: "Production growth/decline",
+    min: -0.15,
+    max: 0.15,
+    step: 0.005,
+  },
+  { key: "operating_margin", label: "Operating margin", min: 0, max: 0.6, step: 0.005 },
+  { key: "wacc", label: "WACC", min: 0.05, max: 0.18, step: 0.001 },
+];
+
+const ENERGY_RATIOS: SliderConfig[] = [
+  { key: "tax_rate", label: "Tax rate", min: 0, max: 0.45, step: 0.005 },
+  { key: "capex_ratio", label: "Capex / revenue", min: 0, max: 0.5, step: 0.005 },
+  { key: "da_ratio", label: "Depletion+D&A / revenue", min: 0, max: 0.4, step: 0.005 },
+  {
+    key: "working_capital_ratio",
+    label: "ΔWC / ΔRevenue",
+    min: -0.2,
+    max: 0.3,
+    step: 0.005,
+  },
+];
+
 export default function AssumptionsPanel({
   value,
   onChange,
@@ -197,6 +228,34 @@ export default function AssumptionsPanel({
           so FFO — not net income — is the conventional cash-earnings
           measure. Fair value/share ={" "}
           <code>FFO/share × (1 + g) / (r − g)</code>.
+        </p>
+      </div>
+    );
+  }
+
+  if (industry === "energy") {
+    return (
+      <div className="space-y-8">
+        <Group
+          title="Forward-looking drivers (Monte Carlo inputs)"
+          sliders={ENERGY_DRIVERS}
+          value={value}
+          update={update}
+        />
+        <Group
+          title="Historical ratios"
+          sliders={ENERGY_RATIOS}
+          value={value}
+          update={update}
+        />
+        <p className="text-xs text-zinc-500 dark:text-zinc-500">
+          E&amp;P companies deplete their reserves, so this workspace runs a{" "}
+          <strong>10-year FCFF projection with no terminal value</strong> —
+          Gordon-growth-to-infinity is conceptually wrong for an asset that
+          will run out. The terminal-growth slider doesn&apos;t apply here.
+          The projection is intentionally conservative; sell-side NAV models
+          typically add a salvage / undeveloped-reserve value beyond the
+          projection horizon.
         </p>
       </div>
     );
