@@ -13,6 +13,7 @@ const TICKERS: Array<{ ticker: string; name: string; sector?: string }> = [
   { ticker: "CAT", name: "Caterpillar Inc." },
   { ticker: "JPM", name: "JPMorgan Chase & Co.", sector: "Bank · DDM" },
   { ticker: "PRU", name: "Prudential Financial, Inc.", sector: "Insurer · P/B" },
+  { ticker: "PLD", name: "Prologis, Inc.", sector: "REIT · FFO" },
 ];
 
 export default function Home() {

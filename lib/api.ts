@@ -66,10 +66,25 @@ export type InsuranceIncomeStatement = {
   diluted_shares_outstanding: LineItem;
 };
 
+export type REITIncomeStatement = {
+  kind: "reit";
+  revenue: LineItem;
+  property_operating_expense: LineItem | null;
+  depreciation_amortization: LineItem;
+  general_and_administrative: LineItem | null;
+  operating_income: LineItem | null;
+  interest_expense: LineItem | null;
+  income_before_tax: LineItem | null;
+  income_tax_expense: LineItem | null;
+  net_income: LineItem;
+  diluted_shares_outstanding: LineItem;
+};
+
 export type AnyIncomeStatement =
   | IncomeStatement
   | BankIncomeStatement
-  | InsuranceIncomeStatement;
+  | InsuranceIncomeStatement
+  | REITIncomeStatement;
 
 export type BalanceSheet = {
   kind: "standard";
@@ -111,10 +126,23 @@ export type InsuranceBalanceSheet = {
   shareholders_equity: LineItem;
 };
 
+export type REITBalanceSheet = {
+  kind: "reit";
+  cash_and_equivalents: LineItem;
+  real_estate_at_cost: LineItem | null;
+  accumulated_depreciation: LineItem | null;
+  real_estate_net: LineItem | null;
+  total_assets: LineItem;
+  long_term_debt: LineItem | null;
+  total_liabilities: LineItem;
+  shareholders_equity: LineItem;
+};
+
 export type AnyBalanceSheet =
   | BalanceSheet
   | BankBalanceSheet
-  | InsuranceBalanceSheet;
+  | InsuranceBalanceSheet
+  | REITBalanceSheet;
 
 export type CashFlowStatement = {
   kind: "standard";
@@ -146,10 +174,21 @@ export type InsuranceCashFlowStatement = {
   capital_expenditures: LineItem | null;
 };
 
+export type REITCashFlowStatement = {
+  kind: "reit";
+  cash_from_operations: LineItem;
+  cash_from_investing: LineItem | null;
+  cash_from_financing: LineItem | null;
+  dividends_paid: LineItem | null;
+  depreciation_amortization: LineItem | null;
+  capital_expenditures: LineItem | null;
+};
+
 export type AnyCashFlowStatement =
   | CashFlowStatement
   | BankCashFlowStatement
-  | InsuranceCashFlowStatement;
+  | InsuranceCashFlowStatement
+  | REITCashFlowStatement;
 
 export type FinancialPeriod = {
   fiscal_year: number;

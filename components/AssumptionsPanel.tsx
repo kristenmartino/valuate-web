@@ -86,6 +86,31 @@ const INSURER_CONTEXT: SliderConfig[] = [
   { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
 ];
 
+// REIT FFO-multiple sliders: Gordon growth on FFO, so the same two drivers
+// as a bank DDM (cost of equity + growth), but the growth rate is FFO growth
+// rather than dividend growth. r is set lower by default because REITs trade
+// like long-duration bond proxies given their pass-through dividend regime.
+const REIT_DRIVERS: SliderConfig[] = [
+  {
+    key: "wacc",
+    label: "Cost of equity (r)",
+    min: 0.04,
+    max: 0.15,
+    step: 0.001,
+  },
+  {
+    key: "terminal_growth",
+    label: "FFO growth (g)",
+    min: 0.0,
+    max: 0.08,
+    step: 0.001,
+  },
+];
+
+const REIT_CONTEXT: SliderConfig[] = [
+  { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
+];
+
 export default function AssumptionsPanel({
   value,
   onChange,
@@ -145,6 +170,33 @@ export default function AssumptionsPanel({
           <code>fair value/share = book value/share × P/B</code>. Reserves and
           investments dominate the balance sheet, so book value is the
           economic anchor. FCFF doesn&apos;t fit this business model.
+        </p>
+      </div>
+    );
+  }
+
+  if (industry === "reit") {
+    return (
+      <div className="space-y-8">
+        <Group
+          title="FFO-multiple inputs — Gordon growth on FFO"
+          sliders={REIT_DRIVERS}
+          value={value}
+          update={update}
+        />
+        <Group
+          title="Historical context (informational)"
+          sliders={REIT_CONTEXT}
+          value={value}
+          update={update}
+        />
+        <p className="text-xs text-zinc-500 dark:text-zinc-500">
+          REITs are valued on Funds From Operations:{" "}
+          <code>FFO = net income + D&amp;A</code>. GAAP depreciation
+          overstates economic depreciation for well-maintained real estate,
+          so FFO — not net income — is the conventional cash-earnings
+          measure. Fair value/share ={" "}
+          <code>FFO/share × (1 + g) / (r − g)</code>.
         </p>
       </div>
     );

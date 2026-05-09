@@ -124,6 +124,43 @@ const INSURANCE_FIELDS: {
   ],
 };
 
+const REIT_FIELDS: {
+  income: Array<[string, string]>;
+  balance: Array<[string, string]>;
+  cashflow: Array<[string, string]>;
+} = {
+  income: [
+    ["revenue", "Revenue (rental + service income)"],
+    ["property_operating_expense", "Property operating expense"],
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["general_and_administrative", "General and administrative"],
+    ["operating_income", "Operating income"],
+    ["interest_expense", "Interest expense"],
+    ["income_before_tax", "Income before tax"],
+    ["income_tax_expense", "Income tax expense"],
+    ["net_income", "Net income"],
+    ["diluted_shares_outstanding", "Diluted shares outstanding"],
+  ],
+  balance: [
+    ["cash_and_equivalents", "Cash and equivalents"],
+    ["real_estate_at_cost", "Real estate (at cost)"],
+    ["accumulated_depreciation", "Accumulated depreciation"],
+    ["real_estate_net", "Real estate (net)"],
+    ["total_assets", "Total assets"],
+    ["long_term_debt", "Long-term debt"],
+    ["total_liabilities", "Total liabilities"],
+    ["shareholders_equity", "Shareholders' equity"],
+  ],
+  cashflow: [
+    ["cash_from_operations", "Cash from operations"],
+    ["cash_from_investing", "Cash from investing"],
+    ["cash_from_financing", "Cash from financing"],
+    ["dividends_paid", "Dividends paid"],
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["capital_expenditures", "Capital expenditures"],
+  ],
+};
+
 function tooltipFor(item: LineItem): string {
   const lines = [
     `source: ${item.source} · conf ${item.confidence.toFixed(2)}`,
@@ -222,6 +259,8 @@ export default function StatementsPanel({ periods }: Props) {
       ? BANK_FIELDS
       : industry === "insurer"
       ? INSURANCE_FIELDS
+      : industry === "reit"
+      ? REIT_FIELDS
       : STANDARD_FIELDS;
   const labelFor = (s: string) =>
     industry === "standard" ? s : `${s} (${industry})`;

@@ -265,6 +265,29 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 item={period.balance_sheet.total_assets}
               />
             </>
+          ) : period.income_statement.kind === "reit" ? (
+            <>
+              <ExtractStat
+                label="Revenue"
+                item={period.income_statement.revenue}
+              />
+              <ExtractStat
+                label="Net income"
+                item={period.income_statement.net_income}
+              />
+              <ExtractStat
+                label="D&A (FFO add-back)"
+                item={period.income_statement.depreciation_amortization}
+              />
+              <ExtractStat
+                label="Real estate (net)"
+                item={
+                  period.balance_sheet.kind === "reit"
+                    ? period.balance_sheet.real_estate_net
+                    : null
+                }
+              />
+            </>
           ) : (
             <>
               <ExtractStat label="Revenue" item={period.income_statement.revenue} />
@@ -367,6 +390,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
               ? "10,000 iterations sampling cost of equity and dividend growth"
               : period.industry === "insurer"
               ? "10,000 iterations sampling cost of equity, growth, and ROE"
+              : period.industry === "reit"
+              ? "10,000 iterations sampling cost of equity and FFO growth"
               : "10,000 iterations across the 4 key drivers"}
           </p>
           <div className="mt-4">
