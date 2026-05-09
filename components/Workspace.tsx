@@ -246,6 +246,25 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 item={period.balance_sheet.total_assets}
               />
             </>
+          ) : period.income_statement.kind === "insurer" ? (
+            <>
+              <ExtractStat
+                label="Premiums earned"
+                item={period.income_statement.premiums_earned}
+              />
+              <ExtractStat
+                label="Net investment income"
+                item={period.income_statement.net_investment_income}
+              />
+              <ExtractStat
+                label="Net income"
+                item={period.income_statement.net_income}
+              />
+              <ExtractStat
+                label="Total assets"
+                item={period.balance_sheet.total_assets}
+              />
+            </>
           ) : (
             <>
               <ExtractStat label="Revenue" item={period.income_statement.revenue} />
@@ -336,7 +355,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
       <div
         className={`grid grid-cols-1 gap-6 ${
-          period.industry === "bank" ? "" : "lg:grid-cols-2"
+          period.industry === "standard" ? "lg:grid-cols-2" : ""
         }`}
       >
         <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
@@ -346,6 +365,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             {period.industry === "bank"
               ? "10,000 iterations sampling cost of equity and dividend growth"
+              : period.industry === "insurer"
+              ? "10,000 iterations sampling cost of equity, growth, and ROE"
               : "10,000 iterations across the 4 key drivers"}
           </p>
           <div className="mt-4">
@@ -354,9 +375,10 @@ export default function Workspace({ ticker }: { ticker: string }) {
             )}
           </div>
         </section>
-        {/* Sensitivity (rev growth × op margin) only meaningful for FCFF DCF;
-            for banks the DDM doesn't depend on those axes, so hide. */}
-        {period.industry !== "bank" && (
+        {/* Sensitivity (rev growth × op margin) is only meaningful for FCFF
+            DCF. For banks (DDM) and insurers (justified P/B) those axes
+            don't enter the model, so the heatmap would be uniform — hide. */}
+        {period.industry === "standard" && (
           <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               Sensitivity (revenue growth × operating margin)

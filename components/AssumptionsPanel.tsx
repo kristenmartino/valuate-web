@@ -56,6 +56,36 @@ const BANK_CONTEXT: SliderConfig[] = [
   { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
 ];
 
+// Insurer justified-P/B sliders: ROE is a real input here (not just context —
+// it directly multiplies into the formula), alongside r and g.
+const INSURER_DRIVERS: SliderConfig[] = [
+  {
+    key: "operating_margin",
+    label: "Return on equity (ROE)",
+    min: 0,
+    max: 0.3,
+    step: 0.005,
+  },
+  {
+    key: "wacc",
+    label: "Cost of equity (r)",
+    min: 0.05,
+    max: 0.18,
+    step: 0.001,
+  },
+  {
+    key: "terminal_growth",
+    label: "Long-term growth (g)",
+    min: 0.0,
+    max: 0.08,
+    step: 0.001,
+  },
+];
+
+const INSURER_CONTEXT: SliderConfig[] = [
+  { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
+];
+
 export default function AssumptionsPanel({
   value,
   onChange,
@@ -89,6 +119,32 @@ export default function AssumptionsPanel({
           by deposit/loan flows rather than free cash flow. This workspace uses
           the Gordon DDM: <code>P = D₀(1+g) / (r−g)</code>. The other DCF
           sliders (revenue growth, capex/D&amp;A ratios) don&apos;t apply.
+        </p>
+      </div>
+    );
+  }
+
+  if (industry === "insurer") {
+    return (
+      <div className="space-y-8">
+        <Group
+          title="Justified-P/B inputs"
+          sliders={INSURER_DRIVERS}
+          value={value}
+          update={update}
+        />
+        <Group
+          title="Historical context (informational)"
+          sliders={INSURER_CONTEXT}
+          value={value}
+          update={update}
+        />
+        <p className="text-xs text-zinc-500 dark:text-zinc-500">
+          Insurers are valued via a justified price-to-book multiple:{" "}
+          <code>P/B = (ROE − g) / (r − g)</code>, then{" "}
+          <code>fair value/share = book value/share × P/B</code>. Reserves and
+          investments dominate the balance sheet, so book value is the
+          economic anchor. FCFF doesn&apos;t fit this business model.
         </p>
       </div>
     );

@@ -91,6 +91,39 @@ const BANK_FIELDS: {
   ],
 };
 
+const INSURANCE_FIELDS: {
+  income: Array<[string, string]>;
+  balance: Array<[string, string]>;
+  cashflow: Array<[string, string]>;
+} = {
+  income: [
+    ["premiums_earned", "Premiums earned, net"],
+    ["net_investment_income", "Net investment income"],
+    ["benefits_and_claims", "Policyholder benefits and claims"],
+    ["operating_expenses", "Operating expenses"],
+    ["income_before_tax", "Income before tax"],
+    ["income_tax_expense", "Income tax expense"],
+    ["net_income", "Net income"],
+    ["diluted_shares_outstanding", "Diluted shares outstanding"],
+  ],
+  balance: [
+    ["cash_and_equivalents", "Cash and equivalents"],
+    ["investments", "Investments (general account)"],
+    ["insurance_reserves", "Future policy benefits + unpaid claims"],
+    ["total_assets", "Total assets"],
+    ["total_liabilities", "Total liabilities"],
+    ["shareholders_equity", "Shareholders' equity"],
+  ],
+  cashflow: [
+    ["cash_from_operations", "Cash from operations"],
+    ["cash_from_investing", "Cash from investing"],
+    ["cash_from_financing", "Cash from financing"],
+    ["dividends_paid", "Dividends paid"],
+    ["depreciation_amortization", "Depreciation and amortization"],
+    ["capital_expenditures", "Capital expenditures"],
+  ],
+};
+
 function tooltipFor(item: LineItem): string {
   const lines = [
     `source: ${item.source} · conf ${item.confidence.toFixed(2)}`,
@@ -183,11 +216,17 @@ function StatementTable({
 
 export default function StatementsPanel({ periods }: Props) {
   if (periods.length === 0) return null;
-  const fields = periods[0].industry === "bank" ? BANK_FIELDS : STANDARD_FIELDS;
-  const incomeTitle =
-    periods[0].industry === "bank" ? "Income statement (bank)" : "Income statement";
-  const balanceTitle =
-    periods[0].industry === "bank" ? "Balance sheet (bank)" : "Balance sheet";
+  const industry = periods[0].industry;
+  const fields =
+    industry === "bank"
+      ? BANK_FIELDS
+      : industry === "insurer"
+      ? INSURANCE_FIELDS
+      : STANDARD_FIELDS;
+  const labelFor = (s: string) =>
+    industry === "standard" ? s : `${s} (${industry})`;
+  const incomeTitle = labelFor("Income statement");
+  const balanceTitle = labelFor("Balance sheet");
 
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">

@@ -54,7 +54,22 @@ export type BankIncomeStatement = {
   diluted_shares_outstanding: LineItem;
 };
 
-export type AnyIncomeStatement = IncomeStatement | BankIncomeStatement;
+export type InsuranceIncomeStatement = {
+  kind: "insurer";
+  premiums_earned: LineItem;
+  net_investment_income: LineItem | null;
+  benefits_and_claims: LineItem | null;
+  operating_expenses: LineItem | null;
+  income_before_tax: LineItem;
+  income_tax_expense: LineItem;
+  net_income: LineItem;
+  diluted_shares_outstanding: LineItem;
+};
+
+export type AnyIncomeStatement =
+  | IncomeStatement
+  | BankIncomeStatement
+  | InsuranceIncomeStatement;
 
 export type BalanceSheet = {
   kind: "standard";
@@ -86,7 +101,20 @@ export type BankBalanceSheet = {
   shareholders_equity: LineItem;
 };
 
-export type AnyBalanceSheet = BalanceSheet | BankBalanceSheet;
+export type InsuranceBalanceSheet = {
+  kind: "insurer";
+  cash_and_equivalents: LineItem;
+  investments: LineItem | null;
+  insurance_reserves: LineItem | null;
+  total_assets: LineItem;
+  total_liabilities: LineItem;
+  shareholders_equity: LineItem;
+};
+
+export type AnyBalanceSheet =
+  | BalanceSheet
+  | BankBalanceSheet
+  | InsuranceBalanceSheet;
 
 export type CashFlowStatement = {
   kind: "standard";
@@ -108,7 +136,20 @@ export type BankCashFlowStatement = {
   capital_expenditures: LineItem | null;
 };
 
-export type AnyCashFlowStatement = CashFlowStatement | BankCashFlowStatement;
+export type InsuranceCashFlowStatement = {
+  kind: "insurer";
+  cash_from_operations: LineItem;
+  cash_from_investing: LineItem | null;
+  cash_from_financing: LineItem | null;
+  dividends_paid: LineItem | null;
+  depreciation_amortization: LineItem | null;
+  capital_expenditures: LineItem | null;
+};
+
+export type AnyCashFlowStatement =
+  | CashFlowStatement
+  | BankCashFlowStatement
+  | InsuranceCashFlowStatement;
 
 export type FinancialPeriod = {
   fiscal_year: number;
