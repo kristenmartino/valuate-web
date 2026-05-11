@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import TickerSearch from "@/components/TickerSearch";
+
 const TICKERS: Array<{ ticker: string; name: string; sector?: string }> = [
   { ticker: "AAPL", name: "Apple Inc." },
   { ticker: "MSFT", name: "Microsoft Corporation" },
@@ -57,6 +59,8 @@ export default function Home() {
             </Link>
           ))}
         </div>
+
+        <TickerSearch />
 
         <p className="mt-10 text-xs text-zinc-500 dark:text-zinc-500">
           First load for a ticker takes ~15s (SEC fetch + Claude extraction).
