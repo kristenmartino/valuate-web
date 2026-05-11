@@ -389,10 +389,29 @@ export function lookupLineItem(
 
 // --- formatters --------------------------------------------------------------
 
-export function formatBillions(value: number | string): string {
+// Magnitude-aware compact USD formatter. The universe spans market caps
+// across ~5 orders of magnitude (REAL ~$50M cap → AAPL ~$3.5T), so a
+// fixed-unit formatter doesn't work — a small-cap rendered in billions
+// shows up as "$0.0B" and is useless. Each tier uses a precision that
+// keeps two significant figures regardless of scale:
+//   trillions → 2 decimals ($3.52T)
+//   billions  → 1 decimal  ($391.4B)
+//   millions  → 0 decimals ($693M)
+//   thousands → 0 decimals ($45K)
+//   sub-$1k   → 0 decimals ($120)
+// Boundaries are biased upward (>=950) so values that would round up to
+// "$1000K" instead promote to the next tier as "$1.0M".
+export function formatMoney(value: number | string): string {
   const n = typeof value === "string" ? Number(value) : value;
   if (!Number.isFinite(n)) return "—";
-  return `$${(n / 1e9).toFixed(1)}B`;
+  if (n === 0) return "$0";
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+  if (abs >= 950_000_000_000) return `${sign}$${(abs / 1e12).toFixed(2)}T`;
+  if (abs >= 950_000_000) return `${sign}$${(abs / 1e9).toFixed(1)}B`;
+  if (abs >= 950_000) return `${sign}$${(abs / 1e6).toFixed(0)}M`;
+  if (abs >= 950) return `${sign}$${(abs / 1e3).toFixed(0)}K`;
+  return `${sign}$${abs.toFixed(0)}`;
 }
 
 export function formatUSD(value: number): string {

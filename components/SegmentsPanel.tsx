@@ -2,7 +2,7 @@
 
 import {
   type RevenueSegment,
-  formatBillions,
+  formatMoney,
   formatPercent,
 } from "@/lib/api";
 
@@ -52,8 +52,8 @@ export default function SegmentsPanel({
           }`}
         >
           {reconciles
-            ? `Reconciles to revenue (${formatBillions(segmentSum)})`
-            : `Sum ${formatBillions(segmentSum)} ≠ revenue ${formatBillions(totalRev)}`}
+            ? `Reconciles to revenue (${formatMoney(segmentSum)})`
+            : `Sum ${formatMoney(segmentSum)} ≠ revenue ${formatMoney(totalRev)}`}
         </span>
       </header>
 
@@ -82,7 +82,7 @@ export default function SegmentsPanel({
                 />
               </div>
               <span className="w-20 shrink-0 text-right tabular-nums text-zinc-900 dark:text-zinc-100">
-                {formatBillions(value)}
+                {formatMoney(value)}
               </span>
               <span className="w-14 shrink-0 text-right font-mono text-xs tabular-nums text-zinc-500 dark:text-zinc-500">
                 {formatPercent(sharePct, 1)}

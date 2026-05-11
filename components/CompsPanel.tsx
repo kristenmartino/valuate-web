@@ -3,7 +3,7 @@
 import {
   type CompsResponse,
   type PeerMultiples,
-  formatBillions,
+  formatMoney,
 } from "@/lib/api";
 
 type Props = {
@@ -28,7 +28,7 @@ function numFmt(x: number | null | undefined, digits = 1): string {
 
 function bnFmt(x: number | null | undefined): string {
   if (x === null || x === undefined || !Number.isFinite(x)) return NA;
-  return formatBillions(x);
+  return formatMoney(x);
 }
 
 function Cell({

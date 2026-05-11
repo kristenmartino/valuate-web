@@ -1,6 +1,6 @@
 "use client";
 
-import { type FinancialPeriod, type LineItem, formatBillions } from "@/lib/api";
+import { type FinancialPeriod, type LineItem, formatMoney } from "@/lib/api";
 
 type Props = {
   periods: FinancialPeriod[]; // newest-first; all share the same industry
@@ -177,7 +177,7 @@ function ProvenanceCell({ item }: { item: LineItem | null }) {
   if (!item) return <span className="text-zinc-400">—</span>;
   return (
     <div className="text-right" title={tooltipFor(item)}>
-      <div className="tabular-nums">{formatBillions(item.value)}</div>
+      <div className="tabular-nums">{formatMoney(item.value)}</div>
       <div className="font-mono text-[10px] uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
         {item.source} · {item.confidence.toFixed(2)}
       </div>

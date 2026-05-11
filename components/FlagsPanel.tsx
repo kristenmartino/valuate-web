@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   type Company,
   type ExtractionFlag,
-  formatBillions,
+  formatMoney,
   lookupLineItem,
   putOverride,
 } from "@/lib/api";
@@ -96,7 +96,7 @@ function FlagRow({
   const parsed = parseUsdInput(value);
   const previewBillions =
     parsed !== null && Number(parsed) >= 1e6
-      ? formatBillions(parsed)
+      ? formatMoney(parsed)
       : null;
 
   async function submit() {
@@ -133,7 +133,7 @@ function FlagRow({
       </div>
       <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
         <span className="tabular-nums text-zinc-900 dark:text-zinc-100">
-          {formatBillions(flag.current_value)}
+          {formatMoney(flag.current_value)}
         </span>
         {item && (
           <span className="font-mono text-xs text-zinc-500 dark:text-zinc-500">

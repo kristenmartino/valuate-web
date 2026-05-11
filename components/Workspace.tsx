@@ -8,7 +8,7 @@ import {
   type CompsResponse,
   type LineItem,
   type ValuationResponse,
-  formatBillions,
+  formatMoney,
   formatPercent,
   formatUSD,
   getCompany,
@@ -349,12 +349,12 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <dl className="mt-4 grid grid-cols-3 gap-4">
           <Stat
             label="Enterprise value"
-            value={formatBillions(summary.enterprise_value)}
+            value={formatMoney(summary.enterprise_value)}
           />
-          <Stat label="Net debt" value={formatBillions(summary.net_debt)} />
+          <Stat label="Net debt" value={formatMoney(summary.net_debt)} />
           <Stat
             label="Equity value"
-            value={formatBillions(summary.equity_value)}
+            value={formatMoney(summary.equity_value)}
           />
         </dl>
       </section>
@@ -452,22 +452,22 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 >
                   <td className="py-2 pr-4">+{y.year}y</td>
                   <td className="py-2 pr-4 tabular-nums">
-                    {formatBillions(y.revenue)}
+                    {formatMoney(y.revenue)}
                   </td>
                   <td className="py-2 pr-4 tabular-nums">
-                    {formatBillions(y.operating_income)}
+                    {formatMoney(y.operating_income)}
                   </td>
                   <td className="py-2 pr-4 tabular-nums">
-                    {formatBillions(y.nopat)}
+                    {formatMoney(y.nopat)}
                   </td>
                   <td className="py-2 pr-4 tabular-nums">
-                    {formatBillions(y.capital_expenditures)}
+                    {formatMoney(y.capital_expenditures)}
                   </td>
                   <td className="py-2 pr-4 tabular-nums">
-                    {formatBillions(y.depreciation_amortization)}
+                    {formatMoney(y.depreciation_amortization)}
                   </td>
                   <td className="py-2 pr-4 tabular-nums font-medium">
-                    {formatBillions(y.free_cash_flow)}
+                    {formatMoney(y.free_cash_flow)}
                   </td>
                 </tr>
               ))}
@@ -476,12 +476,12 @@ export default function Workspace({ ticker }: { ticker: string }) {
           <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-500">
             {period.industry === "energy" ? (
               <>
-                Terminal value: {formatBillions(valuation.projection.terminal_value)}{" "}
+                Terminal value: {formatMoney(valuation.projection.terminal_value)}{" "}
                 (none — reserves deplete past the projection horizon)
               </>
             ) : (
               <>
-                Terminal value: {formatBillions(valuation.projection.terminal_value)}{" "}
+                Terminal value: {formatMoney(valuation.projection.terminal_value)}{" "}
                 (Gordon growth at {formatPercent(assumptions.terminal_growth)})
               </>
             )}
@@ -521,7 +521,7 @@ function ExtractStat({
         {label}
       </dt>
       <dd className="mt-1 text-lg font-medium tabular-nums text-zinc-900 dark:text-zinc-50">
-        {item ? formatBillions(item.value) : "—"}
+        {item ? formatMoney(item.value) : "—"}
       </dd>
       {item && (
         <dd className="mt-1 font-mono text-[10px] text-zinc-500 dark:text-zinc-500">
