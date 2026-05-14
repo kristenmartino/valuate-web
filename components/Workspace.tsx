@@ -357,6 +357,20 @@ export default function Workspace({ ticker }: { ticker: string }) {
             value={formatMoney(summary.equity_value)}
           />
         </dl>
+        {period.industry === "reit" &&
+          valuation.projection.ffo_per_share !== null &&
+          valuation.projection.affo_per_share !== null && (
+            <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+              <Stat
+                label="FFO / share (drives Gordon)"
+                value={formatUSD(valuation.projection.ffo_per_share)}
+              />
+              <Stat
+                label="AFFO / share (cross-check)"
+                value={formatUSD(valuation.projection.affo_per_share)}
+              />
+            </dl>
+          )}
       </section>
 
       <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">

@@ -32,7 +32,7 @@ Server-rendered shells, client-rendered interactive surfaces:
   - `TickerSearch.tsx` — escape hatch from the curated grid. Validates `1–5` letters (optional `.` or `-` class suffix) and routes via `useRouter`.
 - **API client** — `lib/api.ts`. TypeScript discriminated unions (`AnyIncomeStatement = IncomeStatement | BankIncomeStatement | InsuranceIncomeStatement | REITIncomeStatement`) mirror the Pydantic schemas one-to-one, so `kind` narrowing on the frontend uses the same discriminator the backend serializes with.
 
-Next.js rewrites in `next.config.ts` proxy `/api/*` → `${NEXT_PUBLIC_VALUATE_API}/*` so the browser only sees the Vercel origin (no CORS plumbing).
+Next.js rewrites in `next.config.ts` proxy `/api/*` → `${NEXT_PUBLIC_VALUATE_API}/*` so the browser only sees the Vercel origin (no CORS plumbing). A `proxy.ts` (Next 16's renamed middleware file) sits in front of override requests specifically: it injects `Authorization: Bearer ${VALUATE_OVERRIDE_TOKEN}` from a non-public Vercel env var, so the token never reaches the browser but the backend still sees the credential it requires. When the env var is unset, the proxy is a no-op and the backend's auth dependency also short-circuits — local dev works without setup.
 
 ## Industry-aware rendering
 
@@ -78,11 +78,12 @@ No runtime tests on the frontend — the `lib/api.ts` types are mirrored from th
 
 ## Deployment
 
-Deployed on Vercel. Required env var:
+Deployed on Vercel.
 
 | Variable | Required | Notes |
 |---|---|---|
 | `NEXT_PUBLIC_VALUATE_API` | yes | URL of the Railway-hosted valuate-api, e.g. `https://valuate-api.up.railway.app`. The Next.js rewrite in `next.config.ts` proxies `/api/*` to this origin. |
+| `VALUATE_OVERRIDE_TOKEN` | optional | Bearer token for the backend's `/override` endpoint. **Server-side only** (no `NEXT_PUBLIC_` prefix), read by `proxy.ts` on the Vercel edge and injected as an `Authorization` header. Must match the same-named env var on the backend. When unset on both sides, `/override` runs unauthenticated. |
 
 ## License
 

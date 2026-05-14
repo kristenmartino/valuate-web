@@ -31,6 +31,7 @@ export type IncomeStatement = {
   research_and_development: LineItem | null;
   selling_general_administrative: LineItem | null;
   depreciation_amortization: LineItem | null;
+  share_based_compensation: LineItem | null;
   operating_income: LineItem;
   interest_expense: LineItem | null;
   income_before_tax: LineItem | null;
@@ -250,6 +251,10 @@ export type Projection = {
   equity_value: number;
   diluted_shares: number;
   fair_value_per_share: number;
+  // REIT-only. FFO/share is the Gordon-growth driver; AFFO/share is the
+  // more conservative cash-earnings number REIT analysts also reference.
+  ffo_per_share: number | null;
+  affo_per_share: number | null;
 };
 
 export type MonteCarloResult = {

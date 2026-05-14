@@ -21,6 +21,7 @@ const STANDARD_FIELDS: {
     ["research_and_development", "Research and development"],
     ["selling_general_administrative", "Selling, general and administrative"],
     ["depreciation_amortization", "Depreciation and amortization"],
+    ["share_based_compensation", "Stock-based compensation"],
     ["operating_income", "Operating income"],
     ["interest_expense", "Interest expense"],
     ["income_before_tax", "Income before tax"],
