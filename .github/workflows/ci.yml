@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Next.js 16 requires Node >= 18.18; 22 is the current LTS.
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # No frontend runtime tests — `lib/api.ts` types mirror the Pydantic
+      # schemas, so contract drift surfaces as a TypeScript error at the
+      # boundary. `tsc --noEmit` is the test.
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      # Catches build-time errors (config drift, missing imports, dynamic
+      # route issues) that bare `tsc` would miss. Production deploys go
+      # through this same step on Vercel; running it in CI mirrors that.
+      - name: Build
+        run: npm run build
+        env:
+          # Set to a dummy URL so the rewrite config in next.config.ts can
+          # construct a destination during the build phase. The actual
+          # value is overridden by Vercel's production env.
+          NEXT_PUBLIC_VALUATE_API: https://example.com
