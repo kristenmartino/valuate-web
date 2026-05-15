@@ -17,10 +17,13 @@ import {
   postExtract,
   postValue,
 } from "@/lib/api";
+import { parseFetchError } from "@/lib/friendlyError";
+import { recordTickerVisit } from "@/lib/recentlyViewed";
 
 import AssumptionsPanel from "./AssumptionsPanel";
 import CompsPanel from "./CompsPanel";
 import FlagsPanel from "./FlagsPanel";
+import LoadingStepper from "./LoadingStepper";
 import MonteCarloChart from "./MonteCarloChart";
 import SegmentsPanel from "./SegmentsPanel";
 import SensitivityHeatmap from "./SensitivityHeatmap";
@@ -72,6 +75,9 @@ export default function Workspace({ ticker }: { ticker: string }) {
         if (cancelled) return;
         setValuation(v);
         setStatus({ phase: "ready" });
+        // Record a successful workspace visit for the home page's
+        // RecentlyViewed chip row. localStorage-backed, per-browser.
+        recordTickerVisit(ticker);
 
         // Comps are independent of /extract; fetch in parallel-ish, after
         // the workspace is interactive. Failures don't block the rest.
@@ -150,6 +156,21 @@ export default function Workspace({ ticker }: { ticker: string }) {
     };
   }, [period, valuation]);
 
+  // DCF fair value vs. the live market price per share. Pulled from the
+  // comps panel's target_market data (yfinance market_cap / diluted shares).
+  // The spread answers the "is this stock cheap or rich vs my model?"
+  // question that's usually what the user actually came for.
+  const marketComparison = useMemo(() => {
+    if (!comps?.target_market?.market_cap || !valuation) return null;
+    const shares = valuation.projection.diluted_shares;
+    if (!shares || shares <= 0) return null;
+    const market_price = comps.target_market.market_cap / shares;
+    const fair = valuation.projection.fair_value_per_share;
+    if (!Number.isFinite(market_price) || market_price <= 0) return null;
+    const spread = (fair - market_price) / market_price;
+    return { market_price, spread };
+  }, [comps, valuation]);
+
   // What the DCF's equity/enterprise values translate to as multiples,
   // so the user can compare against peer medians directly. Only computable
   // for standard-industry filers — banks don't have a "revenue" or
@@ -177,24 +198,32 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   if (status.phase === "extracting" || (status.phase === "idle" && !company)) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-100" />
-        <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
-          {status.phase === "extracting" ? status.message : "Loading..."}
-        </p>
-      </div>
+      <LoadingStepper
+        message={status.phase === "extracting" ? status.message : "Loading..."}
+      />
     );
   }
 
   if (status.phase === "error") {
+    const friendly = parseFetchError(status.message);
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4 sm:p-6 dark:border-red-900 dark:bg-red-950">
         <p className="text-sm font-medium text-red-900 dark:text-red-200">
-          Could not load {ticker}
+          {friendly.title} — {ticker}
         </p>
-        <p className="mt-2 font-mono text-xs text-red-700 dark:text-red-300">
-          {status.message}
-        </p>
+        {friendly.hint && (
+          <p className="mt-2 text-sm text-red-800 dark:text-red-300">
+            {friendly.hint}
+          </p>
+        )}
+        <details className="mt-3 text-xs text-red-700 dark:text-red-400">
+          <summary className="cursor-pointer hover:underline">
+            Raw error
+          </summary>
+          <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all font-mono">
+            {friendly.raw}
+          </pre>
+        </details>
       </div>
     );
   }
@@ -346,6 +375,26 @@ export default function Workspace({ ticker }: { ticker: string }) {
             Monte Carlo 80% CI: {formatUSD(summary.mc_p10)} –{" "}
             {formatUSD(summary.mc_p90)} (median{" "}
             {summary.mc_median !== null ? formatUSD(summary.mc_median) : "—"})
+          </p>
+        )}
+        {marketComparison && (
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            <span>Market: {formatUSD(marketComparison.market_price)} · </span>
+            <span
+              className={
+                marketComparison.spread >= 0
+                  ? "font-medium text-emerald-700 dark:text-emerald-400"
+                  : "font-medium text-rose-700 dark:text-rose-400"
+              }
+            >
+              Model vs market: {marketComparison.spread >= 0 ? "+" : ""}
+              {formatPercent(marketComparison.spread, 1)}
+            </span>
+            <span className="text-zinc-500 dark:text-zinc-500">
+              {" "}
+              ({marketComparison.spread >= 0 ? "undervalued" : "overvalued"} by
+              the model)
+            </span>
           </p>
         )}
         <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">

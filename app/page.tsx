@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import RecentlyViewed from "@/components/RecentlyViewed";
 import TickerSearch from "@/components/TickerSearch";
 
 const TICKERS: Array<{ ticker: string; name: string; sector?: string }> = [
@@ -22,7 +23,7 @@ const TICKERS: Array<{ ticker: string; name: string; sector?: string }> = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <main className="mx-auto max-w-3xl px-6 py-16">
+      <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           Valuate
         </h1>
@@ -30,6 +31,8 @@ export default function Home() {
           AI-augmented DCF agent. Pick a ticker to extract its latest 10-K and
           run a Monte Carlo valuation.
         </p>
+
+        <RecentlyViewed />
 
         <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {TICKERS.map(({ ticker, name, sector }) => (
