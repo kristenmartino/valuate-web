@@ -51,7 +51,7 @@ export default function FlagsPanel({
 }: Props) {
   if (flags.length === 0) return null;
   return (
-    <section className="rounded-lg border border-amber-200 bg-amber-50 p-6 dark:border-amber-900/60 dark:bg-amber-950/30">
+    <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 sm:p-6 dark:border-amber-900/60 dark:bg-amber-950/30">
       <header className="flex items-baseline justify-between">
         <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-200">
           Extraction flags

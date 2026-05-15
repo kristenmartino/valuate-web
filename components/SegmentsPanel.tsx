@@ -33,7 +33,7 @@ export default function SegmentsPanel({
     totalRev > 0 && Math.abs(segmentSum - totalRev) / totalRev < 0.005;
 
   return (
-    <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
       <header className="flex items-baseline justify-between">
         <div>
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">

@@ -188,7 +188,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   if (status.phase === "error") {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-900 dark:bg-red-950">
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4 sm:p-6 dark:border-red-900 dark:bg-red-950">
         <p className="text-sm font-medium text-red-900 dark:text-red-200">
           Could not load {ticker}
         </p>
@@ -205,22 +205,24 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-baseline justify-between">
-          <div>
+      <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <div className="min-w-0">
             <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               {company.name}
             </h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               FY{period.fiscal_year} 10-K · period ending{" "}
               {period.fiscal_period_end} · accession{" "}
-              <span className="font-mono">{period.filing_accession}</span>
+              <span className="break-all font-mono">
+                {period.filing_accession}
+              </span>
             </p>
           </div>
           {flagCount > 0 && (
             <a
               href="#extraction-flags"
-              className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
+              className="shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
             >
               {flagCount} extraction flag{flagCount === 1 ? "" : "s"} →
             </a>
@@ -325,7 +327,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <CompsPanel comps={comps} dcfImplied={dcfImplied} />
       )}
 
-      <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-baseline justify-between">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             Fair value per share
@@ -336,7 +338,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             </span>
           )}
         </div>
-        <div className="mt-2 text-4xl font-semibold tabular-nums text-zinc-900 dark:text-zinc-50">
+        <div className="mt-2 text-3xl font-semibold tabular-nums text-zinc-900 sm:text-4xl dark:text-zinc-50">
           {formatUSD(summary.fair_value)}
         </div>
         {summary.mc_p10 !== null && summary.mc_p90 !== null && (
@@ -346,7 +348,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             {summary.mc_median !== null ? formatUSD(summary.mc_median) : "—"})
           </p>
         )}
-        <dl className="mt-4 grid grid-cols-3 gap-4">
+        <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Stat
             label="Enterprise value"
             value={formatMoney(summary.enterprise_value)}
@@ -373,7 +375,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
           )}
       </section>
 
-      <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Assumptions
         </h3>
@@ -397,7 +399,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             : ""
         }`}
       >
-        <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+        <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             Monte Carlo distribution
           </h3>
@@ -424,7 +426,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             would be uniform — hide. Energy E&P uses standard FCFF math (just
             with no terminal value), so the heatmap is meaningful. */}
         {(period.industry === "standard" || period.industry === "energy") && (
-          <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+          <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               Sensitivity ({period.industry === "energy" ? "production" : "revenue"} growth × operating margin)
             </h3>
@@ -441,7 +443,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       </div>
 
       {valuation.projection.years.length > 0 && (
-      <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {valuation.projection.years.length}-year projection
         </h3>

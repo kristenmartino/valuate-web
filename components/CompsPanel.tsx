@@ -89,7 +89,7 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
   }
 
   return (
-    <section className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
       <header>
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Trading comps
