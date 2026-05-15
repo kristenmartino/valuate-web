@@ -200,6 +200,10 @@ export type FinancialPeriod = {
   income_statement: AnyIncomeStatement;
   balance_sheet: AnyBalanceSheet;
   cash_flow_statement: AnyCashFlowStatement;
+  // E&P-only: SMOG / PV-10 of proved oil & gas reserves extracted from
+  // the supplementary disclosure. Null for non-E&P filers and for E&P
+  // filers whose section extractor missed the disclosure.
+  standardized_measure: LineItem | null;
 };
 
 export type ExtractionFlag = {
@@ -255,6 +259,11 @@ export type Projection = {
   // more conservative cash-earnings number REIT analysts also reference.
   ffo_per_share: number | null;
   affo_per_share: number | null;
+  // E&P-only. SMOG/share — sell-side-style PV-10/share NAV anchor extracted
+  // from the filing's supplementary information. Surfaced alongside the
+  // 10-year-FCFF fair value as a cross-check; doesn't change the primary
+  // valuation. Null when SMOG wasn't extracted.
+  smog_per_share: number | null;
 };
 
 export type MonteCarloResult = {

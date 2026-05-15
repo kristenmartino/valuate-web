@@ -373,6 +373,23 @@ export default function Workspace({ ticker }: { ticker: string }) {
               />
             </dl>
           )}
+        {period.industry === "energy" &&
+          valuation.projection.smog_per_share !== null && (
+            <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+              <Stat
+                label="SMOG / share — sell-side PV-10 anchor (cross-check)"
+                value={formatUSD(valuation.projection.smog_per_share)}
+              />
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
+                Standardized Measure of Discounted Future Net Cash Flows
+                (ASC 932-235) extracted from the filing&apos;s supplementary
+                disclosure. PV-at-10% of proved reserves, net of estimated
+                future income taxes — the conventional sell-side NAV
+                anchor. Cross-check only; the primary fair value is still
+                the 10-year FCFF projection above.
+              </p>
+            </div>
+          )}
       </section>
 
       <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
