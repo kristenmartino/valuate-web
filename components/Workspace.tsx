@@ -99,9 +99,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
     };
   }, [ticker]);
 
+  // Monotonic request id so an earlier, slower /value response can't overwrite
+  // a later one. Slider drags fire overlapping recompute() calls; the result
+  // that must win is the last one SENT, not the last one to RESOLVE.
+  const valuationRequestId = useRef(0);
+
   // Recompute helper used by both the debounced assumptions watcher and
   // the override flow (where the underlying line items just changed).
   async function recompute(currentAssumptions: Assumptions) {
+    const requestId = ++valuationRequestId.current;
     setRecomputing(true);
     try {
       const v = await postValue(ticker, {
@@ -109,11 +115,13 @@ export default function Workspace({ ticker }: { ticker: string }) {
         monte_carlo: { iterations: 10000, seed: 42 },
         sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
       });
-      setValuation(v);
+      // Ignore a stale response that a newer recompute has already superseded.
+      if (requestId === valuationRequestId.current) setValuation(v);
     } catch (err) {
-      console.error(err);
+      if (requestId === valuationRequestId.current) console.error(err);
     } finally {
-      setRecomputing(false);
+      // Only the latest in-flight request controls the recomputing indicator.
+      if (requestId === valuationRequestId.current) setRecomputing(false);
     }
   }
 

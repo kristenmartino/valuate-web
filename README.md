@@ -9,12 +9,12 @@ The case study has the full design narrative; this README is a working reference
 
 ## What this is
 
-A Next.js 16 (App Router) frontend paired with the valuate-api FastAPI service. The home page surfaces 14 curated tickers across five industries plus a free-text search for any SEC-filed company. Each ticker routes to a workspace at `/v/[ticker]` that runs the agent extraction, lets the user adjust assumption sliders, and renders Monte Carlo + sensitivity visualizations alongside the per-share fair value.
+A Next.js 16 (App Router) frontend paired with the valuate-api FastAPI service. The home page surfaces 18 curated tickers across five industries plus a free-text search for any SEC-filed company. Each ticker routes to a workspace at `/v/[ticker]` that runs the agent extraction, lets the user adjust assumption sliders, and renders Monte Carlo + sensitivity visualizations alongside the per-share fair value.
 
 ## Routes
 
 ```
-/                         home page — curated 14-ticker grid + free-text ticker search
+/                         home page — curated 18-ticker grid + free-text ticker search
 /v/[ticker]               workspace — extraction review, statements, sliders, MC + sensitivity, comps
 ```
 
@@ -26,7 +26,7 @@ Server-rendered shells, client-rendered interactive surfaces:
 - **Client Components** — everything under `components/`:
   - `Workspace.tsx` — state machine for extract → defaults → value → optional override loop. Owns `Company`, `Assumptions`, `ValuationResponse`, `CompsResponse` state; debounces re-valuation 300ms after slider changes.
   - `AssumptionsPanel.tsx` — industry-aware sliders. Standard mode = 4 MC drivers + 4 historical ratios; bank/insurer/REIT modes relabel sliders for the relevant formula (cost of equity, dividend growth, ROE, etc.) and hide unused ones; energy mode relabels `revenue_growth` as "Production growth/decline" and notes the no-terminal design in the help text.
-  - `StatementsPanel.tsx` — three-statement view, side-by-side across the 3 most-recent fiscal years, with a per-industry field-map so the table shows the right line items per variant. Each cell renders its `source` + `confidence`; hover for the verbatim quote or XBRL tag.
+  - `StatementsPanel.tsx` — three-statement view, side-by-side across the 5 most-recent fiscal years, with a per-industry field-map so the table shows the right line items per variant. Each cell renders its `source` + `confidence`; hover for the verbatim quote or XBRL tag.
   - `MonteCarloChart.tsx`, `SensitivityHeatmap.tsx` — Recharts visualizations.
   - `CompsPanel.tsx`, `SegmentsPanel.tsx`, `FlagsPanel.tsx` — peer-multiples table, revenue-by-segment breakdown, and HITL flag/override surface respectively.
   - `TickerSearch.tsx` — escape hatch from the curated grid. Validates `1–5` letters (optional `.` or `-` class suffix) and routes via `useRouter`.
