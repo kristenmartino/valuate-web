@@ -18,6 +18,7 @@ import {
   postValue,
 } from "@/lib/api";
 import { parseFetchError } from "@/lib/friendlyError";
+import { assumptionIssue } from "@/lib/assumptionValidation";
 import { recordTickerVisit } from "@/lib/recentlyViewed";
 
 import AssumptionsPanel from "./AssumptionsPanel";
@@ -112,6 +113,12 @@ export default function Workspace({ ticker }: { ticker: string }) {
   // the override flow (where the underlying line items just changed).
   async function recompute(currentAssumptions: Assumptions) {
     const requestId = ++valuationRequestId.current;
+    if (company && assumptionIssue(currentAssumptions, company.periods[0].industry)) {
+      setRecomputing(false);
+      setRecomputeError(null);
+      setPendingChanges(true);
+      return;
+    }
     setRecomputing(true);
     setRecomputeError(null);
     try {
@@ -160,6 +167,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   const period = company?.periods[0];
   const flagCount = company?.extraction_flags.length ?? 0;
+  const inputIssue = assumptions && period ? assumptionIssue(assumptions, period.industry) : null;
 
   const summary = useMemo(() => {
     if (!period || !valuation) return null;
@@ -373,10 +381,11 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">An estimate under the selected assumptions, not a quoted stock price.</p>
         {(pendingChanges || recomputing) && (
           <p role="status" className="mt-4 border-l-2 border-amber-500 pl-3 text-sm text-amber-800 dark:text-amber-300">
-            {recomputeError ? "Update failed. Displayed results reflect the previous successful calculation." : "Updating. Displayed results reflect the previous successful calculation."}
+            {inputIssue ? "Adjust the inputs to recalculate. Displayed results reflect the previous successful calculation." : recomputeError ? "Update failed. Displayed results reflect the previous successful calculation." : "Updating. Displayed results reflect the previous successful calculation."}
           </p>
         )}
-        {recomputeError && <div role="alert" className="mt-3 text-sm text-red-700 dark:text-red-300"><p>{parseFetchError(recomputeError).title}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => recompute(assumptions)}>Retry calculation</button></div>}
+        {inputIssue && <p role="alert" className="mt-3 text-sm text-red-700 dark:text-red-300">{inputIssue}</p>}
+        {recomputeError && !inputIssue && <div role="alert" className="mt-3 text-sm text-red-700 dark:text-red-300"><p>{parseFetchError(recomputeError).title}</p><p className="mt-1">{parseFetchError(recomputeError).hint}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => recompute(assumptions)}>Retry calculation</button></div>}
         <dl className={`mt-4 grid grid-cols-1 gap-4 ${
           period.industry === "standard" || period.industry === "energy"
             ? "sm:grid-cols-3"
@@ -420,7 +429,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <div className="mt-6">
           <AssumptionsPanel
             value={assumptions}
-            onChange={(next) => { ++valuationRequestId.current; setPendingChanges(true); setAssumptions(next); }}
+            onChange={(next) => { ++valuationRequestId.current; setRecomputing(false); setRecomputeError(null); setPendingChanges(true); setAssumptions(next); }}
             industry={period.industry}
           />
         </div>

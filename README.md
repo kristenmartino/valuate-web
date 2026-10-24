@@ -66,3 +66,11 @@ Energy uses a fixed ten-year revenue-based cash-flow projection without terminal
 A reconciliation flag identifies the whole balance sheet. Its editor requires a choice of total assets, total liabilities, or shareholders' equity before a number can be saved. Each choice loads that field's current value and supporting excerpt; the request uses the specific `balance_sheet.<field>` path required by the API. Saving reruns validation, so a reconciliation warning can remain when another line still needs review.
 
 Run `npm test` for correction-target and request-validation regression tests.
+
+## Valuation inputs and simulation display
+
+The workspace checks that the discount rate exceeds growth for perpetuity models, and that ROE exceeds growth for the insurer model. Invalid combinations show an input-specific explanation and keep prior results explicitly labeled until valid inputs recalculate.
+
+The API preserves the full Monte Carlo histogram and supplies a second histogram built from actual samples between p10 and p90, with counts below and above that window. The chart defaults to that percentile view, discloses its sample counts, and offers a full-range view. All summary statistics use all completed samples. Older API responses without the additional histogram display the full range.
+
+Trading-comps copy distinguishes market context from the DCF-implied row, which is available for standard and energy models.

@@ -95,7 +95,10 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
           Trading comps
         </h3>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Peer multiples from Yahoo Finance alongside the multiples implied by the selected model assumptions. Reporting periods and valuation dates may differ.
+          {dcfImplied
+            ? "Market multiples from Yahoo Finance, with a DCF-implied row calculated from the selected assumptions."
+            : "Market multiples from Yahoo Finance for context. This table does not show multiples implied by the selected valuation model."}{" "}
+          Reporting periods and valuation dates may differ.
         </p>
       </header>
 

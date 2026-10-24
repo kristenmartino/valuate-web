@@ -276,6 +276,13 @@ export type MonteCarloResult = {
   p75: number;
   p90: number;
   histogram: [number, number][];
+  central_histogram?: {
+    lower_bound: number;
+    upper_bound: number;
+    histogram: [number, number][];
+    below_count: number;
+    above_count: number;
+  } | null;
 };
 
 export type SensitivityGrid = {

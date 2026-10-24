@@ -51,8 +51,8 @@ export function parseFetchError(raw: string): FriendlyError {
   }
   if (COMPOSITION.test(detail)) {
     return {
-      title: "This filer's 10-K is missing required tags",
-      hint: "Track A (XBRL) and Track B (Claude) couldn't fill some required line items. The architecture can't compose a valid Company without them — the curated 14-ticker grid is verified to extract cleanly.",
+      title: "Required financial values are missing",
+      hint: "Some required values remain missing after extraction and supported calculations. Try another company; this filing needs further review.",
       raw,
     };
   }
@@ -65,7 +65,7 @@ export function parseFetchError(raw: string): FriendlyError {
   }
   return {
     title: "Something went wrong",
-    hint: "The raw error is shown below — share it if you're reporting a bug.",
+    hint: "Try again. If the problem continues, return later or report the error with the ticker and inputs you used.",
     raw,
   };
 }
