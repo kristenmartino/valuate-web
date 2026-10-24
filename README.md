@@ -52,3 +52,11 @@ npm run build
 ```
 
 The frontend is deployed on Vercel. See `.env.example` for configuration; backend persistence and extraction freshness are configured separately in the API service.
+
+## Model-specific presentation
+
+Bank, insurer, and REIT models estimate equity directly, so the workspace displays equity value without the API's placeholder enterprise-value or net-debt fields. Historical context for these models is read-only; only the formula's inputs are editable.
+
+The REIT screen labels net income plus D&A as approximate FFO and the supplementary metric as estimated AFFO. Expand each calculation to see the formula. Estimated AFFO subtracts positive reported capital expenditures; otherwise it uses 80% of approximate FFO. These are simplified model calculations, not company-reported FFO/AFFO.
+
+Energy uses a fixed ten-year revenue-based cash-flow projection without terminal value. It does not estimate reserve life, production volumes, or commodity prices. The revenue-growth input and sensitivity axes describe the calculation actually performed.

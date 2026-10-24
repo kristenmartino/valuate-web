@@ -11,6 +11,8 @@ type SliderConfig = {
   step: number;
 };
 
+type ContextField = Pick<SliderConfig, "key" | "label">;
+
 // Standard (FCFF DCF) sliders: 4 MC drivers + 4 historical-derived ratios.
 const STANDARD_DRIVERS: SliderConfig[] = [
   { key: "revenue_growth", label: "Revenue growth", min: -0.1, max: 0.25, step: 0.005 },
@@ -51,9 +53,9 @@ const BANK_DRIVERS: SliderConfig[] = [
   },
 ];
 
-const BANK_CONTEXT: SliderConfig[] = [
-  { key: "operating_margin", label: "Return on equity (historical)", min: 0, max: 0.4, step: 0.005 },
-  { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
+const BANK_CONTEXT: ContextField[] = [
+  { key: "operating_margin", label: "Return on equity (historical)" },
+  { key: "tax_rate", label: "Tax rate (historical)" },
 ];
 
 // Insurer justified-P/B sliders: ROE is a real input here (not just context —
@@ -82,8 +84,8 @@ const INSURER_DRIVERS: SliderConfig[] = [
   },
 ];
 
-const INSURER_CONTEXT: SliderConfig[] = [
-  { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
+const INSURER_CONTEXT: ContextField[] = [
+  { key: "tax_rate", label: "Tax rate (historical)" },
 ];
 
 // REIT FFO-multiple sliders: Gordon growth on FFO, so the same two drivers
@@ -100,27 +102,23 @@ const REIT_DRIVERS: SliderConfig[] = [
   },
   {
     key: "terminal_growth",
-    label: "FFO growth (g)",
+    label: "Approximate FFO growth (g)",
     min: 0.0,
     max: 0.08,
     step: 0.001,
   },
 ];
 
-const REIT_CONTEXT: SliderConfig[] = [
-  { key: "tax_rate", label: "Tax rate (historical)", min: 0, max: 0.45, step: 0.005 },
+const REIT_CONTEXT: ContextField[] = [
+  { key: "tax_rate", label: "Tax rate (historical)" },
 ];
 
-// Energy E&P sliders: same FCFF math as standard, but with two semantic
-// shifts — `revenue_growth` is production growth/decline (E&P revenue
-// follows volume × commodity-price; volume declines as wells deplete absent
-// drilling reinvestment), and `terminal_growth` is unused (no terminal
-// value at all in compute_energy_projection — reserves deplete, so
-// Gordon-growth-to-infinity is conceptually wrong for E&P).
+// Energy uses revenue growth in a fixed ten-year cash-flow projection.
+// Terminal growth is unused because this model has no terminal value.
 const ENERGY_DRIVERS: SliderConfig[] = [
   {
     key: "revenue_growth",
-    label: "Production growth/decline",
+    label: "Revenue growth",
     min: -0.15,
     max: 0.15,
     step: 0.005,
@@ -164,17 +162,11 @@ export default function AssumptionsPanel({
           value={value}
           update={update}
         />
-        <Group
-          title="Historical context (informational)"
-          sliders={BANK_CONTEXT}
-          value={value}
-          update={update}
-        />
+        <HistoricalContext fields={BANK_CONTEXT} value={value} />
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
-          Banks aren&apos;t valued via FCFF — the cash flow statement is dominated
-          by deposit/loan flows rather than free cash flow. This workspace uses
-          the Gordon DDM: <code>P = D₀(1+g) / (r−g)</code>. The other DCF
-          sliders (revenue growth, capex/D&amp;A ratios) don&apos;t apply.
+          This workspace uses the Gordon dividend discount model:{" "}
+          <code>P = D₀(1+g) / (r−g)</code>. Cost of equity and dividend growth
+          drive the estimate. Historical figures are shown for context.
         </p>
       </div>
     );
@@ -189,18 +181,13 @@ export default function AssumptionsPanel({
           value={value}
           update={update}
         />
-        <Group
-          title="Historical context (informational)"
-          sliders={INSURER_CONTEXT}
-          value={value}
-          update={update}
-        />
+        <HistoricalContext fields={INSURER_CONTEXT} value={value} />
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
-          Insurers are valued via a justified price-to-book multiple:{" "}
+          This workspace uses a simplified justified price-to-book model:{" "}
           <code>P/B = (ROE − g) / (r − g)</code>, then{" "}
-          <code>estimated value/share = book value/share × P/B</code>. Reserves and
-          investments dominate the balance sheet, so book value is the
-          economic anchor. FCFF doesn&apos;t fit this business model.
+          <code>estimated value/share = book value/share × P/B</code>. The
+          estimate uses book value per share and the selected ROE, growth,
+          and cost of equity.
         </p>
       </div>
     );
@@ -210,24 +197,17 @@ export default function AssumptionsPanel({
     return (
       <div className="space-y-8">
         <Group
-          title="FFO-multiple inputs — Gordon growth on FFO"
+          title="Gordon growth inputs — approximate FFO"
           sliders={REIT_DRIVERS}
           value={value}
           update={update}
         />
-        <Group
-          title="Historical context (informational)"
-          sliders={REIT_CONTEXT}
-          value={value}
-          update={update}
-        />
+        <HistoricalContext fields={REIT_CONTEXT} value={value} />
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
-          REITs are valued on Funds From Operations:{" "}
-          <code>FFO = net income + D&amp;A</code>. GAAP depreciation
-          overstates economic depreciation for well-maintained real estate,
-          so FFO — not net income — is the conventional cash-earnings
-          measure. Estimated value/share ={" "}
-          <code>FFO/share × (1 + g) / (r − g)</code>.
+          This workspace uses approximate FFO (net income + D&amp;A), which
+          omits other Nareit adjustments. Estimated value/share ={" "}
+          <code>approximate FFO/share × (1 + g) / (r − g)</code>. Open the
+          calculations beside the estimate to inspect the inputs.
         </p>
       </div>
     );
@@ -249,13 +229,10 @@ export default function AssumptionsPanel({
           update={update}
         />
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
-          E&amp;P companies deplete their reserves, so this workspace runs a{" "}
-          <strong>10-year FCFF projection with no terminal value</strong> —
-          Gordon-growth-to-infinity is conceptually wrong for an asset that
-          will run out. The terminal-growth slider doesn&apos;t apply here.
-          The projection is intentionally conservative; sell-side NAV models
-          typically add a salvage / undeveloped-reserve value beyond the
-          projection horizon.
+          This prototype uses a fixed ten-year cash-flow projection with no
+          terminal value. It does not estimate company-specific reserve life.
+          Revenue growth changes projected sales; the model does not separately
+          forecast production volumes or commodity prices.
         </p>
       </div>
     );
@@ -276,6 +253,32 @@ export default function AssumptionsPanel({
         update={update}
       />
     </div>
+  );
+}
+
+function HistoricalContext({
+  fields,
+  value,
+}: {
+  fields: ContextField[];
+  value: Assumptions;
+}) {
+  return (
+    <section aria-label="Historical context">
+      <h4 className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
+        Historical context (read-only)
+      </h4>
+      <dl className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
+        {fields.map(({ key, label }) => (
+          <div key={key}>
+            <dt className="text-sm text-zinc-600 dark:text-zinc-400">{label}</dt>
+            <dd className="mt-1 font-mono text-sm tabular-nums text-zinc-900 dark:text-zinc-50">
+              {formatPercent(value[key], 2)}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }
 

@@ -29,6 +29,7 @@ import SegmentsPanel from "./SegmentsPanel";
 import SensitivityHeatmap from "./SensitivityHeatmap";
 import StatementsPanel from "./StatementsPanel";
 import SourceDetails from "./SourceDetails";
+import ReitMetrics from "./ReitMetrics";
 
 type LoadStatus =
   | { phase: "idle" }
@@ -240,7 +241,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
     standard: "Five-year FCFF DCF",
     bank: "Dividend discount model",
     insurer: "Justified price-to-book",
-    reit: "FFO Gordon growth",
+    reit: "Gordon growth using approximate FFO",
     energy: "Ten-year FCFF, no terminal value",
   }[period.industry];
 
@@ -321,7 +322,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 item={period.income_statement.net_income}
               />
               <ExtractStat
-                label="D&A (FFO add-back)"
+                label="D&A (approximate FFO add-back)"
                 item={period.income_statement.depreciation_amortization}
               />
               <ExtractStat
@@ -376,31 +377,25 @@ export default function Workspace({ ticker }: { ticker: string }) {
           </p>
         )}
         {recomputeError && <div role="alert" className="mt-3 text-sm text-red-700 dark:text-red-300"><p>{parseFetchError(recomputeError).title}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => recompute(assumptions)}>Retry calculation</button></div>}
-        <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Stat
-            label="Enterprise value"
-            value={formatMoney(summary.enterprise_value)}
-          />
-          <Stat label="Net debt" value={formatMoney(summary.net_debt)} />
-          <Stat
-            label="Equity value"
-            value={formatMoney(summary.equity_value)}
-          />
-        </dl>
-        {period.industry === "reit" &&
-          valuation.projection.ffo_per_share !== null &&
-          valuation.projection.affo_per_share !== null && (
-            <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+        <dl className={`mt-4 grid grid-cols-1 gap-4 ${
+          period.industry === "standard" || period.industry === "energy"
+            ? "sm:grid-cols-3"
+            : ""
+        }`}>
+          {(period.industry === "standard" || period.industry === "energy") && (
+            <>
               <Stat
-                label="FFO / share (model input)"
-                value={formatUSD(valuation.projection.ffo_per_share)}
+                label="Enterprise value"
+                value={formatMoney(summary.enterprise_value)}
               />
-              <Stat
-                label="AFFO / share (cross-check)"
-                value={formatUSD(valuation.projection.affo_per_share)}
-              />
-            </dl>
+              <Stat label="Net debt" value={formatMoney(summary.net_debt)} />
+            </>
           )}
+          <Stat label="Equity value" value={formatMoney(summary.equity_value)} />
+        </dl>
+        {period.industry === "reit" && (
+          <ReitMetrics period={period} projection={valuation.projection} />
+        )}
         {period.industry === "energy" &&
           valuation.projection.smog_per_share !== null && (
             <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
@@ -479,9 +474,9 @@ export default function Workspace({ ticker }: { ticker: string }) {
               : period.industry === "insurer"
               ? "10,000 iterations sampling cost of equity, growth, and ROE"
               : period.industry === "reit"
-              ? "10,000 iterations sampling cost of equity and FFO growth"
+              ? "10,000 iterations sampling cost of equity and approximate FFO growth"
               : period.industry === "energy"
-              ? "10,000 iterations sampling production growth, op margin, and WACC"
+              ? "10,000 iterations sampling revenue growth, op margin, and WACC"
               : "10,000 iterations across the 4 key drivers"}
           </p>
           <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">The range describes simulated outputs under sampled assumptions. It is not a calibrated forecast of future stock prices.</p>
@@ -499,7 +494,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         {(period.industry === "standard" || period.industry === "energy") && (
           <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              Sensitivity ({period.industry === "energy" ? "production" : "revenue"} growth × operating margin)
+              Sensitivity (revenue growth × operating margin)
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               Estimated value per share at each combination
@@ -564,7 +559,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             {period.industry === "energy" ? (
               <>
                 Terminal value: {formatMoney(valuation.projection.terminal_value)}{" "}
-                (none — reserves deplete past the projection horizon)
+                (excluded by the fixed ten-year model; reserve life is not estimated)
               </>
             ) : (
               <>
