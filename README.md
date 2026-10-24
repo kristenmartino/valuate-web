@@ -63,6 +63,12 @@ The REIT screen labels net income plus D&A as approximate FFO and the supplement
 
 Energy uses a fixed ten-year revenue-based cash-flow projection without terminal value. It does not estimate reserve life, production volumes, or commodity prices. The revenue-growth input and sensitivity axes describe the calculation actually performed.
 
+## Statement coverage
+
+Insurer investment and policy-liability slots can hold either totals or components. Labels follow each period's stored XBRL concept: Berkshire's debt-security figure is labeled fixed-maturity securities (available for sale), and its future-policy-benefit figure does not claim to include unpaid claims. Different concepts across years get separate coverage labels beside the values. Unknown, AI-extracted, calculated, or corrected amounts without a recognized XBRL basis are labeled with unspecified coverage rather than presented as totals.
+
+Berkshire's cash calculation retains Treasury bills already classified as cash equivalents and excludes separately reported restricted cash and short-term Treasury-bill investments. These disclosure changes do not alter values, valuation formulas, or assumptions.
+
 ## Balance-sheet corrections
 
 A reconciliation flag identifies the whole balance sheet. Its editor requires a choice of total assets, total liabilities, or shareholders' equity before a number can be saved. Each choice loads that field's current value and supporting excerpt; the request uses the specific `balance_sheet.<field>` path required by the API. Saving reruns validation, so a reconciliation warning can remain when another line still needs review.

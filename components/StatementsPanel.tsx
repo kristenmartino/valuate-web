@@ -3,6 +3,7 @@
 import { type FinancialPeriod, type LineItem, formatLineItem } from "@/lib/api";
 
 import SourceDetails from "./SourceDetails";
+import { statementRowLabels } from "@/lib/statementLabels";
 
 type Props = {
   periods: FinancialPeriod[]; // newest-first; all share the same industry
@@ -112,8 +113,8 @@ const INSURANCE_FIELDS: {
   ],
   balance: [
     ["cash_and_equivalents", "Cash and equivalents"],
-    ["investments", "Investments (general account)"],
-    ["insurance_reserves", "Future policy benefits + unpaid claims"],
+    ["investments", "Investment amount (coverage unspecified)"],
+    ["insurance_reserves", "Policy or claims liability (coverage unspecified)"],
     ["total_assets", "Total assets"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
@@ -219,21 +220,26 @@ function StatementTable({
             </tr>
           </thead>
           <tbody>
-            {fields.map(([key, label]) => (
-              <tr
-                key={key}
-                className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"
-              >
-                <td className="py-2 pr-4 text-zinc-900 dark:text-zinc-100">
-                  {label}
-                </td>
-                {periods.map((p) => (
-                  <td key={p.fiscal_year} className="py-2 pl-4">
-                    <ProvenanceCell item={pickItem(p, statement, key)} field={key} label={`${label}, FY${p.fiscal_year}`} />
+            {fields.map(([key, label]) => {
+              const items = periods.map(p => pickItem(p, statement, key));
+              const scope = statementRowLabels(key, label, items);
+              return (
+                <tr
+                  key={key}
+                  className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"
+                >
+                  <td className="py-2 pr-4 text-zinc-900 dark:text-zinc-100">
+                    {scope.label}
                   </td>
-                ))}
-              </tr>
-            ))}
+                  {periods.map((p, index) => (
+                    <td key={p.fiscal_year} className="py-2 pl-4">
+                      {scope.cellLabels[index] && <p className="mb-1 text-right text-xs text-zinc-600 dark:text-zinc-400">{scope.cellLabels[index]}</p>}
+                      <ProvenanceCell item={items[index]} field={key} label={`${scope.cellLabels[index] ?? scope.label}, FY${p.fiscal_year}`} />
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
