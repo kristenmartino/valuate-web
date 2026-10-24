@@ -1,6 +1,8 @@
 "use client";
 
-import { type FinancialPeriod, type LineItem, formatMoney } from "@/lib/api";
+import { type FinancialPeriod, type LineItem, formatLineItem } from "@/lib/api";
+
+import SourceDetails from "./SourceDetails";
 
 type Props = {
   periods: FinancialPeriod[]; // newest-first; all share the same industry
@@ -162,26 +164,12 @@ const REIT_FIELDS: {
   ],
 };
 
-function tooltipFor(item: LineItem): string {
-  const lines = [
-    `source: ${item.source} · conf ${item.confidence.toFixed(2)}`,
-  ];
-  if (item.source_quote) {
-    lines.push(`“${item.source_quote.replace(/\s+/g, " ").trim()}”`);
-  } else if (item.xbrl_tag) {
-    lines.push(item.xbrl_tag);
-  }
-  return lines.join("\n");
-}
-
-function ProvenanceCell({ item }: { item: LineItem | null }) {
-  if (!item) return <span className="text-zinc-400">—</span>;
+function ProvenanceCell({ item, field, label }: { item: LineItem | null; field: string; label: string }) {
+  if (!item) return <span className="text-zinc-500">—</span>;
   return (
-    <div className="text-right" title={tooltipFor(item)}>
-      <div className="tabular-nums">{formatMoney(item.value)}</div>
-      <div className="font-mono text-[10px] uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
-        {item.source} · {item.confidence.toFixed(2)}
-      </div>
+    <div className="min-w-32 text-right">
+      <div className="tabular-nums">{formatLineItem(item.value, field)}</div>
+      <SourceDetails item={item} label={label} />
     </div>
   );
 }
@@ -240,7 +228,7 @@ function StatementTable({
                 </td>
                 {periods.map((p) => (
                   <td key={p.fiscal_year} className="py-2 pl-4">
-                    <ProvenanceCell item={pickItem(p, statement, key)} />
+                    <ProvenanceCell item={pickItem(p, statement, key)} field={key} label={`${label}, FY${p.fiscal_year}`} />
                   </td>
                 ))}
               </tr>
@@ -269,15 +257,13 @@ export default function StatementsPanel({ periods }: Props) {
   const balanceTitle = labelFor("Balance sheet");
 
   return (
-    <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <section id="statements" className="scroll-mt-6 rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
       <header>
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Extracted statements
         </h3>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Every line item the agent pulled, side-by-side across {periods.length} fiscal year
-          {periods.length === 1 ? "" : "s"}. Hover any cell to see its source, confidence, and
-          verbatim quote (or XBRL tag for Track A items).
+          Extracted values across {periods.length} fiscal year{periods.length === 1 ? "" : "s"}. Open source details to inspect the stored excerpt or XBRL tag. A dash means no value is available; it does not mean zero.
         </p>
       </header>
 

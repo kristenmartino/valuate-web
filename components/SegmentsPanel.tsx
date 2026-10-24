@@ -1,5 +1,7 @@
 "use client";
 
+import SourceDetails from "./SourceDetails";
+
 import {
   type RevenueSegment,
   formatMoney,
@@ -65,14 +67,10 @@ export default function SegmentsPanel({
           return (
             <li
               key={s.name}
-              className="flex items-center gap-3 text-sm"
-              title={
-                s.revenue.source_quote
-                  ? `“${s.revenue.source_quote}” — conf ${s.revenue.confidence.toFixed(2)}`
-                  : `source: ${s.revenue.source} · conf ${s.revenue.confidence.toFixed(2)}`
-              }
+              className="flex flex-wrap items-center gap-3 text-sm"
+
             >
-              <span className="w-44 shrink-0 truncate text-zinc-900 dark:text-zinc-100">
+              <span className="w-32 shrink-0 truncate text-zinc-900 dark:text-zinc-100">
                 {s.name}
               </span>
               <div className="relative h-6 flex-1 overflow-hidden rounded bg-zinc-100 dark:bg-zinc-800">
@@ -87,6 +85,7 @@ export default function SegmentsPanel({
               <span className="w-14 shrink-0 text-right font-mono text-xs tabular-nums text-zinc-500 dark:text-zinc-500">
                 {formatPercent(sharePct, 1)}
               </span>
+              <div className="w-full"><SourceDetails item={s.revenue} label={s.name} /></div>
             </li>
           );
         })}

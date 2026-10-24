@@ -1,23 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { getRecentTickers } from "@/lib/recentlyViewed";
 
-// Renders the user's recently-viewed tickers as a chip row above the
-// curated grid. Hydrates from localStorage on mount; renders nothing
-// (no skeleton, no padding) on first paint to avoid layout shift on
-// users who haven't visited any ticker yet.
+function subscribe(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+}
+
+function snapshot() {
+  return getRecentTickers().join(",");
+}
 
 export default function RecentlyViewed() {
-  const [tickers, setTickers] = useState<string[] | null>(null);
-
-  useEffect(() => {
-    setTickers(getRecentTickers());
-  }, []);
-
-  if (tickers === null || tickers.length === 0) return null;
+  const saved = useSyncExternalStore(subscribe, snapshot, () => "");
+  const tickers = saved ? saved.split(",") : [];
+  if (tickers.length === 0) return null;
 
   return (
     <section className="mt-8">

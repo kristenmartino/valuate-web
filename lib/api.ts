@@ -441,3 +441,18 @@ export function formatPercent(value: number, digits = 1): string {
   if (!Number.isFinite(value)) return "—";
   return `${(value * 100).toFixed(digits)}%`;
 }
+
+export function sourceLabel(source: LineItemSource): string {
+  return { xbrl: "SEC XBRL", llm_html: "AI extraction", derived: "Calculated", user_override: "User correction" }[source];
+}
+
+export function isShareField(field: string): boolean {
+  return field.split(".").at(-1) === "diluted_shares_outstanding";
+}
+
+export function formatLineItem(value: number | string, field: string): string {
+  if (!isShareField(field)) return formatMoney(value);
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "—";
+  return `${formatMoney(n).replace("$", "")} shares`;
+}

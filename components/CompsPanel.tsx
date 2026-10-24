@@ -95,9 +95,7 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
           Trading comps
         </h3>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Current peer multiples from public market data, alongside the
-          multiple your DCF assumptions imply. Useful as a relative-value
-          sanity check on the intrinsic-value estimate.
+          Peer multiples from Yahoo Finance alongside the multiples implied by the selected model assumptions. Reporting periods and valuation dates may differ.
         </p>
       </header>
 

@@ -36,13 +36,10 @@ export default function TickerSearch() {
   return (
     <section className="mt-10 rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-700 dark:text-zinc-300">
-        Try another ticker
+        Find a company
       </h2>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Any SEC-filed US company works. Banks, insurers, REITs, and E&amp;P
-        route to their dedicated valuation flavors based on SIC code; anything
-        else runs the standard 5-year FCFF DCF — which may not fit the
-        business if it isn&apos;t a clean industrial.
+        Enter a US ticker with a SEC 10-K filing. Extraction can fail when required data is missing. Banks, insurers, REITs, and energy companies use separate models; other companies use a five-year cash-flow model that may not suit their business.
       </p>
       <form onSubmit={submit} className="mt-4 flex items-start gap-2">
         <input
@@ -65,7 +62,7 @@ export default function TickerSearch() {
           disabled={navigating || ticker.trim().length === 0}
           className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          {navigating ? "Loading…" : "Value"}
+          {navigating ? "Loading…" : "Open workspace"}
         </button>
       </form>
       {error && (

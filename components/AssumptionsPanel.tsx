@@ -198,7 +198,7 @@ export default function AssumptionsPanel({
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
           Insurers are valued via a justified price-to-book multiple:{" "}
           <code>P/B = (ROE − g) / (r − g)</code>, then{" "}
-          <code>fair value/share = book value/share × P/B</code>. Reserves and
+          <code>estimated value/share = book value/share × P/B</code>. Reserves and
           investments dominate the balance sheet, so book value is the
           economic anchor. FCFF doesn&apos;t fit this business model.
         </p>
@@ -226,7 +226,7 @@ export default function AssumptionsPanel({
           <code>FFO = net income + D&amp;A</code>. GAAP depreciation
           overstates economic depreciation for well-maintained real estate,
           so FFO — not net income — is the conventional cash-earnings
-          measure. Fair value/share ={" "}
+          measure. Estimated value/share ={" "}
           <code>FFO/share × (1 + g) / (r − g)</code>.
         </p>
       </div>

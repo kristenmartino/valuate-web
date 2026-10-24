@@ -32,18 +32,23 @@ export default function Home() {
           Valuate
         </h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          AI-augmented DCF agent. Pick a ticker to extract its latest 10-K and
-          run a Monte Carlo valuation.
+          Explore company valuations from SEC filings.
         </p>
 
+        <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          Review extracted financials and their sources, adjust assumptions, and compare valuation scenarios.
+        </p>
+        <TickerSearch />
         <RecentlyViewed />
+        <h2 className="mt-10 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Sample companies</h2>
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">18 companies across five model categories</p>
 
-        <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {TICKERS.map(({ ticker, name, sector }) => (
             <Link
               key={ticker}
               href={`/v/${ticker}`}
-              className="group flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-3 transition-colors hover:border-zinc-400 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
+              className="group flex items-center justify-between border-b border-zinc-200 px-1 py-3 transition-colors hover:border-zinc-400 hover:bg-zinc-100 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
             >
               <div>
                 <div className="flex items-baseline gap-2">
@@ -67,11 +72,8 @@ export default function Home() {
           ))}
         </div>
 
-        <TickerSearch />
-
         <p className="mt-10 text-xs text-zinc-500 dark:text-zinc-500">
-          First load for a ticker takes ~15s (SEC fetch + Claude extraction).
-          Subsequent assumption changes are instant.
+          Portfolio prototype. Review the source data and model assumptions before interpreting a valuation.
         </p>
       </main>
     </div>

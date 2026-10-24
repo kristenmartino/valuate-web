@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Valuate — AI-augmented DCF agent",
+    default: "Valuate — SEC filing valuation workspace",
     template: "%s · Valuate",
   },
   description:
-    "Extract financial line items from SEC 10-Ks via XBRL and Claude, then run a Monte Carlo DCF valuation with cell-level source attribution.",
+    "Review financials from SEC 10-K filings, inspect sources, and explore company valuations under different assumptions.",
 };
 
 export default function RootLayout({

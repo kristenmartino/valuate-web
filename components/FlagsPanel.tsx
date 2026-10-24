@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import SourceDetails from "./SourceDetails";
 
 import {
   type Company,
   type ExtractionFlag,
-  formatMoney,
+  formatLineItem,
+  isShareField,
   lookupLineItem,
   putOverride,
 } from "@/lib/api";
 
-// Accept formatted dollar amounts like "$25,596,000,000", "25596000000", or
-// "25.6B" / "25.6b" shorthand. Returns the integer USD string the API expects,
+// Accept plain numbers, formatted USD values, or K/M/B suffixes.
+// Returns the integer base-unit string the API expects,
 // or null if the input doesn't look like a number.
-function parseUsdInput(raw: string): string | null {
+function parseNumericInput(raw: string): string | null {
   const trimmed = raw.trim();
   if (!trimmed) return null;
   const lower = trimmed.toLowerCase().replace(/[$,\s]/g, "");
@@ -32,7 +34,7 @@ function parseUsdInput(raw: string): string | null {
   if (!/^-?\d+(\.\d+)?$/.test(body)) return null;
   const value = Number(body) * multiplier;
   if (!Number.isFinite(value)) return null;
-  // Round to integer USD; the schema's Decimal accepts string form.
+  // Round to integer base units; the schema's Decimal accepts string form.
   return Math.round(value).toString();
 }
 
@@ -54,12 +56,13 @@ export default function FlagsPanel({
     <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 sm:p-6 dark:border-amber-900/60 dark:bg-amber-950/30">
       <header className="flex items-baseline justify-between">
         <h3 className="text-lg font-semibold text-amber-900 dark:text-amber-200">
-          Extraction flags
+          Items to review
         </h3>
         <span className="text-xs text-amber-700 dark:text-amber-300">
-          {flags.length} item{flags.length === 1 ? "" : "s"} — review and override against the filing
+          {flags.length} item{flags.length === 1 ? "" : "s"} — check against the filing before correcting
         </span>
       </header>
+      <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">Corrections replace the saved current value. Reviewer identity and earlier corrections are not retained.</p>
       <ul className="mt-4 space-y-3">
         {flags.map((flag) => (
           <FlagRow
@@ -93,11 +96,10 @@ function FlagRow({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const parsed = parseUsdInput(value);
-  const previewBillions =
-    parsed !== null && Number(parsed) >= 1e6
-      ? formatMoney(parsed)
-      : null;
+  const shareField = isShareField(flag.field_path);
+  const parsed = shareField && value.includes("$") ? null : parseNumericInput(value);
+  const preview = parsed !== null ? formatLineItem(parsed, flag.field_path) : null;
+  const fieldLabel = flag.field_path.split(".").at(-1)!.replaceAll("_", " ");
 
   async function submit() {
     if (parsed === null) {
@@ -125,7 +127,7 @@ function FlagRow({
     <li className="rounded-md border border-amber-200/60 bg-white p-4 dark:border-amber-900/40 dark:bg-zinc-900">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <code className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          {flag.field_path}
+          {fieldLabel}
         </code>
         <span className="text-xs text-amber-800 dark:text-amber-300">
           {flag.reason}
@@ -133,24 +135,10 @@ function FlagRow({
       </div>
       <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
         <span className="tabular-nums text-zinc-900 dark:text-zinc-100">
-          {formatMoney(flag.current_value)}
+          {formatLineItem(flag.current_value, flag.field_path)}
         </span>
-        {item && (
-          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-500">
-            source: {item.source} · conf {item.confidence.toFixed(2)}
-          </span>
-        )}
       </div>
-      {item?.source_quote && (
-        <blockquote className="mt-2 border-l-2 border-amber-300 pl-3 text-sm italic text-zinc-700 dark:border-amber-700 dark:text-zinc-300">
-          “{item.source_quote.replace(/\s+/g, " ").trim()}”
-        </blockquote>
-      )}
-      {item?.xbrl_tag && !item.source_quote && (
-        <div className="mt-2 font-mono text-xs text-zinc-500 dark:text-zinc-500">
-          {item.xbrl_tag}
-        </div>
-      )}
+      {item && <SourceDetails item={item} label={fieldLabel} />}
 
       <div className="mt-3">
         {!editing && (
@@ -159,7 +147,7 @@ function FlagRow({
             onClick={() => setEditing(true)}
             className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
-            Override
+            Correct value
           </button>
         )}
         {editing && (
@@ -172,8 +160,7 @@ function FlagRow({
           >
             <label className="block">
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                Corrected value — accepts <code>25596000000</code>,{" "}
-                <code>$25,596,000,000</code>, or <code>25.6B</code>
+                Corrected value ({shareField ? "shares" : "USD"}) — accepts plain numbers or K, M, B suffixes
               </span>
               <input
                 type="text"
@@ -183,8 +170,8 @@ function FlagRow({
                 className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
               />
               <span className="mt-1 block text-[11px] text-zinc-500 dark:text-zinc-500">
-                {previewBillions !== null
-                  ? `Will be sent as ${parsed} (${previewBillions})`
+                {preview !== null
+                  ? `Save ${parsed} ${shareField ? "shares" : "USD"} (${preview})`
                   : value
                   ? "Couldn't parse a number from that"
                   : ""}
@@ -192,7 +179,7 @@ function FlagRow({
             </label>
             <label className="block">
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                Source quote (optional — paste from filing for audit trail)
+                Supporting excerpt (optional — paste from the filing)
               </span>
               <input
                 type="text"
@@ -208,7 +195,7 @@ function FlagRow({
                 disabled={submitting}
                 className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
               >
-                {submitting ? "Saving…" : "Save override"}
+                {submitting ? "Saving…" : "Save correction"}
               </button>
               <button
                 type="button"

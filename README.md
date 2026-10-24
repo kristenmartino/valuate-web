@@ -1,96 +1,54 @@
 # valuate-web
 
-> Frontend for **Valuate** — AI-augmented DCF agent over SEC 10-K filings.
-> Live at [valuate.kristenmartino.ai](https://valuate.kristenmartino.ai)
-> · Backend repo: [valuate-api](https://github.com/kristenmartino/valuate-api)
-> · Case study: [kristenmartino.ai/work/valuate](https://kristenmartino.ai/work/valuate)
+Frontend for [Valuate](https://valuate.kristenmartino.ai), a portfolio prototype for reviewing SEC 10-K financials and exploring company valuations. The [backend](https://github.com/kristenmartino/valuate-api) performs extraction and valuation; the [case study](https://kristenmartino.ai/work/valuate) describes the product choices and evaluation limits.
 
-The case study has the full design narrative; this README is a working reference for the code.
+## Workspace
 
-## What this is
+The home page offers 18 sample companies across five model categories and a ticker search. Search requires a SEC 10-K; extraction may fail on missing required fields. The default FCFF model is not suitable for every company outside the explicitly modeled categories.
 
-A Next.js 16 (App Router) frontend paired with the valuate-api FastAPI service. The home page surfaces 18 curated tickers across five industries plus a free-text search for any SEC-filed company. Each ticker routes to a workspace at `/v/[ticker]` that runs the agent extraction, lets the user adjust assumption sliders, and renders Monte Carlo + sensitivity visualizations alongside the per-share fair value.
+At `/v/[ticker]`, the workspace shows:
 
-## Routes
+- Company, filing period, model category, and automated review status.
+- Estimated value and assumptions first, side by side on larger screens.
+- Data-review flags and correction controls, then segment revenue, peer multiples, simulations, projections, and extracted statements.
+- Source details that open by click or keyboard: stored XBRL tags, AI-provided excerpts, calculation descriptions, or current correction notes.
 
-```
-/                         home page — curated 18-ticker grid + free-text ticker search
-/v/[ticker]               workspace — extraction review, statements, sliders, MC + sensitivity, comps
-```
+Diluted shares use share units rather than currency. Missing values are shown as dashes, not zero. Source labels describe origin, not verification. Internal XBRL scores are tag-priority heuristics; AI scores are self-reported, not calibrated accuracy probabilities. Automated checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. No flags does not mean every value has been verified.
 
-## Architecture
+The displayed simulation interval is the middle 80% of outputs under sampled assumptions, not a confidence interval for future stock prices. No quoted market price is inferred from market capitalization divided by filing diluted shares.
 
-Server-rendered shells, client-rendered interactive surfaces:
+Corrections replace the current saved value and rerun validation and valuation. Reviewer identity and prior corrections are not stored. A failed valuation update leaves the last successful output visible with an explicit stale-results notice and retry action.
 
-- **Server Components** — `app/page.tsx` (curated ticker grid), `app/v/[ticker]/page.tsx` (workspace shell). The workspace route awaits `params` per Next 16's async params convention.
-- **Client Components** — everything under `components/`:
-  - `Workspace.tsx` — state machine for extract → defaults → value → optional override loop. Owns `Company`, `Assumptions`, `ValuationResponse`, `CompsResponse` state; debounces re-valuation 300ms after slider changes.
-  - `AssumptionsPanel.tsx` — industry-aware sliders. Standard mode = 4 MC drivers + 4 historical ratios; bank/insurer/REIT modes relabel sliders for the relevant formula (cost of equity, dividend growth, ROE, etc.) and hide unused ones; energy mode relabels `revenue_growth` as "Production growth/decline" and notes the no-terminal design in the help text.
-  - `StatementsPanel.tsx` — three-statement view, side-by-side across the 5 most-recent fiscal years, with a per-industry field-map so the table shows the right line items per variant. Each cell renders its `source` + `confidence`; hover for the verbatim quote or XBRL tag.
-  - `MonteCarloChart.tsx`, `SensitivityHeatmap.tsx` — Recharts visualizations.
-  - `CompsPanel.tsx`, `SegmentsPanel.tsx`, `FlagsPanel.tsx` — peer-multiples table, revenue-by-segment breakdown, and HITL flag/override surface respectively.
-  - `TickerSearch.tsx` — escape hatch from the curated grid. Validates `1–5` letters (optional `.` or `-` class suffix) and routes via `useRouter`.
-  - `LoadingStepper.tsx` — replaces the bare spinner during the ~15s first-extract with a 4-step progress checklist (cache → extract → defaults → value). Active step gets a spinner, completed get a green check.
-  - `RecentlyViewed.tsx` — chip row above the curated grid that hydrates from `localStorage` (`lib/recentlyViewed.ts`), surfaces the last 6 distinct tickers the user has visited.
-- **Helpers** (`lib/`): `friendlyError.ts` parses raw fetch errors into title + actionable hint (ticker-not-found, rate-limited, composition-error, etc.); `recentlyViewed.ts` is the localStorage shim for the chip row.
-- **API client** — `lib/api.ts`. TypeScript discriminated unions (`AnyIncomeStatement = IncomeStatement | BankIncomeStatement | InsuranceIncomeStatement | REITIncomeStatement`) mirror the Pydantic schemas one-to-one, so `kind` narrowing on the frontend uses the same discriminator the backend serializes with.
+## Model categories
 
-Next.js rewrites in `next.config.ts` proxy `/api/*` → `${NEXT_PUBLIC_VALUATE_API}/*` so the browser only sees the Vercel origin (no CORS plumbing). A `proxy.ts` (Next 16's renamed middleware file) sits in front of override requests specifically: it injects `Authorization: Bearer ${VALUATE_OVERRIDE_TOKEN}` from a non-public Vercel env var, so the token never reaches the browser but the backend still sees the credential it requires. When the env var is unset, the proxy is a no-op and the backend's auth dependency also short-circuits — local dev works without setup.
+| Category | Model | Controls and output |
+|---|---|---|
+| Industrial / tech | Five-year FCFF DCF | Growth, margin, WACC, terminal growth, historical ratios; projection and sensitivity grid |
+| Bank | Dividend discount | Cost of equity and dividend growth |
+| Insurer | Justified price-to-book | ROE, cost of equity, long-term growth |
+| REIT | FFO Gordon growth | Cost of equity and FFO growth; AFFO cross-check |
+| Energy | Ten-year FCFF, no terminal value | Production growth, margin, WACC, historical ratios; projection, sensitivity, standardized-measure cross-check |
 
-## Industry-aware rendering
+## Implementation
 
-Workspace components dispatch on `period.industry` (a string union from the API response):
+Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, and Recharts. The server components provide page shells; `Workspace.tsx` owns extraction, assumptions, valuation, and correction state. Valuation requests are debounced by 300 ms and guarded against stale responses. `lib/api.ts` mirrors the backend's statement variants and provides display formatters. `SourceDetails.tsx` provides the expandable provenance display.
 
-| Surface | Standard | Bank | Insurer | REIT | Energy |
-|---|---|---|---|---|---|
-| Summary stat cards | Revenue · Op income · Net income · Total assets | NII · IBT · Net income · Total assets | Premiums · Investment income · Net income · Total assets | Revenue · Net income · D&A · Real estate (net) | Revenue · Op income · Net income · Total assets |
-| Slider labels | Revenue growth · Op margin · WACC · Terminal growth | Cost of equity · Dividend growth | ROE · Cost of equity · Long-term growth | Cost of equity · FFO growth | Production growth/decline · Op margin · WACC |
-| Sensitivity grid | shown | hidden | hidden | hidden | shown |
-| Projection table | 5-year FCFF | hidden (DDM has no annual projection) | hidden | hidden | 10-year FCFF, terminal `$0` |
-| Statements field map | standard us-gaap | bank-specific (net interest income, loans, deposits) | insurer-specific (premiums, reserves) | REIT-specific (real-estate-at-cost / accumulated-depreciation / real-estate-net) | standard us-gaap |
-| Per-industry extra | DCF-implied multiples panel | (none) | (none) | FFO/share + AFFO/share cross-check | SMOG/share NAV anchor (ASC 932-235) |
-
-Below the per-share fair value display, the workspace also shows the live market price (from `comps.target_market.market_cap` / diluted shares) and the model-vs-market spread, colored green when the model is more bullish and rose when less. That answers the "cheap or rich vs my model?" question that's usually what the user came for.
-
-Energy E&P shares the standard schema variant — the line items are standard us-gaap — but routes through a different `compute_projection` flavor on the backend. The frontend reflects this by reusing the standard summary cards + statements panel but distinguishing the slider labels and the no-terminal note in the projection table.
-
-## Tech stack
-
-- **Next.js 16** (App Router, Turbopack default)
-- **React 19**
-- **TypeScript** with strict mode
-- **Tailwind CSS** for styling
-- **Recharts** for the Monte Carlo histogram and sensitivity heatmap
+`next.config.ts` rewrites `/api/*` to `NEXT_PUBLIC_VALUATE_API`. The server-side `proxy.ts` injects `VALUATE_OVERRIDE_TOKEN` for correction requests so that the bearer token is not exposed to the browser.
 
 ## Local development
 
 ```bash
-git clone https://github.com/kristenmartino/valuate-web
-cd valuate-web
 npm install
-cp .env.example .env.local   # then set NEXT_PUBLIC_VALUATE_API
+cp .env.example .env.local
 npm run dev
 ```
 
-The dev server listens on `http://localhost:3000`. By default `.env.example` points `NEXT_PUBLIC_VALUATE_API` at the Railway-hosted backend; set it to `http://127.0.0.1:8000` when running the backend locally.
-
-### Type-check
+Set `NEXT_PUBLIC_VALUATE_API` to the backend origin, or `http://127.0.0.1:8000` for a local backend. Set the server-only `VALUATE_OVERRIDE_TOKEN` to the matching backend token when corrections require authentication. It must not use a `NEXT_PUBLIC_` prefix.
 
 ```bash
+npm run lint
 npx tsc --noEmit
+npm run build
 ```
 
-No runtime tests on the frontend — the `lib/api.ts` types are mirrored from the Pydantic schemas, so contract drift surfaces as a TypeScript error at the boundary.
-
-## Deployment
-
-Deployed on Vercel.
-
-| Variable | Required | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_VALUATE_API` | yes | URL of the Railway-hosted valuate-api, e.g. `https://valuate-api.up.railway.app`. The Next.js rewrite in `next.config.ts` proxies `/api/*` to this origin. |
-| `VALUATE_OVERRIDE_TOKEN` | optional | Bearer token for the backend's `/override` endpoint. **Server-side only** (no `NEXT_PUBLIC_` prefix), read by `proxy.ts` on the Vercel edge and injected as an `Authorization` header. Must match the same-named env var on the backend. When unset on both sides, `/override` runs unauthenticated. |
-
-## License
-
-MIT
+The frontend is deployed on Vercel. See `.env.example` for configuration; backend persistence and extraction freshness are configured separately in the API service.

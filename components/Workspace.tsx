@@ -28,6 +28,7 @@ import MonteCarloChart from "./MonteCarloChart";
 import SegmentsPanel from "./SegmentsPanel";
 import SensitivityHeatmap from "./SensitivityHeatmap";
 import StatementsPanel from "./StatementsPanel";
+import SourceDetails from "./SourceDetails";
 
 type LoadStatus =
   | { phase: "idle" }
@@ -42,19 +43,21 @@ export default function Workspace({ ticker }: { ticker: string }) {
   const [valuation, setValuation] = useState<ValuationResponse | null>(null);
   const [comps, setComps] = useState<CompsResponse | null>(null);
   const [recomputing, setRecomputing] = useState(false);
+  const [recomputeError, setRecomputeError] = useState<string | null>(null);
+  const [pendingChanges, setPendingChanges] = useState(false);
 
   // Initial load: ensure /company exists, fetch defaults, run first valuation.
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        setStatus({ phase: "extracting", message: "Checking cache..." });
+        setStatus({ phase: "extracting", message: "Checking for saved financials…" });
         let c = await getCompany(ticker);
         if (!c) {
           setStatus({
             phase: "extracting",
             message:
-              "Fetching 10-K from SEC and extracting line items (~15s)...",
+              "Fetching the SEC 10-K and extracting financial line items…",
           });
           c = await postExtract(ticker);
         }
@@ -109,6 +112,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   async function recompute(currentAssumptions: Assumptions) {
     const requestId = ++valuationRequestId.current;
     setRecomputing(true);
+    setRecomputeError(null);
     try {
       const v = await postValue(ticker, {
         assumptions: currentAssumptions,
@@ -116,9 +120,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
         sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
       });
       // Ignore a stale response that a newer recompute has already superseded.
-      if (requestId === valuationRequestId.current) setValuation(v);
+      if (requestId === valuationRequestId.current) {
+        setValuation(v);
+        setPendingChanges(false);
+      }
     } catch (err) {
-      if (requestId === valuationRequestId.current) console.error(err);
+      if (requestId === valuationRequestId.current) {
+        setRecomputeError(err instanceof Error ? err.message : String(err));
+        setPendingChanges(true);
+      }
     } finally {
       // Only the latest in-flight request controls the recomputing indicator.
       if (requestId === valuationRequestId.current) setRecomputing(false);
@@ -143,6 +153,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   // so the fair value, Monte Carlo, and sensitivity all reflect the change.
   function handleOverride(updated: Company) {
     setCompany(updated);
+    setPendingChanges(true);
     if (assumptions) recompute(assumptions);
   }
 
@@ -163,21 +174,6 @@ export default function Workspace({ ticker }: { ticker: string }) {
       mc_median: mc?.median ?? null,
     };
   }, [period, valuation]);
-
-  // DCF fair value vs. the live market price per share. Pulled from the
-  // comps panel's target_market data (yfinance market_cap / diluted shares).
-  // The spread answers the "is this stock cheap or rich vs my model?"
-  // question that's usually what the user actually came for.
-  const marketComparison = useMemo(() => {
-    if (!comps?.target_market?.market_cap || !valuation) return null;
-    const shares = valuation.projection.diluted_shares;
-    if (!shares || shares <= 0) return null;
-    const market_price = comps.target_market.market_cap / shares;
-    const fair = valuation.projection.fair_value_per_share;
-    if (!Number.isFinite(market_price) || market_price <= 0) return null;
-    const spread = (fair - market_price) / market_price;
-    return { market_price, spread };
-  }, [comps, valuation]);
 
   // What the DCF's equity/enterprise values translate to as multiples,
   // so the user can compare against peer medians directly. Only computable
@@ -240,6 +236,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
     return null;
   }
 
+  const modelName = {
+    standard: "Five-year FCFF DCF",
+    bank: "Dividend discount model",
+    insurer: "Justified price-to-book",
+    reit: "FFO Gordon growth",
+    energy: "Ten-year FCFF, no terminal value",
+  }[period.industry];
+
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
@@ -256,16 +260,18 @@ export default function Workspace({ ticker }: { ticker: string }) {
               </span>
             </p>
           </div>
-          {flagCount > 0 && (
-            <a
-              href="#extraction-flags"
-              className="shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
-            >
-              {flagCount} extraction flag{flagCount === 1 ? "" : "s"} →
-            </a>
-          )}
+          <a href="#review" className="text-sm font-medium text-teal-800 underline underline-offset-4 dark:text-teal-300">
+            {flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} to review` : "No automated flags"}
+          </a>
         </div>
-        <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <p className="mt-2 text-xs font-medium text-teal-800 dark:text-teal-300">{modelName}</p>
+        <nav aria-label="Workspace sections" className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-zinc-200 pt-3 text-sm dark:border-zinc-800">
+          <a className="underline underline-offset-4" href="#valuation">Valuation</a>
+          <a className="underline underline-offset-4" href="#review">Review data</a>
+          <a className="underline underline-offset-4" href="#statements">Sources &amp; statements</a>
+          <a className="underline underline-offset-4" href="#simulation">Simulation</a>
+        </nav>
+        <dl className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {period.income_statement.kind === "bank" ? (
             <>
               <ExtractStat
@@ -341,33 +347,11 @@ export default function Workspace({ ticker }: { ticker: string }) {
         </dl>
       </section>
 
-      <div id="extraction-flags" className="scroll-mt-4">
-        <FlagsPanel
-          ticker={ticker}
-          flags={company.extraction_flags}
-          company={company}
-          onOverride={handleOverride}
-        />
-      </div>
-
-      {period.income_statement.kind === "standard" &&
-        period.income_statement.revenue_segments &&
-        period.income_statement.revenue_segments.length > 0 && (
-          <SegmentsPanel
-            segments={period.income_statement.revenue_segments}
-            totalRevenue={period.income_statement.revenue.value}
-            fiscalYear={period.fiscal_year}
-          />
-        )}
-
-      {comps && (comps.peers.length > 0 || comps.target_market) && (
-        <CompsPanel comps={comps} dcfImplied={dcfImplied} />
-      )}
-
-      <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
+      <div id="valuation" className="grid scroll-mt-6 grid-cols-1 items-start gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="rounded-lg border border-teal-200 bg-teal-50/50 p-4 sm:p-6 dark:border-teal-900 dark:bg-teal-950/20">
         <div className="flex items-baseline justify-between">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            Fair value per share
+            Estimated value per share
           </h3>
           {recomputing && (
             <span className="text-xs text-zinc-500 dark:text-zinc-500">
@@ -380,31 +364,18 @@ export default function Workspace({ ticker }: { ticker: string }) {
         </div>
         {summary.mc_p10 !== null && summary.mc_p90 !== null && (
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Monte Carlo 80% CI: {formatUSD(summary.mc_p10)} –{" "}
+            Middle 80% of simulated valuations: {formatUSD(summary.mc_p10)} –{" "}
             {formatUSD(summary.mc_p90)} (median{" "}
             {summary.mc_median !== null ? formatUSD(summary.mc_median) : "—"})
           </p>
         )}
-        {marketComparison && (
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            <span>Market: {formatUSD(marketComparison.market_price)} · </span>
-            <span
-              className={
-                marketComparison.spread >= 0
-                  ? "font-medium text-emerald-700 dark:text-emerald-400"
-                  : "font-medium text-rose-700 dark:text-rose-400"
-              }
-            >
-              Model vs market: {marketComparison.spread >= 0 ? "+" : ""}
-              {formatPercent(marketComparison.spread, 1)}
-            </span>
-            <span className="text-zinc-500 dark:text-zinc-500">
-              {" "}
-              ({marketComparison.spread >= 0 ? "undervalued" : "overvalued"} by
-              the model)
-            </span>
+        <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">An estimate under the selected assumptions, not a quoted stock price.</p>
+        {(pendingChanges || recomputing) && (
+          <p role="status" className="mt-4 border-l-2 border-amber-500 pl-3 text-sm text-amber-800 dark:text-amber-300">
+            {recomputeError ? "Update failed. Displayed results reflect the previous successful calculation." : "Updating. Displayed results reflect the previous successful calculation."}
           </p>
         )}
+        {recomputeError && <div role="alert" className="mt-3 text-sm text-red-700 dark:text-red-300"><p>{parseFetchError(recomputeError).title}</p><button type="button" className="mt-2 underline underline-offset-4" onClick={() => recompute(assumptions)}>Retry calculation</button></div>}
         <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Stat
             label="Enterprise value"
@@ -421,7 +392,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
           valuation.projection.affo_per_share !== null && (
             <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
               <Stat
-                label="FFO / share (drives Gordon)"
+                label="FFO / share (model input)"
                 value={formatUSD(valuation.projection.ffo_per_share)}
               />
               <Stat
@@ -434,16 +405,11 @@ export default function Workspace({ ticker }: { ticker: string }) {
           valuation.projection.smog_per_share !== null && (
             <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
               <Stat
-                label="SMOG / share — sell-side PV-10 anchor (cross-check)"
+                label="Standardized measure / share (cross-check)"
                 value={formatUSD(valuation.projection.smog_per_share)}
               />
               <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                Standardized Measure of Discounted Future Net Cash Flows
-                (ASC 932-235) extracted from the filing&apos;s supplementary
-                disclosure. PV-at-10% of proved reserves, net of estimated
-                future income taxes — the conventional sell-side NAV
-                anchor. Cross-check only; the primary fair value is still
-                the 10-year FCFF projection above.
+                Discounted future net cash flows from the filing’s supplementary reserve disclosure, after estimated income taxes. This is a cross-check; the main estimate uses the ten-year cash-flow projection.
               </p>
             </div>
           )}
@@ -454,20 +420,50 @@ export default function Workspace({ ticker }: { ticker: string }) {
           Assumptions
         </h3>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Adjust the sliders — fair value, Monte Carlo, and sensitivity update
-          automatically.
+          Adjust the inputs to recalculate the estimate and simulation.
         </p>
         <div className="mt-6">
           <AssumptionsPanel
             value={assumptions}
-            onChange={setAssumptions}
+            onChange={(next) => { ++valuationRequestId.current; setPendingChanges(true); setAssumptions(next); }}
             industry={period.industry}
           />
         </div>
       </section>
 
+      </div>
+
+      <section id="review" className="scroll-mt-6 border-y border-zinc-200 py-5 dark:border-zinc-800">
+        <h3 className="text-lg font-semibold">Data review</h3>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} triggered automated checks.` : "No items triggered automated checks."} These checks do not verify every figure against the filing.</p>
+        <details className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+          <summary className="cursor-pointer py-1 text-teal-800 underline underline-offset-4 dark:text-teal-300">How sources and review flags work</summary>
+          <div className="mt-3 max-w-3xl space-y-2 leading-relaxed">
+            <p>SEC XBRL values come from tagged company facts. AI extraction fills gaps from filing text; calculated values use formulas; user corrections replace the saved current value.</p>
+            <p>Internal XBRL scores are assigned by tag priority (1.0 for a primary tag; 0.95 for an alternate). AI scores are self-reported. Neither is a measured probability that a number is correct.</p>
+            <p>Automated checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. A score above the threshold, or no flags, does not establish accuracy. Open source details and check important inputs against the filing.</p>
+          </div>
+        </details>
+        <div className="mt-4"><FlagsPanel ticker={ticker} flags={company.extraction_flags} company={company} onOverride={handleOverride} /></div>
+      </section>
+
+      {period.income_statement.kind === "standard" &&
+        period.income_statement.revenue_segments &&
+        period.income_statement.revenue_segments.length > 0 && (
+          <SegmentsPanel
+            segments={period.income_statement.revenue_segments}
+            totalRevenue={period.income_statement.revenue.value}
+            fiscalYear={period.fiscal_year}
+          />
+        )}
+
+      {comps && (comps.peers.length > 0 || comps.target_market) && (
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} />
+      )}
+
       <div
-        className={`grid grid-cols-1 gap-6 ${
+        id="simulation"
+        className={`scroll-mt-6 grid grid-cols-1 gap-6 ${
           period.industry === "standard" || period.industry === "energy"
             ? "lg:grid-cols-2"
             : ""
@@ -488,6 +484,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
               ? "10,000 iterations sampling production growth, op margin, and WACC"
               : "10,000 iterations across the 4 key drivers"}
           </p>
+          <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">The range describes simulated outputs under sampled assumptions. It is not a calibrated forecast of future stock prices.</p>
           <div className="mt-4">
             {valuation.monte_carlo && (
               <MonteCarloChart result={valuation.monte_carlo} />
@@ -505,7 +502,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
               Sensitivity ({period.industry === "energy" ? "production" : "revenue"} growth × operating margin)
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Per-share fair value at each cell
+              Estimated value per share at each combination
             </p>
             <div className="mt-4">
               {valuation.sensitivity && (
@@ -572,7 +569,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             ) : (
               <>
                 Terminal value: {formatMoney(valuation.projection.terminal_value)}{" "}
-                (Gordon growth at {formatPercent(assumptions.terminal_growth)})
+                (Gordon growth at {formatPercent(valuation.projection.assumptions.terminal_growth)})
               </>
             )}
           </p>
@@ -613,27 +610,7 @@ function ExtractStat({
       <dd className="mt-1 text-lg font-medium tabular-nums text-zinc-900 dark:text-zinc-50">
         {item ? formatMoney(item.value) : "—"}
       </dd>
-      {item && (
-        <dd className="mt-1 font-mono text-[10px] text-zinc-500 dark:text-zinc-500">
-          {item.source} · conf {item.confidence.toFixed(2)}
-        </dd>
-      )}
-      {item?.source_quote && (
-        <dd
-          className="mt-1 truncate text-[11px] italic text-zinc-600 dark:text-zinc-400"
-          title={item.source_quote}
-        >
-          “{item.source_quote.replace(/\s+/g, " ").trim()}”
-        </dd>
-      )}
-      {item?.xbrl_tag && !item.source_quote && (
-        <dd
-          className="mt-1 truncate font-mono text-[10px] text-zinc-600 dark:text-zinc-400"
-          title={item.xbrl_tag}
-        >
-          {item.xbrl_tag}
-        </dd>
-      )}
+      {item && <dd><SourceDetails item={item} label={label} /></dd>}
     </div>
   );
 }
