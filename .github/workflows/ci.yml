@@ -31,9 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # No frontend runtime tests — `lib/api.ts` types mirror the Pydantic
-      # schemas, so contract drift surfaces as a TypeScript error at the
-      # boundary. `tsc --noEmit` is the test.
+      - name: Correction regression tests
+        run: npm test
+
       - name: Type-check
         run: npx tsc --noEmit
 
