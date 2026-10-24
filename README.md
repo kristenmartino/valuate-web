@@ -60,3 +60,9 @@ Bank, insurer, and REIT models estimate equity directly, so the workspace displa
 The REIT screen labels net income plus D&A as approximate FFO and the supplementary metric as estimated AFFO. Expand each calculation to see the formula. Estimated AFFO subtracts positive reported capital expenditures; otherwise it uses 80% of approximate FFO. These are simplified model calculations, not company-reported FFO/AFFO.
 
 Energy uses a fixed ten-year revenue-based cash-flow projection without terminal value. It does not estimate reserve life, production volumes, or commodity prices. The revenue-growth input and sensitivity axes describe the calculation actually performed.
+
+## Balance-sheet corrections
+
+A reconciliation flag identifies the whole balance sheet. Its editor requires a choice of total assets, total liabilities, or shareholders' equity before a number can be saved. Each choice loads that field's current value and supporting excerpt; the request uses the specific `balance_sheet.<field>` path required by the API. Saving reruns validation, so a reconciliation warning can remain when another line still needs review.
+
+Run `npm test` for correction-target and request-validation regression tests.

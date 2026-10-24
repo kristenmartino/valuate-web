@@ -2,41 +2,15 @@
 
 import { useState } from "react";
 import SourceDetails from "./SourceDetails";
+import { correctionOptions, correctionRequest, parseCorrectionValue } from "@/lib/corrections";
 
 import {
   type Company,
   type ExtractionFlag,
   formatLineItem,
   isShareField,
-  lookupLineItem,
   putOverride,
 } from "@/lib/api";
-
-// Accept plain numbers, formatted USD values, or K/M/B suffixes.
-// Returns the integer base-unit string the API expects,
-// or null if the input doesn't look like a number.
-function parseNumericInput(raw: string): string | null {
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-  const lower = trimmed.toLowerCase().replace(/[$,\s]/g, "");
-  let multiplier = 1;
-  let body = lower;
-  if (body.endsWith("b")) {
-    multiplier = 1_000_000_000;
-    body = body.slice(0, -1);
-  } else if (body.endsWith("m")) {
-    multiplier = 1_000_000;
-    body = body.slice(0, -1);
-  } else if (body.endsWith("k")) {
-    multiplier = 1_000;
-    body = body.slice(0, -1);
-  }
-  if (!/^-?\d+(\.\d+)?$/.test(body)) return null;
-  const value = Number(body) * multiplier;
-  if (!Number.isFinite(value)) return null;
-  // Round to integer base units; the schema's Decimal accepts string form.
-  return Math.round(value).toString();
-}
 
 type Props = {
   ticker: string;
@@ -89,33 +63,59 @@ function FlagRow({
   company: Company;
   onOverride: (updated: Company) => void;
 }) {
-  const item = lookupLineItem(company, flag.field_path);
+  const aggregateFlag = flag.field_path === "balance_sheet";
+  const options = correctionOptions(company, flag);
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(flag.current_value);
+  const [fieldPath, setFieldPath] = useState(aggregateFlag ? "" : flag.field_path);
+  const [value, setValue] = useState(aggregateFlag ? "" : flag.current_value);
   const [sourceQuote, setSourceQuote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
 
-  const shareField = isShareField(flag.field_path);
-  const parsed = shareField && value.includes("$") ? null : parseNumericInput(value);
-  const preview = parsed !== null ? formatLineItem(parsed, flag.field_path) : null;
-  const fieldLabel = flag.field_path.split(".").at(-1)!.replaceAll("_", " ");
+  const selected = options.find((option) => option.fieldPath === fieldPath);
+  const item = selected?.item;
+  const shareField = isShareField(fieldPath);
+  const parsed = shareField && value.includes("$") ? null : parseCorrectionValue(value);
+  const preview = parsed !== null ? formatLineItem(parsed, fieldPath) : null;
+  const fieldLabel = aggregateFlag
+    ? "Balance-sheet reconciliation"
+    : flag.field_path.split(".").at(-1)!.replaceAll("_", " ");
+
+  function selectField(nextPath: string) {
+    const next = options.find((option) => option.fieldPath === nextPath);
+    setFieldPath(nextPath);
+    setValue(next?.item.value ?? "");
+    setSourceQuote(next?.item.source_quote ?? "");
+    setError(null);
+  }
+
+  function startEditing() {
+    setSaved(null);
+    setError(null);
+    selectField(aggregateFlag ? "" : flag.field_path);
+    setEditing(true);
+  }
 
   async function submit() {
-    if (parsed === null) {
-      setError("Couldn't parse a number from that input.");
+    setError(null);
+    let request;
+    try {
+      request = correctionRequest(company, flag, fieldPath, value, sourceQuote);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
       return;
     }
     setSubmitting(true);
-    setError(null);
     try {
-      const updated = await putOverride(ticker, {
-        field_path: flag.field_path,
-        value: parsed,
-        source_quote: sourceQuote || null,
-      });
+      const updated = await putOverride(ticker, request);
       onOverride(updated);
       setEditing(false);
+      setSaved(`${selected?.label ?? fieldLabel} saved. Automated checks ran again.${
+        updated.extraction_flags.some((next) => next.field_path === flag.field_path)
+          ? " This check still needs review."
+          : ""
+      }`);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -135,16 +135,19 @@ function FlagRow({
       </div>
       <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
         <span className="tabular-nums text-zinc-900 dark:text-zinc-100">
+          {aggregateFlag ? "Current total assets: " : ""}
           {formatLineItem(flag.current_value, flag.field_path)}
         </span>
       </div>
-      {item && <SourceDetails item={item} label={fieldLabel} />}
+      {item && <SourceDetails item={item} label={selected?.label ?? fieldLabel} />}
+      {saved && <p role="status" className="mt-3 text-sm text-teal-800 dark:text-teal-300">{saved}</p>}
 
       <div className="mt-3">
         {!editing && (
           <button
             type="button"
-            onClick={() => setEditing(true)}
+            onClick={startEditing}
+            disabled={options.length === 0}
             className="rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
             Correct value
@@ -158,13 +161,39 @@ function FlagRow({
             }}
             className="space-y-2"
           >
+            {aggregateFlag && (
+              <label className="block">
+                <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                  Balance-sheet field to correct
+                </span>
+                <select
+                  value={fieldPath}
+                  onChange={(e) => selectField(e.target.value)}
+                  required
+                  disabled={submitting}
+                  className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                >
+                  <option value="">Choose a balance-sheet field</option>
+                  {options.map((option) => (
+                    <option key={option.fieldPath} value={option.fieldPath}>
+                      {option.label} — {formatLineItem(option.item.value, option.fieldPath)}
+                    </option>
+                  ))}
+                </select>
+                <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
+                  Check assets, liabilities, and equity against the filing, then select the line that needs correction.
+                </span>
+              </label>
+            )}
             <label className="block">
               <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                Corrected value ({shareField ? "shares" : "USD"}) — accepts plain numbers or K, M, B suffixes
+                Corrected value{selected ? ` for ${selected.label}` : ""} ({shareField ? "shares" : "USD"}) — accepts plain numbers or K, M, B suffixes
               </span>
               <input
                 type="text"
                 inputMode="decimal"
+                disabled={!selected || submitting}
+                required
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
@@ -184,6 +213,7 @@ function FlagRow({
               <input
                 type="text"
                 value={sourceQuote}
+                disabled={!selected || submitting}
                 onChange={(e) => setSourceQuote(e.target.value)}
                 placeholder='e.g. "Operating income 25,596 24,378 21,889"'
                 className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-900"
@@ -192,7 +222,7 @@ function FlagRow({
             <div className="flex items-center gap-2">
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={submitting || !selected || parsed === null}
                 className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
               >
                 {submitting ? "Saving…" : "Save correction"}
@@ -201,16 +231,15 @@ function FlagRow({
                 type="button"
                 onClick={() => {
                   setEditing(false);
-                  setValue(flag.current_value);
-                  setSourceQuote("");
-                  setError(null);
+                  selectField(aggregateFlag ? "" : flag.field_path);
                 }}
+                disabled={submitting}
                 className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               >
                 Cancel
               </button>
               {error && (
-                <span className="text-sm text-red-600 dark:text-red-400">{error}</span>
+                <span role="alert" className="text-sm text-red-600 dark:text-red-400">{error}</span>
               )}
             </div>
           </form>
