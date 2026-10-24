@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { normalizeTicker } from "@/lib/tickers";
 
 import Workspace from "@/components/Workspace";
 
@@ -8,12 +10,13 @@ type Props = { params: Promise<{ ticker: string }> };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { ticker } = await props.params;
-  return { title: ticker.toUpperCase() };
+  return { title: normalizeTicker(ticker) };
 }
 
 export default async function Page(props: Props) {
   const { ticker } = await props.params;
-  const upper = ticker.toUpperCase();
+  const upper = normalizeTicker(ticker);
+  if (ticker !== upper) redirect(`/v/${encodeURIComponent(upper)}`);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">

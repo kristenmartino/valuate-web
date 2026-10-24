@@ -2,13 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { isValidTicker, normalizeTicker } from "@/lib/tickers";
 
-// Free-text ticker entry — the escape hatch from the curated 14-ticker grid.
-// Any SEC-filed US company works at extraction time (the backend's SIC
-// classifier picks an Industry from the submissions response). What the
-// caveat copy below makes explicit is that companies outside the five
-// supported industries fall back to standard 5-year FCFF, which may not
-// fit their business model.
+// Recognizing a ticker does not establish extraction or valuation coverage.
 export default function TickerSearch() {
   const router = useRouter();
   const [ticker, setTicker] = useState("");
@@ -17,15 +13,13 @@ export default function TickerSearch() {
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const t = ticker.trim().toUpperCase();
+    const t = normalizeTicker(ticker);
     if (!t) {
       setError("Enter a ticker");
       return;
     }
-    // SEC tickers are 1–5 letters, occasionally with a class suffix
-    // (BRK.B, BF-B). Allow letters plus a single `.` or `-` in the middle.
-    if (!/^[A-Z][A-Z]*([.-][A-Z]+)?$/.test(t) || t.length > 6) {
-      setError("Tickers are 1–5 letters, e.g. AMZN or BRK.B");
+    if (!isValidTicker(t)) {
+      setError("Use 1–5 letters with an optional class letter, e.g. AMZN or BRK.B. Ticker recognition does not guarantee valuation coverage.");
       return;
     }
     setError(null);

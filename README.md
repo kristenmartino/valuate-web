@@ -6,6 +6,8 @@ Frontend for [Valuate](https://valuate.kristenmartino.ai), a portfolio prototype
 
 The home page offers 18 sample companies across five model categories and a ticker search. Search requires a SEC 10-K; extraction may fail on missing required fields. The default FCFF model is not suitable for every company outside the explicitly modeled categories.
 
+Dot and hyphen share-class symbols use one canonical route: `BRK.B`, `brk.b`, and `BRK-B` resolve to `/v/BRK-B`. Direct legacy dot URLs redirect as well. Ticker recognition is separate from valuation coverage: Berkshire currently lacks required extracted financial values, so the workspace reports “Ticker recognized; valuation unavailable” instead of inventing a per-share estimate.
+
 At `/v/[ticker]`, the workspace shows:
 
 - Company, filing period, model category, and automated review status.
@@ -27,7 +29,7 @@ Corrections replace the current saved value and rerun validation and valuation. 
 | Bank | Dividend discount | Cost of equity and dividend growth |
 | Insurer | Justified price-to-book | ROE, cost of equity, long-term growth |
 | REIT | FFO Gordon growth | Cost of equity and FFO growth; AFFO cross-check |
-| Energy | Ten-year FCFF, no terminal value | Production growth, margin, WACC, historical ratios; projection, sensitivity, standardized-measure cross-check |
+| Energy | Ten-year FCFF, no terminal value | Revenue growth, margin, WACC, historical ratios; projection, sensitivity, standardized-measure cross-check |
 
 ## Implementation
 

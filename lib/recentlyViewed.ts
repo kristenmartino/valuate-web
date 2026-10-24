@@ -1,5 +1,7 @@
 "use client";
 
+import { normalizeTicker } from "./tickers";
+
 // localStorage-backed recently-viewed ticker tracking. Survives reloads,
 // scoped per-browser. Keeps the last 6 distinct tickers, newest first.
 // Used by:
@@ -16,7 +18,7 @@ function _read(): string[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed)
-      ? parsed.filter((t): t is string => typeof t === "string")
+      ? [...new Set(parsed.filter((t): t is string => typeof t === "string").map(normalizeTicker))]
       : [];
   } catch {
     return [];
@@ -38,7 +40,7 @@ export function getRecentTickers(): string[] {
 }
 
 export function recordTickerVisit(ticker: string): void {
-  const upper = ticker.toUpperCase();
+  const upper = normalizeTicker(ticker);
   const existing = _read().filter((t) => t !== upper);
   const next = [upper, ...existing].slice(0, MAX_ENTRIES);
   _write(next);

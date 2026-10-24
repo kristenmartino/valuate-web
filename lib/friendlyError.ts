@@ -51,8 +51,8 @@ export function parseFetchError(raw: string): FriendlyError {
   }
   if (COMPOSITION.test(detail)) {
     return {
-      title: "Required financial values are missing",
-      hint: "Some required values remain missing after extraction and supported calculations. Try another company; this filing needs further review.",
+      title: "Ticker recognized; valuation unavailable",
+      hint: "The SEC lookup succeeded, but required financial values remain missing after extraction and supported calculations. This prototype cannot calculate a valuation from this filing. Try another company.",
       raw,
     };
   }
