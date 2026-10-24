@@ -51,6 +51,17 @@ test('unavailable fields are not offered', () => {
   assert.equal(correctionOptions(missingEquity, reconciliation).length, 2);
 });
 
+test('a reported noncontrolling-interest component can be corrected separately', () => {
+  const withNci = structuredClone(company);
+  withNci.periods[0].balance_sheet.noncontrolling_interests = item('50', 'Noncontrolling interests 50');
+  const options = correctionOptions(withNci, reconciliation);
+  assert.equal(options.length, 4);
+  assert.equal(options[3].fieldPath, 'balance_sheet.noncontrolling_interests');
+  assert.deepEqual(correctionRequest(withNci, reconciliation, options[3].fieldPath, '50', 'Filing'), {
+    field_path: 'balance_sheet.noncontrolling_interests', value: '50', source_quote: 'Filing',
+  });
+});
+
 test('single-field corrections keep their target and share units', () => {
   const flag = { field_path: 'income_statement.diluted_shares_outstanding', current_value: '100' };
   assert.deepEqual(correctionRequest(company, flag, flag.field_path, '150M', ''), {

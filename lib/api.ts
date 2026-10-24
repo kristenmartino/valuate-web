@@ -102,6 +102,7 @@ export type BalanceSheet = {
   long_term_debt: LineItem | null;
   total_liabilities: LineItem;
   shareholders_equity: LineItem;
+  noncontrolling_interests?: LineItem | null;
 };
 
 export type BankBalanceSheet = {
@@ -115,6 +116,7 @@ export type BankBalanceSheet = {
   total_assets: LineItem;
   total_liabilities: LineItem;
   shareholders_equity: LineItem;
+  noncontrolling_interests?: LineItem | null;
 };
 
 export type InsuranceBalanceSheet = {
@@ -125,6 +127,7 @@ export type InsuranceBalanceSheet = {
   total_assets: LineItem;
   total_liabilities: LineItem;
   shareholders_equity: LineItem;
+  noncontrolling_interests?: LineItem | null;
 };
 
 export type REITBalanceSheet = {
@@ -137,6 +140,7 @@ export type REITBalanceSheet = {
   long_term_debt: LineItem | null;
   total_liabilities: LineItem;
   shareholders_equity: LineItem;
+  noncontrolling_interests?: LineItem | null;
 };
 
 export type AnyBalanceSheet =

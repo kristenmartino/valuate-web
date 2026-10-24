@@ -71,7 +71,7 @@ Berkshire's cash calculation retains Treasury bills already classified as cash e
 
 ## Balance-sheet corrections
 
-A reconciliation flag identifies the whole balance sheet. Its editor requires a choice of total assets, total liabilities, or shareholders' equity before a number can be saved. Each choice loads that field's current value and supporting excerpt; the request uses the specific `balance_sheet.<field>` path required by the API. Saving reruns validation, so a reconciliation warning can remain when another line still needs review.
+A reconciliation flag identifies the whole balance sheet. Its editor requires a specific field choice before a number can be saved: total assets, total liabilities, shareholders' equity, or noncontrolling interests when that component is available. Each choice loads that field's current value and supporting excerpt; the request uses the specific `balance_sheet.<field>` path required by the API. Saving reruns validation, so a reconciliation warning can remain when another line still needs review.
 
 Run `npm test` for correction-target and request-validation regression tests.
 
@@ -82,3 +82,5 @@ The workspace checks that the discount rate exceeds growth for perpetuity models
 The API preserves the full Monte Carlo histogram and supplies a second histogram built from actual samples between p10 and p90, with counts below and above that window. The chart defaults to that percentile view, discloses its sample counts, and offers a full-range view. All summary statistics use all completed samples. Older API responses without the additional histogram display the full range.
 
 Trading-comps copy distinguishes market context from the DCF-implied row, which is available for standard and energy models.
+
+The balance-sheet table shows parent versus consolidated equity coverage from recognized source concepts and displays noncontrolling interests separately. Reconciliation adds that component to parent equity and avoids counting it twice for a consolidated-equity tag. A saved Prologis record can acquire the missing component from the same filing without changing existing amounts or valuation inputs; this does not establish filing freshness. Unknown equity coverage remains explicitly labeled.

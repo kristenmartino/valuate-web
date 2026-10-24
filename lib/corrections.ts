@@ -4,6 +4,7 @@ const BALANCE_SHEET_FIELDS = [
   { fieldPath: "balance_sheet.total_assets", label: "Total assets" },
   { fieldPath: "balance_sheet.total_liabilities", label: "Total liabilities" },
   { fieldPath: "balance_sheet.shareholders_equity", label: "Shareholders' equity" },
+  { fieldPath: "balance_sheet.noncontrolling_interests", label: "Noncontrolling interests" },
 ] as const;
 
 export function correctionOptions(company: Company, flag: ExtractionFlag) {

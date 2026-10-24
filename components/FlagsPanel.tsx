@@ -181,7 +181,7 @@ function FlagRow({
                   ))}
                 </select>
                 <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
-                  Check assets, liabilities, and equity against the filing, then select the line that needs correction.
+                  Check assets, liabilities, equity coverage, and any noncontrolling interests against the filing, then select the line that needs correction.
                 </span>
               </label>
             )}

@@ -45,3 +45,12 @@ test('AI, corrected, calculated, and unrecognized facts never inherit total cove
 test('unrelated statement labels and missing values stay unchanged', () => {
   assert.deepEqual(statementRowLabels('total_assets', 'Total assets', [item('Assets'), null]), { label: 'Total assets', cellLabels: [null, null] });
 });
+
+test('parent and consolidated equity coverage are distinguished', () => {
+  assert.equal(statementRowLabels('shareholders_equity', '', [item('StockholdersEquity')]).label, "Parent shareholders' equity");
+  assert.equal(statementRowLabels('shareholders_equity', '', [item('StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest')]).label, 'Equity including noncontrolling interests');
+  const mixed = statementRowLabels('shareholders_equity', '', [item('StockholdersEquity'), item('StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest')]);
+  assert.equal(mixed.label, 'Equity (different coverage)');
+  assert.deepEqual(mixed.cellLabels, ["Parent shareholders' equity", 'Equity including noncontrolling interests']);
+  assert.equal(statementRowLabels('shareholders_equity', '', [item('StockholdersEquity', 'llm_html')]).label, "Shareholders' equity (coverage unspecified)");
+});

@@ -1,6 +1,10 @@
 import type { LineItem } from "./api";
 
 const COMPONENT_LABELS: Record<string, Record<string, string>> = {
+  shareholders_equity: {
+    "us-gaap:StockholdersEquity": "Parent shareholders' equity",
+    "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest": "Equity including noncontrolling interests",
+  },
   investments: {
     "us-gaap:Investments": "Reported investments",
     "us-gaap:AvailableForSaleSecuritiesDebtSecurities": "Fixed-maturity securities (available for sale)",
@@ -14,6 +18,7 @@ const COMPONENT_LABELS: Record<string, Record<string, string>> = {
 };
 
 const UNSPECIFIED_LABELS: Record<string, string> = {
+  shareholders_equity: "Shareholders' equity (coverage unspecified)",
   investments: "Investment amount (coverage unspecified)",
   insurance_reserves: "Policy or claims liability (coverage unspecified)",
 };
@@ -31,7 +36,8 @@ export function statementRowLabels(field: string, fallback: string, items: Array
     return { label: labels.find(label => label !== null) ?? UNSPECIFIED_LABELS[field], cellLabels: items.map(() => null) };
   }
   return {
-    label: field === "investments" ? "Investment amounts (different coverage)" : "Policy and claims liabilities (different coverage)",
+    label: field === "shareholders_equity" ? "Equity (different coverage)"
+      : field === "investments" ? "Investment amounts (different coverage)" : "Policy and claims liabilities (different coverage)",
     cellLabels: labels,
   };
 }

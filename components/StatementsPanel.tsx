@@ -47,6 +47,7 @@ const STANDARD_FIELDS: {
     ["long_term_debt", "Long-term debt"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
+    ["noncontrolling_interests", "Noncontrolling interests"],
   ],
   cashflow: [
     ["depreciation_amortization", "Depreciation and amortization"],
@@ -85,6 +86,7 @@ const BANK_FIELDS: {
     ["total_assets", "Total assets"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
+    ["noncontrolling_interests", "Noncontrolling interests"],
   ],
   cashflow: [
     ["cash_from_operations", "Cash from operations"],
@@ -118,6 +120,7 @@ const INSURANCE_FIELDS: {
     ["total_assets", "Total assets"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
+    ["noncontrolling_interests", "Noncontrolling interests"],
   ],
   cashflow: [
     ["cash_from_operations", "Cash from operations"],
@@ -155,6 +158,7 @@ const REIT_FIELDS: {
     ["long_term_debt", "Long-term debt"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
+    ["noncontrolling_interests", "Noncontrolling interests"],
   ],
   cashflow: [
     ["cash_from_operations", "Cash from operations"],
