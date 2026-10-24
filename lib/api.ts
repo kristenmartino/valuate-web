@@ -220,6 +220,8 @@ export type Company = {
   fiscal_year_end_month: number;
   periods: FinancialPeriod[];
   extraction_flags: ExtractionFlag[];
+  share_count_label?: string | null;
+  valuation_note?: string | null;
 };
 
 export type Assumptions = {

@@ -6,7 +6,7 @@ Frontend for [Valuate](https://valuate.kristenmartino.ai), a portfolio prototype
 
 The home page offers 18 sample companies across five model categories and a ticker search. Search requires a SEC 10-K; extraction may fail on missing required fields. The default FCFF model is not suitable for every company outside the explicitly modeled categories.
 
-Dot and hyphen share-class symbols use one canonical route: `BRK.B`, `brk.b`, and `BRK-B` resolve to `/v/BRK-B`. Direct legacy dot URLs redirect as well. Ticker recognition is separate from valuation coverage: Berkshire currently lacks required extracted financial values, so the workspace reports “Ticker recognized; valuation unavailable” instead of inventing a per-share estimate.
+Dot and hyphen share-class symbols use one canonical route: `BRK.B`, `brk.b`, and `BRK-B` resolve to `/v/BRK-B`. Direct legacy dot URLs redirect as well. Berkshire now uses filing-tagged annual average equivalent shares for the requested class, with dimensioned premiums and cash. Its workspace displays a simplified justified-P/B estimate using consolidated GAAP earnings and Berkshire shareholders' equity. This is not a sum-of-the-parts valuation; investment gains can distort ROE, and annual average shares differ from year-end shares. The share-count row and source details identify the equivalent Class A or B basis. Ticker recognition remains separate from valuation coverage: required missing data still produces an explicit unavailable state.
 
 At `/v/[ticker]`, the workspace shows:
 

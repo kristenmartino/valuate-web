@@ -274,6 +274,9 @@ export default function Workspace({ ticker }: { ticker: string }) {
           </a>
         </div>
         <p className="mt-2 text-xs font-medium text-teal-800 dark:text-teal-300">{modelName}</p>
+        {company.valuation_note && (
+          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{company.valuation_note}</p>
+        )}
         <nav aria-label="Workspace sections" className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-zinc-200 pt-3 text-sm dark:border-zinc-800">
           <a className="underline underline-offset-4" href="#valuation">Valuation</a>
           <a className="underline underline-offset-4" href="#review">Review data</a>
@@ -581,7 +584,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       </section>
       )}
 
-      <StatementsPanel periods={company.periods} />
+      <StatementsPanel periods={company.periods} shareCountLabel={company.share_count_label} />
     </div>
   );
 }
