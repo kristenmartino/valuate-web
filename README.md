@@ -85,6 +85,8 @@ The API preserves the full Monte Carlo histogram and supplies a second histogram
 
 Trading-comps copy distinguishes market context from the DCF-implied row, which is available for standard and energy models.
 
+The trading-comps median uses only returned peers with a positive, finite multiple in each column; the target and DCF-implied row are excluded. The panel labels this inclusion rule and shows its contributing count per metric, including zero available peers. Negative and zero multiples remain visible in individual rows. Missing or nonfinite multiples render as a dash without an `x` suffix. Market data is requested when the workspace loads, but the panel does not expose provider as-of timestamps or establish quote/input freshness.
+
 The balance-sheet table shows parent versus consolidated equity coverage from recognized source concepts and displays noncontrolling interests separately. Reconciliation adds that component to parent equity and avoids counting it twice for a consolidated-equity tag. A saved Prologis record can acquire the missing component from the same filing without changing existing amounts or valuation inputs; this does not establish filing freshness. Unknown equity coverage remains explicitly labeled.
 
 ## Salesforce coverage repair
