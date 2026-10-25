@@ -12,7 +12,7 @@ At `/v/[ticker]`, the workspace shows:
 
 - Company, filing period, model category, and automated review status.
 - Estimated value and assumptions first, side by side on larger screens.
-- Data-review flags and correction controls, then segment revenue, peer multiples, simulations, projections, and extracted statements.
+- Data-review flags and correction controls, then a revenue breakdown, peer multiples, simulations, projections, and extracted statements.
 - Source details that open by click or keyboard: stored XBRL tags, AI-provided excerpts, calculation descriptions, or current correction notes.
 
 Diluted shares use share units rather than currency. Missing values are shown as dashes, not zero. Source labels describe origin, not verification. Internal XBRL scores are tag-priority heuristics; AI scores are self-reported, not calibrated accuracy probabilities. Automated checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. No flags does not mean every value has been verified.
@@ -88,3 +88,5 @@ The balance-sheet table shows parent versus consolidated equity coverage from re
 ## Salesforce coverage repair
 
 CRM shows noncurrent debt separately from current debt and uses the filed cash-flow D&A total across its saved history. Those inputs affect default WACC, the D&A/revenue assumption, and the valuation. Its payables row is labeled accounts payable, accrued expenses and other liabilities when that combined XBRL concept is present. Other unknown payables coverage is labeled unspecified, with per-period labels when coverage differs. The backend's targeted repair preserves existing user corrections, including the reviewed SG&A note; this does not establish that every other field has been manually verified.
+
+CRM's revenue breakdown displays five subscription/support service offerings and professional services and other, with full category names and tagged filing source details. The six categories must reconcile to consolidated revenue; the subscription subtotal is excluded from the bars to avoid double-counting. The panel identifies these as revenue categories because Salesforce reports one operating segment. This presentation does not change the consolidated valuation model.

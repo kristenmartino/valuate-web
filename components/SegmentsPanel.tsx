@@ -12,12 +12,14 @@ type Props = {
   segments: RevenueSegment[];
   totalRevenue: string; // raw decimal string from the consolidated revenue LineItem
   fiscalYear: number;
+  coverageNote?: string;
 };
 
 export default function SegmentsPanel({
   segments,
   totalRevenue,
   fiscalYear,
+  coverageNote,
 }: Props) {
   if (segments.length === 0) return null;
   const totalRev = Number(totalRevenue);
@@ -36,15 +38,15 @@ export default function SegmentsPanel({
 
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
-      <header className="flex items-baseline justify-between">
+      <header className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            Revenue by segment
+            Revenue breakdown
           </h3>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            FY{fiscalYear}, as reported by the filer · extracted from the
-            segment-reporting note
+            FY{fiscalYear} · revenue categories from filing disclosures
           </p>
+          {coverageNote && <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400">{coverageNote}</p>}
         </div>
         <span
           className={`text-xs font-medium ${
@@ -70,7 +72,7 @@ export default function SegmentsPanel({
               className="flex flex-wrap items-center gap-3 text-sm"
 
             >
-              <span className="w-32 shrink-0 truncate text-zinc-900 dark:text-zinc-100">
+              <span className="w-full shrink-0 text-zinc-900 sm:w-56 dark:text-zinc-100">
                 {s.name}
               </span>
               <div className="relative h-6 flex-1 overflow-hidden rounded bg-zinc-100 dark:bg-zinc-800">

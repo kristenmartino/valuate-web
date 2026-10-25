@@ -446,7 +446,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <details className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
           <summary className="cursor-pointer py-1 text-teal-800 underline underline-offset-4 dark:text-teal-300">How sources and review flags work</summary>
           <div className="mt-3 max-w-3xl space-y-2 leading-relaxed">
-            <p>SEC XBRL values come from tagged company facts. AI extraction fills gaps from filing text; calculated values use formulas; user corrections replace the saved current value.</p>
+            <p>SEC XBRL values come from tagged company facts or the filing’s inline XBRL. AI extraction fills gaps from filing text; calculated values use formulas; user corrections replace the saved current value.</p>
             <p>Internal XBRL scores are assigned by tag priority (1.0 for a primary tag; 0.95 for an alternate). AI scores are self-reported. Neither is a measured probability that a number is correct.</p>
             <p>Automated checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. Reconciliation adds reported noncontrolling interests to parent equity, without counting them twice when equity already includes them. A score above the threshold, or no flags, does not establish accuracy. Open source details and check important inputs against the filing.</p>
           </div>
@@ -461,6 +461,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             segments={period.income_statement.revenue_segments}
             totalRevenue={period.income_statement.revenue.value}
             fiscalYear={period.fiscal_year}
+            coverageNote={company.cik.replace(/^0+/, "") === "1108524" ? "Five subscription and support service offerings plus professional services and other. These are revenue categories; Salesforce reports one operating segment." : undefined}
           />
         )}
 
