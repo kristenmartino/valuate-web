@@ -1,6 +1,10 @@
 import type { LineItem } from "./api";
 
 const COMPONENT_LABELS: Record<string, Record<string, string>> = {
+  accounts_payable: {
+    "us-gaap:AccountsPayableCurrent": "Accounts payable",
+    "us-gaap:AccountsPayableAndOtherAccruedLiabilitiesCurrent": "Accounts payable, accrued expenses and other liabilities",
+  },
   shareholders_equity: {
     "us-gaap:StockholdersEquity": "Parent shareholders' equity",
     "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest": "Equity including noncontrolling interests",
@@ -18,6 +22,7 @@ const COMPONENT_LABELS: Record<string, Record<string, string>> = {
 };
 
 const UNSPECIFIED_LABELS: Record<string, string> = {
+  accounts_payable: "Payables or accrued liabilities (coverage unspecified)",
   shareholders_equity: "Shareholders' equity (coverage unspecified)",
   investments: "Investment amount (coverage unspecified)",
   insurance_reserves: "Policy or claims liability (coverage unspecified)",
@@ -37,7 +42,8 @@ export function statementRowLabels(field: string, fallback: string, items: Array
   }
   return {
     label: field === "shareholders_equity" ? "Equity (different coverage)"
-      : field === "investments" ? "Investment amounts (different coverage)" : "Policy and claims liabilities (different coverage)",
+      : field === "investments" ? "Investment amounts (different coverage)"
+      : field === "accounts_payable" ? "Payables and accrued liabilities (different coverage)" : "Policy and claims liabilities (different coverage)",
     cellLabels: labels,
   };
 }

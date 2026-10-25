@@ -84,3 +84,7 @@ The API preserves the full Monte Carlo histogram and supplies a second histogram
 Trading-comps copy distinguishes market context from the DCF-implied row, which is available for standard and energy models.
 
 The balance-sheet table shows parent versus consolidated equity coverage from recognized source concepts and displays noncontrolling interests separately. Reconciliation adds that component to parent equity and avoids counting it twice for a consolidated-equity tag. A saved Prologis record can acquire the missing component from the same filing without changing existing amounts or valuation inputs; this does not establish filing freshness. Unknown equity coverage remains explicitly labeled.
+
+## Salesforce coverage repair
+
+CRM shows noncurrent debt separately from current debt and uses the filed cash-flow D&A total across its saved history. Those inputs affect default WACC, the D&A/revenue assumption, and the valuation. Its payables row is labeled accounts payable, accrued expenses and other liabilities when that combined XBRL concept is present. Other unknown payables coverage is labeled unspecified, with per-period labels when coverage differs. The backend's targeted repair preserves existing user corrections, including the reviewed SG&A note; this does not establish that every other field has been manually verified.

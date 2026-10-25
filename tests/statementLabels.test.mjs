@@ -13,6 +13,20 @@ loadTs.extensions['.ts'] = (module, filename) => {
 const { statementRowLabels } = loadTs('../lib/statementLabels.ts');
 const item = (tag, source = 'xbrl') => ({ value: '17816000000', source, xbrl_tag: `us-gaap:${tag}` });
 
+test('CRM combined payables and accruals never claim standalone accounts payable', () => {
+  assert.equal(statementRowLabels('accounts_payable', 'Accounts payable', [item('AccountsPayableAndOtherAccruedLiabilitiesCurrent')]).label, 'Accounts payable, accrued expenses and other liabilities');
+  assert.equal(statementRowLabels('accounts_payable', '', [item('AccountsPayableCurrent')]).label, 'Accounts payable');
+  for (const source of ['llm_html', 'derived', 'user_override']) {
+    assert.equal(statementRowLabels('accounts_payable', '', [item('AccountsPayableCurrent', source)]).label, 'Payables or accrued liabilities (coverage unspecified)');
+  }
+});
+
+test('mixed payables coverage is shown beside each period rather than as one total', () => {
+  const result = statementRowLabels('accounts_payable', '', [item('AccountsPayableCurrent'), item('AccountsPayableAndOtherAccruedLiabilitiesCurrent'), null]);
+  assert.equal(result.label, 'Payables and accrued liabilities (different coverage)');
+  assert.deepEqual(result.cellLabels, ['Accounts payable', 'Accounts payable, accrued expenses and other liabilities', null]);
+});
+
 test('Berkshire fixed maturities are not labeled as the whole investment portfolio', () => {
   const labels = statementRowLabels('investments', 'Investments', [
     item('AvailableForSaleSecuritiesDebtSecurities'), item('AvailableForSaleSecuritiesDebtSecurities'), null,
