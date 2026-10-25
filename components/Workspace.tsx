@@ -19,6 +19,7 @@ import {
 } from "@/lib/api";
 import { parseFetchError } from "@/lib/friendlyError";
 import { assumptionIssue } from "@/lib/assumptionValidation";
+import { assumptionsChanged } from "@/lib/assumptionControls";
 import { recordTickerVisit } from "@/lib/recentlyViewed";
 
 import AssumptionsPanel from "./AssumptionsPanel";
@@ -42,6 +43,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   const [status, setStatus] = useState<LoadStatus>({ phase: "idle" });
   const [company, setCompany] = useState<Company | null>(null);
   const [assumptions, setAssumptions] = useState<Assumptions | null>(null);
+  const [startingAssumptions, setStartingAssumptions] = useState<Assumptions | null>(null);
   const [valuation, setValuation] = useState<ValuationResponse | null>(null);
   const [comps, setComps] = useState<CompsResponse | null>(null);
   const [recomputing, setRecomputing] = useState(false);
@@ -70,6 +72,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         const a = await getDefaults(ticker);
         if (cancelled) return;
         setAssumptions(a);
+        setStartingAssumptions({ ...a });
 
         setStatus({ phase: "extracting", message: "Computing initial valuation..." });
         const v = await postValue(ticker, {
@@ -165,6 +168,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
     if (assumptions) recompute(assumptions);
   }
 
+  function handleAssumptionsChange(next: Assumptions) {
+    ++valuationRequestId.current;
+    setRecomputing(false);
+    setRecomputeError(null);
+    setPendingChanges(true);
+    setAssumptions(next);
+  }
+
   const period = company?.periods[0];
   const flagCount = company?.extraction_flags.length ?? 0;
   const inputIssue = assumptions && period ? assumptionIssue(assumptions, period.industry) : null;
@@ -241,7 +252,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
     );
   }
 
-  if (!company || !assumptions || !period || !valuation || !summary) {
+  if (!company || !assumptions || !startingAssumptions || !period || !valuation || !summary) {
     return null;
   }
 
@@ -423,19 +434,34 @@ export default function Workspace({ ticker }: { ticker: string }) {
       </section>
 
       <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Assumptions
-        </h3>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            Assumptions
+          </h3>
+          <button
+            type="button"
+            disabled={!assumptionsChanged(assumptions, startingAssumptions)}
+            onClick={() => handleAssumptionsChange({ ...startingAssumptions })}
+            title="Restore all values loaded when this workspace opened."
+            className="rounded border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-default disabled:opacity-40 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Restore starting assumptions
+          </button>
+        </div>
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
           Adjust the inputs to recalculate the estimate and simulation.
         </p>
         <div className="mt-6">
           <AssumptionsPanel
             value={assumptions}
-            onChange={(next) => { ++valuationRequestId.current; setRecomputing(false); setRecomputeError(null); setPendingChanges(true); setAssumptions(next); }}
+            startingValues={startingAssumptions}
+            onChange={handleAssumptionsChange}
             industry={period.industry}
           />
         </div>
+        <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-500">
+          Restore returns every assumption to its exact value when this workspace opened.
+        </p>
       </section>
 
       </div>

@@ -2,6 +2,7 @@
 
 import type { Assumptions, Industry } from "@/lib/api";
 import { formatPercent } from "@/lib/api";
+import { sliderBounds, sliderKeyValue } from "@/lib/assumptionControls";
 
 type SliderConfig = {
   key: keyof Assumptions;
@@ -142,10 +143,12 @@ const ENERGY_RATIOS: SliderConfig[] = [
 
 export default function AssumptionsPanel({
   value,
+  startingValues,
   onChange,
   industry = "standard",
 }: {
   value: Assumptions;
+  startingValues: Assumptions;
   onChange: (next: Assumptions) => void;
   industry?: Industry;
 }) {
@@ -160,6 +163,7 @@ export default function AssumptionsPanel({
           title="DDM inputs — Gordon dividend discount model"
           sliders={BANK_DRIVERS}
           value={value}
+          startingValues={startingValues}
           update={update}
         />
         <HistoricalContext fields={BANK_CONTEXT} value={value} />
@@ -179,6 +183,7 @@ export default function AssumptionsPanel({
           title="Justified-P/B inputs"
           sliders={INSURER_DRIVERS}
           value={value}
+          startingValues={startingValues}
           update={update}
         />
         <HistoricalContext fields={INSURER_CONTEXT} value={value} />
@@ -200,6 +205,7 @@ export default function AssumptionsPanel({
           title="Gordon growth inputs — approximate FFO"
           sliders={REIT_DRIVERS}
           value={value}
+          startingValues={startingValues}
           update={update}
         />
         <HistoricalContext fields={REIT_CONTEXT} value={value} />
@@ -220,12 +226,14 @@ export default function AssumptionsPanel({
           title="Forward-looking drivers (Monte Carlo inputs)"
           sliders={ENERGY_DRIVERS}
           value={value}
+          startingValues={startingValues}
           update={update}
         />
         <Group
           title="Historical ratios"
           sliders={ENERGY_RATIOS}
           value={value}
+          startingValues={startingValues}
           update={update}
         />
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
@@ -244,12 +252,14 @@ export default function AssumptionsPanel({
         title="Forward-looking drivers (Monte Carlo inputs)"
         sliders={STANDARD_DRIVERS}
         value={value}
+        startingValues={startingValues}
         update={update}
       />
       <Group
         title="Historical ratios"
         sliders={STANDARD_RATIOS}
         value={value}
+        startingValues={startingValues}
         update={update}
       />
     </div>
@@ -286,11 +296,13 @@ function Group({
   title,
   sliders,
   value,
+  startingValues,
   update,
 }: {
   title: string;
   sliders: SliderConfig[];
   value: Assumptions;
+  startingValues: Assumptions;
   update: (key: keyof Assumptions, n: number) => void;
 }) {
   return (
@@ -307,6 +319,7 @@ function Group({
             max={s.max}
             step={s.step}
             value={value[s.key]}
+            startingValue={startingValues[s.key]}
             onChange={(n) => update(s.key, n)}
           />
         ))}
@@ -321,6 +334,7 @@ function Slider({
   max,
   step,
   value,
+  startingValue,
   onChange,
 }: {
   label: string;
@@ -328,8 +342,10 @@ function Slider({
   max: number;
   step: number;
   value: number;
+  startingValue: number;
   onChange: (n: number) => void;
 }) {
+  const bounds = sliderBounds({ min, max, step }, value, startingValue);
   return (
     <label className="block">
       <div className="flex items-baseline justify-between">
@@ -340,16 +356,24 @@ function Slider({
       </div>
       <input
         type="range"
-        min={min}
-        max={max}
-        step={step}
+        min={bounds.min}
+        max={bounds.max}
+        step="any"
         value={value}
+        aria-valuetext={formatPercent(value, 2)}
         onChange={(e) => onChange(Number(e.target.value))}
+        onKeyDown={(e) => {
+          const next = sliderKeyValue(e.key, value, { ...bounds, step });
+          if (next !== null) {
+            e.preventDefault();
+            onChange(next);
+          }
+        }}
         className="mt-1.5 w-full accent-zinc-900 dark:accent-zinc-100"
       />
       <div className="mt-0.5 flex justify-between font-mono text-[10px] text-zinc-400 dark:text-zinc-500">
-        <span>{formatPercent(min, 1)}</span>
-        <span>{formatPercent(max, 1)}</span>
+        <span>{formatPercent(bounds.min, 1)}</span>
+        <span>{formatPercent(bounds.max, 1)}</span>
       </div>
     </label>
   );
