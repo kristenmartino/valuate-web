@@ -5,6 +5,7 @@ import {
   type PeerMultiples,
   formatMoney,
 } from "@/lib/api";
+import { formatMultiple, positivePeerCounts } from "@/lib/compsDisplay";
 
 type Props = {
   comps: CompsResponse;
@@ -19,15 +20,8 @@ type Props = {
   } | null;
 };
 
-const NA = "—";
-
-function numFmt(x: number | null | undefined, digits = 1): string {
-  if (x === null || x === undefined || !Number.isFinite(x)) return NA;
-  return x.toFixed(digits);
-}
-
 function bnFmt(x: number | null | undefined): string {
-  if (x === null || x === undefined || !Number.isFinite(x)) return NA;
+  if (x === null || x === undefined || !Number.isFinite(x)) return "—";
   return formatMoney(x);
 }
 
@@ -57,6 +51,7 @@ function Cell({
 
 export default function CompsPanel({ comps, dcfImplied }: Props) {
   if (!comps.peers.length && !comps.target_market) return null;
+  const counts = positivePeerCounts(comps.peers);
 
   const allRows: Array<{
     label: string;
@@ -136,9 +131,9 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
                 <Cell bold={row.isTarget}>
                   {bnFmt(row.data?.enterprise_value)}
                 </Cell>
-                <Cell bold={row.isTarget}>{numFmt(row.data?.pe_ratio)}x</Cell>
-                <Cell bold={row.isTarget}>{numFmt(row.data?.ev_revenue)}x</Cell>
-                <Cell bold={row.isTarget}>{numFmt(row.data?.ev_ebitda)}x</Cell>
+                <Cell bold={row.isTarget}>{formatMultiple(row.data?.pe_ratio)}</Cell>
+                <Cell bold={row.isTarget}>{formatMultiple(row.data?.ev_revenue)}</Cell>
+                <Cell bold={row.isTarget}>{formatMultiple(row.data?.ev_ebitda)}</Cell>
               </tr>
             ))}
             <tr className="border-t-2 border-zinc-300 dark:border-zinc-700">
@@ -146,13 +141,22 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
                 colSpan={2}
                 className="px-3 py-1.5 text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-500"
               >
-                Peer median
+                Peer median (positive values)
               </td>
               <Cell muted>—</Cell>
               <Cell muted>—</Cell>
-              <Cell muted>{numFmt(comps.median_pe)}x</Cell>
-              <Cell muted>{numFmt(comps.median_ev_revenue)}x</Cell>
-              <Cell muted>{numFmt(comps.median_ev_ebitda)}x</Cell>
+              <Cell muted>
+                {formatMultiple(comps.median_pe)}
+                <span className="block whitespace-nowrap text-xs">{counts.pe_ratio} of {comps.peers.length} peers</span>
+              </Cell>
+              <Cell muted>
+                {formatMultiple(comps.median_ev_revenue)}
+                <span className="block whitespace-nowrap text-xs">{counts.ev_revenue} of {comps.peers.length} peers</span>
+              </Cell>
+              <Cell muted>
+                {formatMultiple(comps.median_ev_ebitda)}
+                <span className="block whitespace-nowrap text-xs">{counts.ev_ebitda} of {comps.peers.length} peers</span>
+              </Cell>
             </tr>
             {dcfImplied && (
               <tr className="border-b border-zinc-200 dark:border-zinc-800">
@@ -165,17 +169,23 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
                 </td>
                 <Cell highlight>{bnFmt(dcfImplied.market_cap)}</Cell>
                 <Cell highlight>{bnFmt(dcfImplied.enterprise_value)}</Cell>
-                <Cell highlight>{numFmt(dcfImplied.pe_ratio)}x</Cell>
-                <Cell highlight>{numFmt(dcfImplied.ev_revenue)}x</Cell>
-                <Cell highlight>{numFmt(dcfImplied.ev_ebitda)}x</Cell>
+                <Cell highlight>{formatMultiple(dcfImplied.pe_ratio)}</Cell>
+                <Cell highlight>{formatMultiple(dcfImplied.ev_revenue)}</Cell>
+                <Cell highlight>{formatMultiple(dcfImplied.ev_ebitda)}</Cell>
               </tr>
             )}
           </tbody>
         </table>
       </div>
       <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-500">
-        Peer market data via Yahoo Finance (refreshed on each load). Numbers
-        are LTM where available.
+        Each median includes only returned peers with a positive, finite value in
+        that column. Missing, zero and negative values are excluded; the target
+        and DCF-implied rows are excluded. Counts can differ by column.
+      </p>
+      <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
+        Market data is requested from Yahoo Finance when the workspace loads.
+        This panel does not expose provider as-of timestamps; a new request does
+        not establish that every quote or financial input is current.
       </p>
     </section>
   );
