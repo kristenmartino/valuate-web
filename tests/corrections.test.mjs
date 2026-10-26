@@ -80,3 +80,15 @@ test('invalid numeric inputs cannot reach the API', () => {
   assert.equal(parseCorrectionValue('-2.5M'), '-2500000');
   assert.equal(parseCorrectionValue('0'), '0');
 });
+
+
+test('a proxy review uses its display scope while preserving the correction API field', () => {
+  const c = structuredClone(company);
+  c.operating_income_label = 'EBIT proxy';
+  c.periods[0].income_statement.operating_income = item('12263000000', 'Calculated proxy source');
+  const flag = { field_path: 'income_statement.operating_income', current_value: '12263000000' };
+  assert.equal(correctionOptions(c, flag)[0].label, 'EBIT proxy');
+  assert.deepEqual(correctionRequest(c, flag, 'income_statement.operating_income', '12.263B', 'Reviewed formula'), {
+    field_path: 'income_statement.operating_income', value: '12263000000', source_quote: 'Reviewed formula',
+  });
+});

@@ -565,7 +565,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 <th className="py-2 pr-4 font-medium">Year</th>
                 <th className="py-2 pr-4 font-medium">Revenue</th>
                 <th className="py-2 pr-4 font-medium">{company.operating_income_label ?? "Op income"}</th>
-                <th className="py-2 pr-4 font-medium">NOPAT</th>
+                <th className="py-2 pr-4 font-medium">{company.operating_income_label ? "After-tax proxy" : "NOPAT"}</th>
                 <th className="py-2 pr-4 font-medium">Capex</th>
                 <th className="py-2 pr-4 font-medium">{combinedDa ? "D&A + other" : "D&A"}</th>
                 <th className="py-2 pr-4 font-medium">FCFF</th>

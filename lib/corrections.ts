@@ -12,7 +12,8 @@ export function correctionOptions(company: Company, flag: ExtractionFlag) {
     ? BALANCE_SHEET_FIELDS
     : [{
         fieldPath: flag.field_path,
-        label: flag.field_path.split(".").at(-1)!.replaceAll("_", " "),
+        label: flag.field_path === "income_statement.operating_income" && company.operating_income_label
+          ? company.operating_income_label : flag.field_path.split(".").at(-1)!.replaceAll("_", " "),
       }];
 
   return fields.flatMap(({ fieldPath, label }) => {

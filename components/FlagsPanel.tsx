@@ -80,7 +80,7 @@ function FlagRow({
   const preview = parsed !== null ? formatLineItem(parsed, fieldPath) : null;
   const fieldLabel = aggregateFlag
     ? "Balance-sheet reconciliation"
-    : flag.field_path.split(".").at(-1)!.replaceAll("_", " ");
+    : options[0]?.label ?? flag.field_path.split(".").at(-1)!.replaceAll("_", " ");
 
   function selectField(nextPath: string) {
     const next = options.find((option) => option.fieldPath === nextPath);
