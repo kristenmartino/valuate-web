@@ -225,6 +225,7 @@ export type Company = {
   periods: FinancialPeriod[];
   extraction_flags: ExtractionFlag[];
   share_count_label?: string | null;
+  operating_income_label?: string | null;
   valuation_note?: string | null;
 };
 

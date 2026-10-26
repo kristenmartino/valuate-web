@@ -147,12 +147,14 @@ export default function AssumptionsPanel({
   onChange,
   industry = "standard",
   combinedDa = false,
+  operatingIncomeLabel,
 }: {
   value: Assumptions;
   startingValues: Assumptions;
   onChange: (next: Assumptions) => void;
   industry?: Industry;
   combinedDa?: boolean;
+  operatingIncomeLabel?: string | null;
 }) {
   const update = (key: keyof Assumptions, n: number) => {
     onChange({ ...value, [key]: n });
@@ -252,7 +254,7 @@ export default function AssumptionsPanel({
     <div className="space-y-8">
       <Group
         title="Forward-looking drivers (Monte Carlo inputs)"
-        sliders={STANDARD_DRIVERS}
+        sliders={STANDARD_DRIVERS.map(s => s.key === "operating_margin" && operatingIncomeLabel ? { ...s, label: `${operatingIncomeLabel} / revenue` } : s)}
         value={value}
         startingValues={startingValues}
         update={update}

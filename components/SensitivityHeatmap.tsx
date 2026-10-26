@@ -13,7 +13,7 @@ function colorFor(value: number, min: number, max: number): string {
   return `hsl(${hue} 50% ${lightness}%)`;
 }
 
-export default function SensitivityHeatmap({ grid }: { grid: SensitivityGrid }) {
+export default function SensitivityHeatmap({ grid, operatingIncomeLabel }: { grid: SensitivityGrid; operatingIncomeLabel?: string | null }) {
   const flat = grid.values.flat().filter((v): v is number => v !== null);
   const min = flat.length > 0 ? Math.min(...flat) : 0;
   const max = flat.length > 0 ? Math.max(...flat) : 0;
@@ -24,7 +24,7 @@ export default function SensitivityHeatmap({ grid }: { grid: SensitivityGrid }) 
         <thead>
           <tr>
             <th className="px-2 py-1 text-right font-mono font-medium text-zinc-500">
-              ↓ rev / op →
+              {operatingIncomeLabel ? `↓ rev / ${operatingIncomeLabel} margin →` : "↓ rev / op →"}
             </th>
             {grid.operating_margin_axis.map((om) => (
               <th

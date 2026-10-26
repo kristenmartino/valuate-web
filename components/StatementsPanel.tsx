@@ -8,6 +8,7 @@ import { statementRowLabels } from "@/lib/statementLabels";
 type Props = {
   periods: FinancialPeriod[]; // newest-first; all share the same industry
   shareCountLabel?: string | null;
+  operatingIncomeLabel?: string | null;
 };
 
 // Display order + human labels per statement, per industry. Order matches
@@ -251,7 +252,7 @@ function StatementTable({
   );
 }
 
-export default function StatementsPanel({ periods, shareCountLabel }: Props) {
+export default function StatementsPanel({ periods, shareCountLabel, operatingIncomeLabel }: Props) {
   if (periods.length === 0) return null;
   const industry = periods[0].industry;
   const fields =
@@ -281,7 +282,7 @@ export default function StatementsPanel({ periods, shareCountLabel }: Props) {
       <div className="mt-6 space-y-8">
         <StatementTable
           title={incomeTitle}
-          fields={fields.income.map(([key, label]) => [key, key === "diluted_shares_outstanding" && shareCountLabel ? shareCountLabel : label])}
+          fields={fields.income.map(([key, label]) => [key, key === "diluted_shares_outstanding" && shareCountLabel ? shareCountLabel : key === "operating_income" && operatingIncomeLabel ? operatingIncomeLabel : label])}
           periods={periods}
           statement="income"
         />

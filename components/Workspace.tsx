@@ -217,9 +217,9 @@ export default function Workspace({ ticker }: { ticker: string }) {
       enterprise_value: p.enterprise_value,
       pe_ratio: ni > 0 ? p.equity_value / ni : null,
       ev_revenue: rev > 0 ? p.enterprise_value / rev : null,
-      ev_ebitda: !isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization) && ebitda > 0 ? p.enterprise_value / ebitda : null,
+      ev_ebitda: !company?.operating_income_label && !isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization) && ebitda > 0 ? p.enterprise_value / ebitda : null,
     };
-  }, [period, valuation]);
+  }, [period, valuation, company?.operating_income_label]);
 
   if (status.phase === "extracting" || (status.phase === "idle" && !company)) {
     return (
@@ -363,7 +363,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
             <>
               <ExtractStat label="Revenue" item={period.income_statement.revenue} />
               <ExtractStat
-                label="Operating income"
+                label={company.operating_income_label ?? "Operating income"}
                 item={period.income_statement.operating_income}
               />
               <ExtractStat label="Net income" item={period.income_statement.net_income} />
@@ -457,6 +457,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <div className="mt-6">
           <AssumptionsPanel
             combinedDa={combinedDa}
+            operatingIncomeLabel={company.operating_income_label}
             value={assumptions}
             startingValues={startingAssumptions}
             onChange={handleAssumptionsChange}
@@ -496,7 +497,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         )}
 
       {comps && (comps.peers.length > 0 || comps.target_market) && (
-        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : undefined} />
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : company.operating_income_label ? "The DCF-implied EV/EBITDA multiple is unavailable because the model uses a calculated EBIT proxy that retains non-operating items. Market multiples retain the provider’s definitions." : undefined} />
       )}
 
       <div
@@ -537,14 +538,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
         {(period.industry === "standard" || period.industry === "energy") && (
           <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              Sensitivity (revenue growth × operating margin)
+              Sensitivity (revenue growth × {company.operating_income_label ? `${company.operating_income_label} margin` : "operating margin"})
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
               Estimated value per share at each combination
             </p>
             <div className="mt-4">
               {valuation.sensitivity && (
-                <SensitivityHeatmap grid={valuation.sensitivity} />
+                <SensitivityHeatmap grid={valuation.sensitivity} operatingIncomeLabel={company.operating_income_label} />
               )}
             </div>
           </section>
@@ -563,7 +564,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
               <tr className="border-b border-zinc-200 text-left text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
                 <th className="py-2 pr-4 font-medium">Year</th>
                 <th className="py-2 pr-4 font-medium">Revenue</th>
-                <th className="py-2 pr-4 font-medium">Op income</th>
+                <th className="py-2 pr-4 font-medium">{company.operating_income_label ?? "Op income"}</th>
                 <th className="py-2 pr-4 font-medium">NOPAT</th>
                 <th className="py-2 pr-4 font-medium">Capex</th>
                 <th className="py-2 pr-4 font-medium">{combinedDa ? "D&A + other" : "D&A"}</th>
@@ -616,7 +617,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       </section>
       )}
 
-      <StatementsPanel periods={company.periods} shareCountLabel={company.share_count_label} />
+      <StatementsPanel periods={company.periods} shareCountLabel={company.share_count_label} operatingIncomeLabel={company.operating_income_label} />
     </div>
   );
 }
