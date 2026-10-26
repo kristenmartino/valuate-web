@@ -106,3 +106,9 @@ CSCO uses its tagged annual depreciation, amortization and other cash-flow adjus
 The DCF-implied EV/EBITDA multiple is unavailable for this combined adjustment, with an explanation in the comps panel. Operating income plus this proxy is not presented as pure EBITDA; provider market multiples retain their own definitions.
 
 The backend replaces incomplete machine-extracted D&A fields across the saved history only after all affected annual periods have matching filing facts. The repair preserves corrected debt, reviewed SG&A and other saved fields. Its combined adjustment/revenue average changes the default D&A ratio and valuation; WACC and other assumptions are unchanged. Missing tagged latest-period data fails explicitly on new extraction, and failed saved-record repair retains the prior values and warning. These targeted checks do not expand the historical extraction baseline.
+
+## Apple debt coverage
+
+AAPL uses filed noncurrent term debt separately from short-term debt, which already includes current term maturities and commercial paper. The FY2025 noncurrent amount is $78.328B; using the inclusive $90.678B total in that slot would count the $12.350B current portion twice. The backend repairs known inclusive machine fields across the saved history while preserving other amounts and reviewer corrections. Failed repairs retain the saved figures and a debt-coverage warning.
+
+The corrected debt feeds the net-debt bridge and the default WACC calculation. With the saved FY2025 inputs, WACC remains at its existing 7% floor and the other starting assumptions are unchanged. This targeted selection does not certify every financial field or expand the historical extraction baseline.
