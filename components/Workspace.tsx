@@ -21,6 +21,7 @@ import { parseFetchError } from "@/lib/friendlyError";
 import { assumptionIssue } from "@/lib/assumptionValidation";
 import { assumptionsChanged } from "@/lib/assumptionControls";
 import { recordTickerVisit } from "@/lib/recentlyViewed";
+import { isCiscoCombinedDa } from "@/lib/statementLabels";
 
 import AssumptionsPanel from "./AssumptionsPanel";
 import CompsPanel from "./CompsPanel";
@@ -216,7 +217,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       enterprise_value: p.enterprise_value,
       pe_ratio: ni > 0 ? p.equity_value / ni : null,
       ev_revenue: rev > 0 ? p.enterprise_value / rev : null,
-      ev_ebitda: ebitda > 0 ? p.enterprise_value / ebitda : null,
+      ev_ebitda: !isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization) && ebitda > 0 ? p.enterprise_value / ebitda : null,
     };
   }, [period, valuation]);
 
@@ -256,6 +257,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
     return null;
   }
 
+  const combinedDa = company.cik.replace(/^0+/, "") === "858877"
+    && isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization);
   const modelName = {
     standard: "Five-year FCFF DCF",
     bank: "Dividend discount model",
@@ -453,6 +456,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         </p>
         <div className="mt-6">
           <AssumptionsPanel
+            combinedDa={combinedDa}
             value={assumptions}
             startingValues={startingAssumptions}
             onChange={handleAssumptionsChange}
@@ -492,7 +496,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         )}
 
       {comps && (comps.peers.length > 0 || comps.target_market) && (
-        <CompsPanel comps={comps} dcfImplied={dcfImplied} />
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : undefined} />
       )}
 
       <div
@@ -552,6 +556,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {valuation.projection.years.length}-year projection
         </h3>
+        {combinedDa && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">The add-back uses Cisco’s filed depreciation, amortization and other cash-flow adjustment as a combined proxy. It is not pure D&amp;A. Its historical ratio is projected against revenue.</p>}
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
@@ -561,7 +566,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 <th className="py-2 pr-4 font-medium">Op income</th>
                 <th className="py-2 pr-4 font-medium">NOPAT</th>
                 <th className="py-2 pr-4 font-medium">Capex</th>
-                <th className="py-2 pr-4 font-medium">D&amp;A</th>
+                <th className="py-2 pr-4 font-medium">{combinedDa ? "D&A + other" : "D&A"}</th>
                 <th className="py-2 pr-4 font-medium">FCFF</th>
               </tr>
             </thead>

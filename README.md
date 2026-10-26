@@ -98,3 +98,11 @@ CRM's revenue breakdown displays five subscription/support service offerings and
 ## Cisco debt coverage
 
 CSCO uses filed noncurrent debt separately from short-term debt, which already includes current maturities. The backend repairs older machine-extracted inclusive debt values across the saved history while preserving reviewed corrections, including the complete SG&A note. The corrected latest debt feeds both net debt and default WACC. Missing or conflicting source facts retain the saved values and a coverage warning; this targeted repair does not establish that every financial field has been verified.
+
+### Cisco cash-flow add-back
+
+CSCO uses its tagged annual depreciation, amortization and other cash-flow adjustment as a combined model proxy. The FY2026 amount is $2.540B; the generic $0.700B fact covers property and equipment only. Statement rows say **Depreciation, amortization and other**, the ratio says **D&A + other / revenue**, and the projection column says **D&A + other**. A note explains that the add-back is not pure D&A and its historical ratio is projected against revenue.
+
+The DCF-implied EV/EBITDA multiple is unavailable for this combined adjustment, with an explanation in the comps panel. Operating income plus this proxy is not presented as pure EBITDA; provider market multiples retain their own definitions.
+
+The backend replaces incomplete machine-extracted D&A fields across the saved history only after all affected annual periods have matching filing facts. The repair preserves corrected debt, reviewed SG&A and other saved fields. Its combined adjustment/revenue average changes the default D&A ratio and valuation; WACC and other assumptions are unchanged. Missing tagged latest-period data fails explicitly on new extraction, and failed saved-record repair retains the prior values and warning. These targeted checks do not expand the historical extraction baseline.

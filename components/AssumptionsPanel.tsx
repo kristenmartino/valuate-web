@@ -146,11 +146,13 @@ export default function AssumptionsPanel({
   startingValues,
   onChange,
   industry = "standard",
+  combinedDa = false,
 }: {
   value: Assumptions;
   startingValues: Assumptions;
   onChange: (next: Assumptions) => void;
   industry?: Industry;
+  combinedDa?: boolean;
 }) {
   const update = (key: keyof Assumptions, n: number) => {
     onChange({ ...value, [key]: n });
@@ -257,7 +259,7 @@ export default function AssumptionsPanel({
       />
       <Group
         title="Historical ratios"
-        sliders={STANDARD_RATIOS}
+        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
         value={value}
         startingValues={startingValues}
         update={update}

@@ -9,6 +9,7 @@ import { formatMultiple, positivePeerCounts } from "@/lib/compsDisplay";
 
 type Props = {
   comps: CompsResponse;
+  impliedEbitdaNote?: string;
   // For the DCF-implied row, computed by the parent so we don't have to
   // re-derive consolidated revenue and net income here.
   dcfImplied: {
@@ -49,7 +50,7 @@ function Cell({
   );
 }
 
-export default function CompsPanel({ comps, dcfImplied }: Props) {
+export default function CompsPanel({ comps, dcfImplied, impliedEbitdaNote }: Props) {
   if (!comps.peers.length && !comps.target_market) return null;
   const counts = positivePeerCounts(comps.peers);
 
@@ -95,6 +96,7 @@ export default function CompsPanel({ comps, dcfImplied }: Props) {
             : "Market multiples from Yahoo Finance for context. This table does not show multiples implied by the selected valuation model."}{" "}
           Reporting periods and valuation dates may differ.
         </p>
+        {impliedEbitdaNote && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{impliedEbitdaNote}</p>}
       </header>
 
       <div className="mt-4 overflow-x-auto">

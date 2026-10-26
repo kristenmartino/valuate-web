@@ -10,8 +10,19 @@ loadTs.extensions['.ts'] = (module, filename) => {
   });
   module._compile(outputText, filename);
 };
-const { statementRowLabels } = loadTs('../lib/statementLabels.ts');
+const { statementRowLabels, isCiscoCombinedDa } = loadTs('../lib/statementLabels.ts');
 const item = (tag, source = 'xbrl') => ({ value: '17816000000', source, xbrl_tag: `us-gaap:${tag}` });
+
+test('Cisco cash-flow adjustment retains its combined scope, including mixed history', () => {
+  const combined = { ...item('unused'), xbrl_tag: 'csco:DepreciationAmortizationAndOther' };
+  assert.equal(isCiscoCombinedDa(combined), true);
+  assert.equal(isCiscoCombinedDa({ ...combined, source: 'user_override' }), false);
+  assert.equal(statementRowLabels('depreciation_amortization', 'Depreciation and amortization', [combined, combined, null]).label, 'Depreciation, amortization and other');
+  const mixed = statementRowLabels('depreciation_amortization', 'Depreciation and amortization', [combined, item('DepreciationDepletionAndAmortization')]);
+  assert.equal(mixed.label, 'D&A adjustments (different coverage)');
+  assert.deepEqual(mixed.cellLabels, ['Depreciation, amortization and other', 'D&A amount (coverage unspecified)']);
+  assert.equal(statementRowLabels('depreciation_amortization', 'Depreciation and amortization', [item('DepreciationAndAmortization')]).label, 'Depreciation and amortization');
+});
 
 test('CRM combined payables and accruals never claim standalone accounts payable', () => {
   assert.equal(statementRowLabels('accounts_payable', 'Accounts payable', [item('AccountsPayableAndOtherAccruedLiabilitiesCurrent')]).label, 'Accounts payable, accrued expenses and other liabilities');

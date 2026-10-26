@@ -1,5 +1,9 @@
 import type { LineItem } from "./api";
 
+export function isCiscoCombinedDa(item: LineItem | null | undefined) {
+  return item?.source === "xbrl" && item.xbrl_tag === "csco:DepreciationAmortizationAndOther";
+}
+
 const COMPONENT_LABELS: Record<string, Record<string, string>> = {
   accounts_payable: {
     "us-gaap:AccountsPayableCurrent": "Accounts payable",
@@ -31,6 +35,14 @@ const UNSPECIFIED_LABELS: Record<string, string> = {
 // These schema slots accept both totals and components. A shared row label
 // must not imply equal coverage when periods use different source concepts.
 export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>) {
+  if (field === "depreciation_amortization" && items.some(isCiscoCombinedDa)) {
+    const labels = items.map(item => !item ? null : isCiscoCombinedDa(item)
+      ? "Depreciation, amortization and other" : "D&A amount (coverage unspecified)");
+    const distinct = new Set(labels.filter(Boolean));
+    return distinct.size <= 1
+      ? { label: "Depreciation, amortization and other", cellLabels: items.map(() => null) }
+      : { label: "D&A adjustments (different coverage)", cellLabels: labels };
+  }
   const concepts = COMPONENT_LABELS[field];
   if (!concepts) return { label: fallback, cellLabels: items.map(() => null) };
   const labels = items.map(item => item
