@@ -23,15 +23,19 @@ Corrections replace the current saved value and rerun validation and valuation. 
 
 Assumption sliders expand their ranges to include the current and starting values. They retain full API precision, including defaults between the usual keyboard increments. **Restore starting assumptions** returns all inputs to the exact values loaded when the workspace opened and recalculates the scenario; it does not round-trip the displayed percentages or change saved financials. For example, TXN's starting capex/revenue ratio of `0.22576254758204173` (displayed 22.58%) remains selectable above the usual 20% ceiling. Keyboard arrows retain each control's configured increment; Home and End select the displayed bounds.
 
+Starting assumptions combine historical calculations and model defaults. For standard DCF, eligible periods have positive revenue; tax expense / positive pre-tax income is limited to 0–50% per period, averaged, then limited to 15–30%. The tax fallback is 21%. IBM therefore starts at 15% despite its FY2025 filed effective rate of −2.3%; this is a normalized projection assumption, not a replacement for the filed tax benefit. Energy averages the same per-period bounded rates without the additional 15–30% normalization. Standard and energy working capital starts at a fixed 5% of the change in revenue, not a ratio calculated from historical working-capital balances.
+
+Capex/revenue and cash-flow add-back/revenue start at equal-weight averages of available annual ratios with positive revenue. Missing-ratio fallbacks are 4% for standard DCF and 20% for energy, and coverage follows the extracted cash-flow fields. Bank, insurer and REIT tax figures are read-only model context: an average of available tax/pre-tax ratios limited to 0–50% per period, or 21% if unavailable; these tax figures do not drive those models. The workspace labels the cash-flow assumptions and explains these starting rules beside the controls. Editing a scenario or restoring its starting assumptions does not change saved financial figures or review notes.
+
 ## Model categories
 
 | Category | Model | Controls and output |
 |---|---|---|
-| Industrial / tech | Five-year FCFF DCF | Growth, margin, WACC, terminal growth, historical ratios; projection and sensitivity grid |
+| Industrial / tech | Five-year FCFF DCF | Growth, margin, WACC, terminal growth, cash-flow assumptions; projection and sensitivity grid |
 | Bank | Dividend discount | Cost of equity and dividend growth |
 | Insurer | Justified price-to-book | ROE, cost of equity, long-term growth |
 | REIT | FFO Gordon growth | Cost of equity and FFO growth; AFFO cross-check |
-| Energy | Ten-year FCFF, no terminal value | Revenue growth, margin, WACC, historical ratios; projection, sensitivity, standardized-measure cross-check |
+| Energy | Ten-year FCFF, no terminal value | Revenue growth, margin, WACC, cash-flow assumptions; projection, sensitivity, standardized-measure cross-check |
 
 ## Implementation
 

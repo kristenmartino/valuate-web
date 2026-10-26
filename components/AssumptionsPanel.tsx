@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import type { Assumptions, Industry } from "@/lib/api";
 import { formatPercent } from "@/lib/api";
 import { sliderBounds, sliderKeyValue } from "@/lib/assumptionControls";
@@ -10,11 +11,12 @@ type SliderConfig = {
   min: number;
   max: number;
   step: number;
+  description?: string;
 };
 
 type ContextField = Pick<SliderConfig, "key" | "label">;
 
-// Standard (FCFF DCF) sliders: 4 MC drivers + 4 historical-derived ratios.
+// Standard FCFF inputs combine historical calculations and model defaults.
 const STANDARD_DRIVERS: SliderConfig[] = [
   { key: "revenue_growth", label: "Revenue growth", min: -0.1, max: 0.25, step: 0.005 },
   { key: "operating_margin", label: "Operating margin", min: 0, max: 0.6, step: 0.005 },
@@ -23,15 +25,37 @@ const STANDARD_DRIVERS: SliderConfig[] = [
 ];
 
 const STANDARD_RATIOS: SliderConfig[] = [
-  { key: "tax_rate", label: "Tax rate", min: 0, max: 0.45, step: 0.005 },
-  { key: "capex_ratio", label: "Capex / revenue", min: 0, max: 0.2, step: 0.001 },
-  { key: "da_ratio", label: "D&A / revenue", min: 0, max: 0.15, step: 0.001 },
+  {
+    key: "tax_rate",
+    label: "Tax rate (model assumption)",
+    min: 0,
+    max: 0.45,
+    step: 0.005,
+    description: "Starting tax rule: for periods with positive revenue and pre-tax income, divide tax expense by pre-tax income, limit each rate to 0–50%, then average. Use 21% if none are available; limit the result to 15–30% for standard DCF. This normalized assumption can differ from the filed effective rate.",
+  },
+  {
+    key: "capex_ratio",
+    label: "Capex / revenue",
+    min: 0,
+    max: 0.2,
+    step: 0.001,
+    description: "Starting value: average available annual capex/revenue ratios for periods with positive revenue; 4% fallback if unavailable. Coverage follows the extracted cash-flow input.",
+  },
+  {
+    key: "da_ratio",
+    label: "D&A / revenue",
+    min: 0,
+    max: 0.15,
+    step: 0.001,
+    description: "Starting value: average available annual cash-flow add-back/revenue ratios for periods with positive revenue; 4% fallback if unavailable. The input may be a combined adjustment where labeled.",
+  },
   {
     key: "working_capital_ratio",
-    label: "ΔWC / ΔRevenue",
+    label: "ΔWC / ΔRevenue (model assumption)",
     min: -0.2,
     max: 0.3,
     step: 0.005,
+    description: "Starting value: fixed 5% model default for incremental working capital per change in revenue. It is not calculated from the company’s historical working-capital balances.",
   },
 ];
 
@@ -56,7 +80,7 @@ const BANK_DRIVERS: SliderConfig[] = [
 
 const BANK_CONTEXT: ContextField[] = [
   { key: "operating_margin", label: "Return on equity (historical)" },
-  { key: "tax_rate", label: "Tax rate (historical)" },
+  { key: "tax_rate", label: "Tax rate (context only)" },
 ];
 
 // Insurer justified-P/B sliders: ROE is a real input here (not just context —
@@ -86,7 +110,7 @@ const INSURER_DRIVERS: SliderConfig[] = [
 ];
 
 const INSURER_CONTEXT: ContextField[] = [
-  { key: "tax_rate", label: "Tax rate (historical)" },
+  { key: "tax_rate", label: "Tax rate (context only)" },
 ];
 
 // REIT FFO-multiple sliders: Gordon growth on FFO, so the same two drivers
@@ -111,7 +135,7 @@ const REIT_DRIVERS: SliderConfig[] = [
 ];
 
 const REIT_CONTEXT: ContextField[] = [
-  { key: "tax_rate", label: "Tax rate (historical)" },
+  { key: "tax_rate", label: "Tax rate (context only)" },
 ];
 
 // Energy uses revenue growth in a fixed ten-year cash-flow projection.
@@ -129,15 +153,37 @@ const ENERGY_DRIVERS: SliderConfig[] = [
 ];
 
 const ENERGY_RATIOS: SliderConfig[] = [
-  { key: "tax_rate", label: "Tax rate", min: 0, max: 0.45, step: 0.005 },
-  { key: "capex_ratio", label: "Capex / revenue", min: 0, max: 0.5, step: 0.005 },
-  { key: "da_ratio", label: "Depletion+D&A / revenue", min: 0, max: 0.4, step: 0.005 },
+  {
+    key: "tax_rate",
+    label: "Tax rate (model assumption)",
+    min: 0,
+    max: 0.45,
+    step: 0.005,
+    description: "Starting tax rule: for periods with positive revenue and pre-tax income, divide tax expense by pre-tax income, limit each rate to 0–50%, then average. Use 21% if none are available. Energy does not apply the standard DCF’s additional 15–30% normalization.",
+  },
+  {
+    key: "capex_ratio",
+    label: "Capex / revenue",
+    min: 0,
+    max: 0.5,
+    step: 0.005,
+    description: "Starting value: average available annual capex/revenue ratios for periods with positive revenue; 20% fallback if unavailable. Coverage follows the extracted cash-flow input.",
+  },
+  {
+    key: "da_ratio",
+    label: "Depletion+D&A / revenue",
+    min: 0,
+    max: 0.4,
+    step: 0.005,
+    description: "Starting value: average available annual cash-flow add-back/revenue ratios for periods with positive revenue; 20% fallback if unavailable.",
+  },
   {
     key: "working_capital_ratio",
-    label: "ΔWC / ΔRevenue",
+    label: "ΔWC / ΔRevenue (model assumption)",
     min: -0.2,
     max: 0.3,
     step: 0.005,
+    description: "Starting value: fixed 5% model default for incremental working capital per change in revenue. It is not calculated from the company’s historical working-capital balances.",
   },
 ];
 
@@ -174,7 +220,7 @@ export default function AssumptionsPanel({
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
           This workspace uses the Gordon dividend discount model:{" "}
           <code>P = D₀(1+g) / (r−g)</code>. Cost of equity and dividend growth
-          drive the estimate. Historical figures are shown for context.
+          drive the estimate. The read-only figures do not drive this estimate.
         </p>
       </div>
     );
@@ -234,7 +280,7 @@ export default function AssumptionsPanel({
           update={update}
         />
         <Group
-          title="Historical ratios"
+          title="Cash-flow assumptions"
           sliders={ENERGY_RATIOS}
           value={value}
           startingValues={startingValues}
@@ -260,7 +306,7 @@ export default function AssumptionsPanel({
         update={update}
       />
       <Group
-        title="Historical ratios"
+        title="Cash-flow assumptions"
         sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
         value={value}
         startingValues={startingValues}
@@ -278,9 +324,9 @@ function HistoricalContext({
   value: Assumptions;
 }) {
   return (
-    <section aria-label="Historical context">
+    <section aria-label="Read-only model context">
       <h4 className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-500">
-        Historical context (read-only)
+        Model context (read-only)
       </h4>
       <dl className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
         {fields.map(({ key, label }) => (
@@ -292,6 +338,11 @@ function HistoricalContext({
           </div>
         ))}
       </dl>
+      <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
+        Tax context averages available tax expense / positive pre-tax income
+        ratios after limiting each to 0–50%; it uses 21% if none are available.
+        It can differ from a filed effective rate and does not drive this model.
+      </p>
     </section>
   );
 }
@@ -319,6 +370,7 @@ function Group({
           <Slider
             key={s.key}
             label={s.label}
+            description={s.description}
             min={s.min}
             max={s.max}
             step={s.step}
@@ -334,6 +386,7 @@ function Group({
 
 function Slider({
   label,
+  description,
   min,
   max,
   step,
@@ -342,6 +395,7 @@ function Slider({
   onChange,
 }: {
   label: string;
+  description?: string;
   min: number;
   max: number;
   step: number;
@@ -349,36 +403,45 @@ function Slider({
   startingValue: number;
   onChange: (n: number) => void;
 }) {
+  const descriptionId = useId();
   const bounds = sliderBounds({ min, max, step }, value, startingValue);
   return (
-    <label className="block">
-      <div className="flex items-baseline justify-between">
-        <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span>
-        <span className="font-mono text-sm tabular-nums text-zinc-900 dark:text-zinc-50">
-          {formatPercent(value, 2)}
-        </span>
-      </div>
-      <input
-        type="range"
-        min={bounds.min}
-        max={bounds.max}
-        step="any"
-        value={value}
-        aria-valuetext={formatPercent(value, 2)}
-        onChange={(e) => onChange(Number(e.target.value))}
-        onKeyDown={(e) => {
-          const next = sliderKeyValue(e.key, value, { ...bounds, step });
-          if (next !== null) {
-            e.preventDefault();
-            onChange(next);
-          }
-        }}
-        className="mt-1.5 w-full accent-zinc-900 dark:accent-zinc-100"
-      />
-      <div className="mt-0.5 flex justify-between font-mono text-[10px] text-zinc-400 dark:text-zinc-500">
-        <span>{formatPercent(bounds.min, 1)}</span>
-        <span>{formatPercent(bounds.max, 1)}</span>
-      </div>
-    </label>
+    <div>
+      <label className="block">
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-zinc-700 dark:text-zinc-300">{label}</span>
+          <span className="font-mono text-sm tabular-nums text-zinc-900 dark:text-zinc-50">
+            {formatPercent(value, 2)}
+          </span>
+        </div>
+        <input
+          type="range"
+          min={bounds.min}
+          max={bounds.max}
+          step="any"
+          value={value}
+          aria-valuetext={formatPercent(value, 2)}
+          aria-describedby={description ? descriptionId : undefined}
+          onChange={(e) => onChange(Number(e.target.value))}
+          onKeyDown={(e) => {
+            const next = sliderKeyValue(e.key, value, { ...bounds, step });
+            if (next !== null) {
+              e.preventDefault();
+              onChange(next);
+            }
+          }}
+          className="mt-1.5 w-full accent-zinc-900 dark:accent-zinc-100"
+        />
+        <div className="mt-0.5 flex justify-between font-mono text-[10px] text-zinc-400 dark:text-zinc-500">
+          <span>{formatPercent(bounds.min, 1)}</span>
+          <span>{formatPercent(bounds.max, 1)}</span>
+        </div>
+      </label>
+      {description && (
+        <p id={descriptionId} className="mt-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
+          {description}
+        </p>
+      )}
+    </div>
   );
 }
