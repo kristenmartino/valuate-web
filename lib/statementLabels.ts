@@ -4,6 +4,10 @@ export function isCiscoCombinedDa(item: LineItem | null | undefined) {
   return item?.source === "xbrl" && item.xbrl_tag === "csco:DepreciationAmortizationAndOther";
 }
 
+export function isAlphabetPpeDa(item: LineItem | null | undefined, cik?: string) {
+  return cik?.replace(/^0+/, "") === "1652044" && item?.source === "xbrl" && item.xbrl_tag === "us-gaap:Depreciation";
+}
+
 const COMPONENT_LABELS: Record<string, Record<string, string>> = {
   accounts_payable: {
     "us-gaap:AccountsPayableCurrent": "Accounts payable",
@@ -34,7 +38,18 @@ const UNSPECIFIED_LABELS: Record<string, string> = {
 
 // These schema slots accept both totals and components. A shared row label
 // must not imply equal coverage when periods use different source concepts.
-export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>) {
+export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>, context?: { cik?: string; legacyDebt?: boolean[] }) {
+  if (context?.cik?.replace(/^0+/, "") === "1652044" && ["depreciation_amortization", "short_term_debt", "long_term_debt"].includes(field)) {
+    const labels = items.map((item, i) => !item ? null : field === "depreciation_amortization"
+      ? isAlphabetPpeDa(item, context.cik) ? "PP&E depreciation (proxy)" : "Add-back (coverage unspecified)"
+      : item.source === "user_override" ? "Debt (reviewed; see source details)"
+      : field === "long_term_debt" ? context.legacyDebt?.[i] ? "Noncurrent debt including finance leases" : "Noncurrent debt"
+      : context.legacyDebt?.[i] ? "Current debt including finance leases" : "Current maturities + commercial paper");
+    const distinct = new Set(labels.filter(Boolean));
+    return distinct.size <= 1
+      ? { label: labels.find(Boolean) ?? fallback, cellLabels: items.map(() => null) }
+      : { label: field === "depreciation_amortization" ? "Add-backs (different coverage)" : field === "long_term_debt" ? "Noncurrent debt (different coverage)" : "Current debt (different coverage)", cellLabels: labels };
+  }
   if (field === "depreciation_amortization" && items.some(isCiscoCombinedDa)) {
     const labels = items.map(item => !item ? null : isCiscoCombinedDa(item)
       ? "Depreciation, amortization and other" : "D&A amount (coverage unspecified)");

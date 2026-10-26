@@ -1,3 +1,4 @@
+import { isAlphabetPpeDa } from "./statementLabels";
 import { type Company, type ExtractionFlag, isShareField, lookupLineItem } from "./api";
 
 const BALANCE_SHEET_FIELDS = [
@@ -19,7 +20,8 @@ export function correctionOptions(company: Company, flag: ExtractionFlag) {
   return fields.flatMap(({ fieldPath, label }) => {
     if (!/^(income_statement|balance_sheet|cash_flow_statement)\.[a-z_]+$/.test(fieldPath)) return [];
     const item = lookupLineItem(company, fieldPath);
-    return item ? [{ fieldPath, label, item }] : [];
+    const scopedLabel = fieldPath.endsWith(".depreciation_amortization") && isAlphabetPpeDa(item, company.cik) ? "PP&E depreciation (proxy)" : label;
+    return item ? [{ fieldPath, label: scopedLabel, item }] : [];
   });
 }
 

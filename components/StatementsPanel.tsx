@@ -6,6 +6,7 @@ import SourceDetails from "./SourceDetails";
 import { statementRowLabels } from "@/lib/statementLabels";
 
 type Props = {
+  companyCik?: string;
   periods: FinancialPeriod[]; // newest-first; all share the same industry
   shareCountLabel?: string | null;
   operatingIncomeLabel?: string | null;
@@ -201,11 +202,13 @@ function StatementTable({
   fields,
   periods,
   statement,
+  companyCik,
 }: {
   title: string;
   fields: Array<[string, string]>;
   periods: FinancialPeriod[];
   statement: "income" | "balance" | "cashflow";
+  companyCik?: string;
 }) {
   return (
     <div>
@@ -227,7 +230,7 @@ function StatementTable({
           <tbody>
             {fields.map(([key, label]) => {
               const items = periods.map(p => pickItem(p, statement, key));
-              const scope = statementRowLabels(key, label, items);
+              const scope = statementRowLabels(key, label, items, { cik: companyCik, legacyDebt: periods.map(p => p.balance_sheet.kind === "standard" && p.balance_sheet.long_term_debt?.xbrl_tag === "us-gaap:LongTermDebtAndCapitalLeaseObligations") });
               return (
                 <tr
                   key={key}
@@ -252,7 +255,7 @@ function StatementTable({
   );
 }
 
-export default function StatementsPanel({ periods, shareCountLabel, operatingIncomeLabel }: Props) {
+export default function StatementsPanel({ periods, shareCountLabel, operatingIncomeLabel, companyCik }: Props) {
   if (periods.length === 0) return null;
   const industry = periods[0].industry;
   const fields =
@@ -283,18 +286,21 @@ export default function StatementsPanel({ periods, shareCountLabel, operatingInc
         <StatementTable
           title={incomeTitle}
           fields={fields.income.map(([key, label]) => [key, key === "diluted_shares_outstanding" && shareCountLabel ? shareCountLabel : key === "operating_income" && operatingIncomeLabel ? operatingIncomeLabel : label])}
+          companyCik={companyCik}
           periods={periods}
           statement="income"
         />
         <StatementTable
           title={balanceTitle}
           fields={fields.balance}
+          companyCik={companyCik}
           periods={periods}
           statement="balance"
         />
         <StatementTable
           title="Cash flow statement"
           fields={fields.cashflow}
+          companyCik={companyCik}
           periods={periods}
           statement="cashflow"
         />

@@ -79,3 +79,22 @@ test('parent and consolidated equity coverage are distinguished', () => {
   assert.deepEqual(mixed.cellLabels, ["Parent shareholders' equity", 'Equity including noncontrolling interests']);
   assert.equal(statementRowLabels('shareholders_equity', '', [item('StockholdersEquity', 'llm_html')]).label, "Shareholders' equity (coverage unspecified)");
 });
+
+test('Alphabet PPE proxy is scoped to the filer and never labeled full D&A', () => {
+  const context = { cik: '0001652044' };
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation')], context).label, 'PP&E depreciation (proxy)');
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation')], { cik: '789019' }).label, 'D&A');
+  const labels = statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation'), item('Depreciation', 'user_override')], context);
+  assert.equal(labels.label, 'Add-backs (different coverage)');
+  assert.deepEqual(labels.cellLabels, ['PP&E depreciation (proxy)', 'Add-back (coverage unspecified)']);
+});
+
+test('Alphabet legacy finance-lease debt coverage remains visible per period', () => {
+  const context = { cik: '1652044', legacyDebt: [false, true] };
+  const long = statementRowLabels('long_term_debt', 'Long-term debt', [item('LongTermDebtNoncurrent'), item('LongTermDebtAndCapitalLeaseObligations')], context);
+  assert.equal(long.label, 'Noncurrent debt (different coverage)');
+  assert.deepEqual(long.cellLabels, ['Noncurrent debt', 'Noncurrent debt including finance leases']);
+  const current = statementRowLabels('short_term_debt', 'Short-term debt', [item('unused', 'derived'), item('unused', 'derived')], context);
+  assert.deepEqual(current.cellLabels, ['Current maturities + commercial paper', 'Current debt including finance leases']);
+  assert.equal(statementRowLabels('short_term_debt', 'Short-term debt', [item('unused', 'user_override')], context).label, 'Debt (reviewed; see source details)');
+});
