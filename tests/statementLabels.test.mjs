@@ -83,7 +83,7 @@ test('parent and consolidated equity coverage are distinguished', () => {
 test('Alphabet PPE proxy is scoped to the filer and never labeled full D&A', () => {
   const context = { cik: '0001652044' };
   assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation')], context).label, 'PP&E depreciation (proxy)');
-  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation')], { cik: '789019' }).label, 'D&A');
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation')], { cik: '789019' }).label, 'Depreciation (component; full D&A unverified)');
   const labels = statementRowLabels('depreciation_amortization', 'D&A', [item('Depreciation'), item('Depreciation', 'user_override')], context);
   assert.equal(labels.label, 'Add-backs (different coverage)');
   assert.deepEqual(labels.cellLabels, ['PP&E depreciation (proxy)', 'Add-back (coverage unspecified)']);
@@ -97,4 +97,15 @@ test('Alphabet legacy finance-lease debt coverage remains visible per period', (
   const current = statementRowLabels('short_term_debt', 'Short-term debt', [item('unused', 'derived'), item('unused', 'derived')], context);
   assert.deepEqual(current.cellLabels, ['Current maturities + commercial paper', 'Current debt including finance leases']);
   assert.equal(statementRowLabels('short_term_debt', 'Short-term debt', [item('unused', 'user_override')], context).label, 'Debt (reviewed; see source details)');
+});
+
+test('unqualified component tags never inherit a full D&A label on unfamiliar filers', () => {
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('Depreciation')]).label,'Depreciation (component; full D&A unverified)');
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationDepletionAndAmortizationPropertyPlantAndEquipment')]).label,'PP&E depreciation and amortization (component)');
+});
+test('an inclusive or face-value debt concept never claims verified noncurrent carrying debt', () => {
+  assert.equal(statementRowLabels('long_term_debt','Long-term debt',[item('LongTermDebt')]).label,'Debt amount (basis/current split unverified)');
+  const labels=statementRowLabels('long_term_debt','Long-term debt',[item('LongTermDebt'),item('LongTermDebtNoncurrent')]);
+  assert.equal(labels.label,'Debt amounts (different coverage)');
+  assert.deepEqual(labels.cellLabels,['Debt amount (basis/current split unverified)','Noncurrent debt']);
 });

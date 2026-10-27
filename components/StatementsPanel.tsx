@@ -44,7 +44,7 @@ const STANDARD_FIELDS: {
     ["property_plant_equipment_net", "Property, plant & equipment (net)"],
     ["total_assets", "Total assets"],
     ["accounts_payable", "Accounts payable"],
-    ["short_term_debt", "Short-term debt"],
+    ["short_term_debt", "Current debt"],
     ["total_current_liabilities", "Total current liabilities"],
     ["long_term_debt", "Long-term debt"],
     ["total_liabilities", "Total liabilities"],

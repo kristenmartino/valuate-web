@@ -58,6 +58,23 @@ export function statementRowLabels(field: string, fallback: string, items: Array
       ? { label: "Depreciation, amortization and other", cellLabels: items.map(() => null) }
       : { label: "D&A adjustments (different coverage)", cellLabels: labels };
   }
+  if (field === "depreciation_amortization" && items.some(item => item?.source === "xbrl" && ["us-gaap:Depreciation", "us-gaap:DepreciationDepletionAndAmortizationPropertyPlantAndEquipment"].includes(item.xbrl_tag ?? ""))) {
+    const labels = items.map(item => !item ? null : item.source === "xbrl" && item.xbrl_tag === "us-gaap:Depreciation"
+      ? "Depreciation (component; full D&A unverified)"
+      : item.source === "xbrl" && item.xbrl_tag === "us-gaap:DepreciationDepletionAndAmortizationPropertyPlantAndEquipment"
+      ? "PP&E depreciation and amortization (component)" : "Add-back (see source details)");
+    return new Set(labels.filter(Boolean)).size <= 1
+      ? { label: labels.find(Boolean) ?? fallback, cellLabels: items.map(() => null) }
+      : { label: "Add-backs (different coverage)", cellLabels: labels };
+  }
+  if (field === "long_term_debt" && items.some(item => item?.source === "xbrl" && item.xbrl_tag === "us-gaap:LongTermDebt")) {
+    const labels = items.map(item => !item ? null : item.source === "xbrl" && item.xbrl_tag === "us-gaap:LongTermDebt"
+      ? "Debt amount (basis/current split unverified)"
+      : item.source === "xbrl" && item.xbrl_tag === "us-gaap:LongTermDebtNoncurrent" ? "Noncurrent debt" : "Debt amount (coverage unspecified)");
+    return new Set(labels.filter(Boolean)).size <= 1
+      ? { label: labels.find(Boolean) ?? fallback, cellLabels: items.map(() => null) }
+      : { label: "Debt amounts (different coverage)", cellLabels: labels };
+  }
   const concepts = COMPONENT_LABELS[field];
   if (!concepts) return { label: fallback, cellLabels: items.map(() => null) };
   const labels = items.map(item => item
