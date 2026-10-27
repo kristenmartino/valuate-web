@@ -17,8 +17,11 @@ concurrency:
 jobs:
   typecheck:
     runs-on: ubuntu-latest
-    # Fresh runners install Chromium and its OS dependencies before browser QA.
     timeout-minutes: 10
+    # Match the pinned Playwright package and avoid fresh apt mirror downloads.
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.0-noble
+      options: --ipc=host
     steps:
       - uses: actions/checkout@v4
 
@@ -48,9 +51,6 @@ jobs:
           # construct a destination during the build phase. The actual
           # value is overridden by Vercel's production env.
           NEXT_PUBLIC_VALUATE_API: https://example.com
-
-      - name: Install browser for contract regressions
-        run: npx playwright install --with-deps chromium
 
       - name: Exercise rendered workspace contracts without external APIs
         run: npm run test:browser
