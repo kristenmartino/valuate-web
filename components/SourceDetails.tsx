@@ -11,7 +11,7 @@ export default function SourceDetails({ item, label }: { item: LineItem; label?:
         {item.xbrl_tag && <p className="break-all font-mono">{item.xbrl_tag}</p>}
         {!item.source_quote && !item.xbrl_tag && <p>No supporting excerpt or tag was stored for this value.</p>}
         {item.source === "llm_html" && <p>AI-provided excerpt. Check it against the filing before relying on the value.</p>}
-        {item.source === "user_override" && <p>Saved current correction; reviewer identity and previous values are not recorded.</p>}
+        {item.source === "user_override" && <p>Saved current correction. Earlier revisions are retained by the backend; individual reviewer identity is not recorded.</p>}
       </div>
     </details>
   );

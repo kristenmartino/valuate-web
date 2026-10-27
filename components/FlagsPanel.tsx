@@ -36,7 +36,7 @@ export default function FlagsPanel({
           {flags.length} item{flags.length === 1 ? "" : "s"} — check against the filing before correcting
         </span>
       </header>
-      <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">Corrections replace the saved current value. Reviewer identity and earlier corrections are not retained.</p>
+      <p className="mt-2 text-xs text-amber-800 dark:text-amber-300">Corrections update the saved current value and retain earlier backend revisions. Individual reviewer identity is not recorded. Changed records require fresh input qualification.</p>
       <ul className="mt-4 space-y-3">
         {flags.map((flag) => (
           <FlagRow
