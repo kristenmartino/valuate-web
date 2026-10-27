@@ -3,6 +3,7 @@
 import { type FinancialPeriod, type LineItem, type Qualification, formatLineItem } from "@/lib/api";
 
 import SourceDetails from "./SourceDetails";
+import StatementWarnings from "./StatementWarnings";
 import { statementRowLabels } from "@/lib/statementLabels";
 
 type Props = {
@@ -219,6 +220,7 @@ function StatementTable({
       <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-700 dark:text-zinc-300">
         {title}
       </h4>
+      {statement === 'balance' && <StatementWarnings qualification={qualification} />}
       <div className="mt-3 overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>
@@ -227,6 +229,7 @@ function StatementTable({
               {periods.map((p) => (
                 <th key={p.fiscal_year} className="py-2 pl-4 text-right font-medium">
                   FY{p.fiscal_year}
+                  {statement === 'balance' && qualification?.statement_warnings?.some(w => w.period_end === p.fiscal_period_end) && <a href="#historical-balance-warnings" className="mt-1 block text-xs text-amber-800 underline dark:text-amber-300">Basis warning</a>}
                 </th>
               ))}
             </tr>
@@ -251,6 +254,7 @@ function StatementTable({
                   </td>
                   {periods.map((p, index) => (
                     <td key={p.fiscal_year} className="py-2 pl-4">
+                      {statement === 'balance' && qualification?.statement_warnings?.some(w => w.period_end === p.fiscal_period_end && w.field_paths.includes(`balance_sheet.${key}`)) && <p className="mb-1 text-right text-xs text-amber-800 [overflow-wrap:anywhere] dark:text-amber-300">Unreconciled historical basis{qualification?.inputs.find(i => i.period_end === p.fiscal_period_end && i.field_path === `balance_sheet.${key}`)?.accession ? ` · source ${qualification.inputs.find(i => i.period_end === p.fiscal_period_end && i.field_path === `balance_sheet.${key}`)?.accession}` : ''}</p>}
                       {scope.cellLabels[index] && <p className="mb-1 text-right text-xs text-zinc-600 dark:text-zinc-400">{scope.cellLabels[index]}</p>}
                       <ProvenanceCell item={items[index]} field={key} label={`${scope.cellLabels[index] ?? scope.label}, FY${p.fiscal_year}`} />
                     </td>

@@ -1,3 +1,6 @@
 # Browser regression fixtures
 
 Recorded public responses from the preserved October 27, 2026 release. These are browser presentation/request tests, not fresh source qualification or accuracy evidence. Calculation operands are omitted from the recorded fixture's expandable qualification report to reduce size; one rendering test injects explicitly synthetic parent/noncontrolling dimensional operands to verify their visibility on mobile; full financial fields and saved correction notes are retained. The API is intercepted locally. Scenario responses are stubbed so tests can observe request precision, restore and stale-result behavior; model mathematics is tested in the backend. No external API, AI request, correction or publication is allowed by the test server.
+
+
+`met-response.json` retains the captured public MET financials, notes, defaults and numeric results. Its qualification metadata was independently recomputed from the pinned source fixtures for this policy, exposing the parent-equity proxy and FY2021 display warning. Operands are omitted for size; source quotes and warning accessions remain intact. These browser cases establish presentation and requests, not a common-share valuation or fresh source accuracy.

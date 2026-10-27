@@ -1,0 +1,2936 @@
+{
+  "company": {
+    "ticker": "MET",
+    "cik": "0001099219",
+    "name": "METLIFE INC",
+    "fiscal_year_end_month": 12,
+    "periods": [
+      {
+        "fiscal_year": 2025,
+        "fiscal_period_end": "2025-12-31",
+        "filing_accession": "0001099219-26-000013",
+        "filing_type": "10-K",
+        "industry": "insurer",
+        "income_statement": {
+          "kind": "insurer",
+          "premiums_earned": {
+            "value": "49779000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Premiums. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PremiumsEarnedNet=49779000000 USD; selected amount 49779000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PremiumsEarnedNet"
+          },
+          "net_investment_income": {
+            "value": "22559000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net investment income. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetInvestmentIncome=22559000000 USD; selected amount 22559000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetInvestmentIncome"
+          },
+          "benefits_and_claims": {
+            "value": "49718000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Policyholder benefits and claims. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PolicyholderBenefitsAndClaimsIncurredNet=49718000000 USD; selected amount 49718000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          },
+          "operating_expenses": {
+            "value": "13860000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Other expenses. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:OperatingExpenses=13860000000 USD; selected amount 13860000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:OperatingExpenses"
+          },
+          "income_before_tax": {
+            "value": "4661000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Income (loss) before provision for income tax. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=4661000000 USD; selected amount 4661000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          },
+          "income_tax_expense": {
+            "value": "1258000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Provision for income tax expense (benefit). Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeTaxExpenseBenefit=1258000000 USD; selected amount 1258000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeTaxExpenseBenefit"
+          },
+          "net_income": {
+            "value": "3379000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetIncomeLoss=3379000000 USD; selected amount 3379000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetIncomeLoss"
+          },
+          "diluted_shares_outstanding": {
+            "value": "673300000.0",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Weighted average common stock outstanding - diluted. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding=673300000.0 shares; selected amount 673300000.0 shares; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          }
+        },
+        "balance_sheet": {
+          "kind": "insurer",
+          "cash_and_equivalents": {
+            "value": "22032000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: us-gaap:CashAndCashEquivalentsAtCarryingValue. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:CashAndCashEquivalentsAtCarryingValue=22032000000 USD; selected amount 22032000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          },
+          "investments": {
+            "value": "472178000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total investments. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Investments=472178000000 USD; selected amount 472178000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Investments"
+          },
+          "insurance_reserves": {
+            "value": "208855000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Future policy benefits. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:LiabilityForFuturePolicyBenefits=208855000000 USD; selected amount 208855000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:LiabilityForFuturePolicyBenefits"
+          },
+          "total_assets": {
+            "value": "745166000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total assets. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Assets=745166000000 USD; selected amount 745166000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Assets"
+          },
+          "total_liabilities": {
+            "value": "716245000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total liabilities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Liabilities=716245000000 USD; selected amount 716245000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Liabilities"
+          },
+          "shareholders_equity": {
+            "value": "28398000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total MetLife, Inc.\u2019s stockholders\u2019 equity. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:StockholdersEquity=28398000000 USD; selected amount 28398000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:StockholdersEquity"
+          },
+          "noncontrolling_interests": {
+            "value": "523000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Noncontrolling interests including separately presented redeemable interests. Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=28680000000 USD; [input component] us-gaap:StockholdersEquity=28398000000 USD; [input component] us-gaap:RedeemableNoncontrollingInterestEquityCarryingAmount=241000000 USD; selected amount 523000000 USD; year-end 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": null
+          }
+        },
+        "cash_flow_statement": {
+          "kind": "insurer",
+          "cash_from_operations": {
+            "value": "17092000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInOperatingActivities=17092000000 USD; selected amount 17092000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          },
+          "cash_from_investing": {
+            "value": "-15607000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInInvestingActivities=-15607000000 USD; selected amount -15607000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          },
+          "cash_from_financing": {
+            "value": "163000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInFinancingActivities=163000000 USD; selected amount 163000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          },
+          "dividends_paid": {
+            "value": "1509000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Dividends on common stock. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PaymentsOfDividendsCommonStock=1509000000 USD; selected amount 1509000000 USD; 2025-01-01 to 2025-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PaymentsOfDividendsCommonStock"
+          },
+          "depreciation_amortization": null,
+          "capital_expenditures": null
+        },
+        "standardized_measure": null
+      },
+      {
+        "fiscal_year": 2024,
+        "fiscal_period_end": "2024-12-31",
+        "filing_accession": "0001099219-26-000013",
+        "filing_type": "10-K",
+        "industry": "insurer",
+        "income_statement": {
+          "kind": "insurer",
+          "premiums_earned": {
+            "value": "44945000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Premiums. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PremiumsEarnedNet=44945000000 USD; selected amount 44945000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PremiumsEarnedNet"
+          },
+          "net_investment_income": {
+            "value": "21273000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net investment income. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetInvestmentIncome=21273000000 USD; selected amount 21273000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetInvestmentIncome"
+          },
+          "benefits_and_claims": {
+            "value": "44728000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Policyholder benefits and claims. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PolicyholderBenefitsAndClaimsIncurredNet=44728000000 USD; selected amount 44728000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          },
+          "operating_expenses": {
+            "value": "13017000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Other expenses. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:OperatingExpenses=13017000000 USD; selected amount 13017000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:OperatingExpenses"
+          },
+          "income_before_tax": {
+            "value": "5622000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Income (loss) before provision for income tax. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=5622000000 USD; selected amount 5622000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          },
+          "income_tax_expense": {
+            "value": "1178000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Provision for income tax expense (benefit). Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeTaxExpenseBenefit=1178000000 USD; selected amount 1178000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeTaxExpenseBenefit"
+          },
+          "net_income": {
+            "value": "4426000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetIncomeLoss=4426000000 USD; selected amount 4426000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetIncomeLoss"
+          },
+          "diluted_shares_outstanding": {
+            "value": "711100000.0",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Weighted average common stock outstanding - diluted. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding=711100000.0 shares; selected amount 711100000.0 shares; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          }
+        },
+        "balance_sheet": {
+          "kind": "insurer",
+          "cash_and_equivalents": {
+            "value": "20068000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: us-gaap:CashAndCashEquivalentsAtCarryingValue. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:CashAndCashEquivalentsAtCarryingValue=20068000000 USD; selected amount 20068000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          },
+          "investments": {
+            "value": "441364000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total investments. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Investments=441364000000 USD; selected amount 441364000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Investments"
+          },
+          "insurance_reserves": {
+            "value": "193646000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Future policy benefits. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:LiabilityForFuturePolicyBenefits=193646000000 USD; selected amount 193646000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:LiabilityForFuturePolicyBenefits"
+          },
+          "total_assets": {
+            "value": "677457000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total assets. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Assets=677457000000 USD; selected amount 677457000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Assets"
+          },
+          "total_liabilities": {
+            "value": "649754000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total liabilities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Liabilities=649754000000 USD; selected amount 649754000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:Liabilities"
+          },
+          "shareholders_equity": {
+            "value": "27445000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total MetLife, Inc.\u2019s stockholders\u2019 equity. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:StockholdersEquity=27445000000 USD; selected amount 27445000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:StockholdersEquity"
+          },
+          "noncontrolling_interests": {
+            "value": "258000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Noncontrolling interests including separately presented redeemable interests. Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=27703000000 USD; [input component] us-gaap:StockholdersEquity=27445000000 USD; [input component] us-gaap:RedeemableNoncontrollingInterestEquityCarryingAmount=0 USD; selected amount 258000000 USD; year-end 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": null
+          }
+        },
+        "cash_flow_statement": {
+          "kind": "insurer",
+          "cash_from_operations": {
+            "value": "14598000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInOperatingActivities=14598000000 USD; selected amount 14598000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          },
+          "cash_from_investing": {
+            "value": "-11493000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInInvestingActivities=-11493000000 USD; selected amount -11493000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          },
+          "cash_from_financing": {
+            "value": "-3131000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInFinancingActivities=-3131000000 USD; selected amount -3131000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          },
+          "dividends_paid": {
+            "value": "1527000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Dividends on common stock. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PaymentsOfDividendsCommonStock=1527000000 USD; selected amount 1527000000 USD; 2024-01-01 to 2024-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PaymentsOfDividendsCommonStock"
+          },
+          "depreciation_amortization": null,
+          "capital_expenditures": null
+        },
+        "standardized_measure": null
+      },
+      {
+        "fiscal_year": 2023,
+        "fiscal_period_end": "2023-12-31",
+        "filing_accession": "0001099219-26-000013",
+        "filing_type": "10-K",
+        "industry": "insurer",
+        "income_statement": {
+          "kind": "insurer",
+          "premiums_earned": {
+            "value": "44283000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Premiums. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PremiumsEarnedNet=44283000000 USD; selected amount 44283000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PremiumsEarnedNet"
+          },
+          "net_investment_income": {
+            "value": "19908000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net investment income. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetInvestmentIncome=19908000000 USD; selected amount 19908000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetInvestmentIncome"
+          },
+          "benefits_and_claims": {
+            "value": "44590000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Policyholder benefits and claims. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PolicyholderBenefitsAndClaimsIncurredNet=44590000000 USD; selected amount 44590000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          },
+          "operating_expenses": {
+            "value": "12710000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Other expenses. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:OperatingExpenses=12710000000 USD; selected amount 12710000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:OperatingExpenses"
+          },
+          "income_before_tax": {
+            "value": "2162000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Income (loss) before provision for income tax. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=2162000000 USD; selected amount 2162000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          },
+          "income_tax_expense": {
+            "value": "560000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Provision for income tax expense (benefit). Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeTaxExpenseBenefit=560000000 USD; selected amount 560000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:IncomeTaxExpenseBenefit"
+          },
+          "net_income": {
+            "value": "1578000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetIncomeLoss=1578000000 USD; selected amount 1578000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetIncomeLoss"
+          },
+          "diluted_shares_outstanding": {
+            "value": "762300000.0",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Weighted average common stock outstanding - diluted. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding=762300000.0 shares; selected amount 762300000.0 shares; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          }
+        },
+        "balance_sheet": {
+          "kind": "insurer",
+          "cash_and_equivalents": {
+            "value": "20639000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:CashAndCashEquivalentsAtCarryingValue=20639000000 USD; selected amount 20639000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          },
+          "investments": {
+            "value": "446137000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total investments. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Investments=446137000000 USD; selected amount 446137000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Investments"
+          },
+          "insurance_reserves": {
+            "value": "196406000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Future policy benefits. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:LiabilityForFuturePolicyBenefits=196406000000 USD; selected amount 196406000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:LiabilityForFuturePolicyBenefits"
+          },
+          "total_assets": {
+            "value": "687584000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total assets. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Assets=687584000000 USD; selected amount 687584000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Assets"
+          },
+          "total_liabilities": {
+            "value": "657331000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total liabilities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Liabilities=657331000000 USD; selected amount 657331000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Liabilities"
+          },
+          "shareholders_equity": {
+            "value": "30015000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Parent shareholders' equity, excluding noncontrolling interests. Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=30015000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:ParentMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=238000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:NoncontrollingInterestMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=30253000000 USD; selected amount 30015000000 USD; year-end 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:StockholdersEquity"
+          },
+          "noncontrolling_interests": {
+            "value": "238000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Noncontrolling interests including separately presented redeemable interests. Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=30253000000 USD; [input component] us-gaap:StockholdersEquity=30015000000 USD; selected amount 238000000 USD; year-end 2023-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": null
+          }
+        },
+        "cash_flow_statement": {
+          "kind": "insurer",
+          "cash_from_operations": {
+            "value": "13721000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInOperatingActivities=13721000000 USD; selected amount 13721000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          },
+          "cash_from_investing": {
+            "value": "-10246000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInInvestingActivities=-10246000000 USD; selected amount -10246000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          },
+          "cash_from_financing": {
+            "value": "-2940000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInFinancingActivities=-2940000000 USD; selected amount -2940000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          },
+          "dividends_paid": {
+            "value": "1566000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Dividends on common stock. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PaymentsOfDividendsCommonStock=1566000000 USD; selected amount 1566000000 USD; 2023-01-01 to 2023-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:PaymentsOfDividendsCommonStock"
+          },
+          "depreciation_amortization": null,
+          "capital_expenditures": null
+        },
+        "standardized_measure": null
+      },
+      {
+        "fiscal_year": 2022,
+        "fiscal_period_end": "2022-12-31",
+        "filing_accession": "0001099219-26-000013",
+        "filing_type": "10-K",
+        "industry": "insurer",
+        "income_statement": {
+          "kind": "insurer",
+          "premiums_earned": {
+            "value": "48510000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Premiums. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PremiumsEarnedNet=48510000000 USD; selected amount 48510000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PremiumsEarnedNet"
+          },
+          "net_investment_income": {
+            "value": "15916000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net investment income. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetInvestmentIncome=15916000000 USD; selected amount 15916000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetInvestmentIncome"
+          },
+          "benefits_and_claims": {
+            "value": "49507000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Policyholder benefits and claims. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PolicyholderBenefitsAndClaimsIncurredNet=49507000000 USD; selected amount 49507000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          },
+          "operating_expenses": {
+            "value": "11859000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Other expenses. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:OperatingExpenses=11859000000 USD; selected amount 11859000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:OperatingExpenses"
+          },
+          "income_before_tax": {
+            "value": "6364000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Income (loss) before provision for income tax. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=6364000000 USD; selected amount 6364000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          },
+          "income_tax_expense": {
+            "value": "1062000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Provision for income tax expense (benefit). Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeTaxExpenseBenefit=1062000000 USD; selected amount 1062000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:IncomeTaxExpenseBenefit"
+          },
+          "net_income": {
+            "value": "5284000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetIncomeLoss=5284000000 USD; selected amount 5284000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetIncomeLoss"
+          },
+          "diluted_shares_outstanding": {
+            "value": "808900000.0",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Weighted average common stock outstanding - diluted. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding=808900000.0 shares; selected amount 808900000.0 shares; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          }
+        },
+        "balance_sheet": {
+          "kind": "insurer",
+          "cash_and_equivalents": {
+            "value": "20195000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:CashAndCashEquivalentsAtCarryingValue=20195000000 USD; selected amount 20195000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          },
+          "investments": {
+            "value": "433293000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total investments. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Investments=433293000000 USD; selected amount 433293000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Investments"
+          },
+          "insurance_reserves": {
+            "value": "187222000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Future policy benefits. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:LiabilityForFuturePolicyBenefits=187222000000 USD; selected amount 187222000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:LiabilityForFuturePolicyBenefits"
+          },
+          "total_assets": {
+            "value": "663072000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total assets. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Assets=663072000000 USD; selected amount 663072000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Assets"
+          },
+          "total_liabilities": {
+            "value": "632947000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total liabilities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Liabilities=632947000000 USD; selected amount 632947000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:Liabilities"
+          },
+          "shareholders_equity": {
+            "value": "29881000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Parent shareholders' equity, excluding noncontrolling interests. Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=29881000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:ParentMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=244000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:NoncontrollingInterestMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=30125000000 USD; selected amount 29881000000 USD; year-end 2022-12-31; SEC accession 0001099219-26-000013.",
+            "xbrl_tag": "us-gaap:StockholdersEquity"
+          },
+          "noncontrolling_interests": {
+            "value": "244000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Noncontrolling interests including separately presented redeemable interests. Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=30125000000 USD; [input component] us-gaap:StockholdersEquity=29881000000 USD; selected amount 244000000 USD; year-end 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": null
+          }
+        },
+        "cash_flow_statement": {
+          "kind": "insurer",
+          "cash_from_operations": {
+            "value": "13044000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInOperatingActivities=13044000000 USD; selected amount 13044000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          },
+          "cash_from_investing": {
+            "value": "-2620000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInInvestingActivities=-2620000000 USD; selected amount -2620000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          },
+          "cash_from_financing": {
+            "value": "-9948000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInFinancingActivities=-9948000000 USD; selected amount -9948000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          },
+          "dividends_paid": {
+            "value": "1598000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Dividends on common stock. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PaymentsOfDividendsCommonStock=1598000000 USD; selected amount 1598000000 USD; 2022-01-01 to 2022-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PaymentsOfDividendsCommonStock"
+          },
+          "depreciation_amortization": null,
+          "capital_expenditures": null
+        },
+        "standardized_measure": null
+      },
+      {
+        "fiscal_year": 2021,
+        "fiscal_period_end": "2021-12-31",
+        "filing_accession": "0001099219-26-000013",
+        "filing_type": "10-K",
+        "industry": "insurer",
+        "income_statement": {
+          "kind": "insurer",
+          "premiums_earned": {
+            "value": "41152000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Premiums. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PremiumsEarnedNet=41152000000 USD; selected amount 41152000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PremiumsEarnedNet"
+          },
+          "net_investment_income": {
+            "value": "21395000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net investment income. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetInvestmentIncome=21395000000 USD; selected amount 21395000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetInvestmentIncome"
+          },
+          "benefits_and_claims": {
+            "value": "43118000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Policyholder benefits and claims. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PolicyholderBenefitsAndClaimsIncurredNet=43118000000 USD; selected amount 43118000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          },
+          "operating_expenses": {
+            "value": "12018000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Other expenses. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:OperatingExpenses=12018000000 USD; selected amount 12018000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:OperatingExpenses"
+          },
+          "income_before_tax": {
+            "value": "8518000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Income (loss) before provision for income tax. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest=8518000000 USD; selected amount 8518000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          },
+          "income_tax_expense": {
+            "value": "1642000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Provision for income tax expense (benefit). Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:IncomeTaxExpenseBenefit=1642000000 USD; selected amount 1642000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:IncomeTaxExpenseBenefit"
+          },
+          "net_income": {
+            "value": "6855000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetIncomeLoss=6855000000 USD; selected amount 6855000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetIncomeLoss"
+          },
+          "diluted_shares_outstanding": {
+            "value": "869400000.0",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "income_statement reported amount: Weighted average common stock outstanding - diluted. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding=869400000.0 shares; selected amount 869400000.0 shares; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          }
+        },
+        "balance_sheet": {
+          "kind": "insurer",
+          "cash_and_equivalents": {
+            "value": "20047000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:CashAndCashEquivalentsAtCarryingValue=20047000000 USD; selected amount 20047000000 USD; year-end 2021-12-31; SEC accession 0001099219-22-000014.",
+            "xbrl_tag": "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          },
+          "investments": {
+            "value": "494821000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total investments. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Investments=494821000000 USD; selected amount 494821000000 USD; year-end 2021-12-31; SEC accession 0001099219-22-000014.",
+            "xbrl_tag": "us-gaap:Investments"
+          },
+          "insurance_reserves": null,
+          "total_assets": {
+            "value": "759708000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total assets. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Assets=759708000000 USD; selected amount 759708000000 USD; year-end 2021-12-31; SEC accession 0001099219-22-000014.",
+            "xbrl_tag": "us-gaap:Assets"
+          },
+          "total_liabilities": {
+            "value": "691959000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "balance_sheet reported amount: Total liabilities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:Liabilities=691959000000 USD; selected amount 691959000000 USD; year-end 2021-12-31; SEC accession 0001099219-22-000014.",
+            "xbrl_tag": "us-gaap:Liabilities"
+          },
+          "shareholders_equity": {
+            "value": "49746000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Parent shareholders' equity, excluding noncontrolling interests. Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=49746000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:ParentMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=267000000 USD {'us-gaap:StatementEquityComponentsAxis': 'us-gaap:NoncontrollingInterestMember'}; [ownership-scope reconciliation] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=50013000000 USD; selected amount 49746000000 USD; year-end 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:StockholdersEquity"
+          },
+          "noncontrolling_interests": {
+            "value": "267000000",
+            "source": "derived",
+            "confidence": 0.99,
+            "source_quote": "Noncontrolling interests including separately presented redeemable interests. Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles. [input component] us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest=67749000000 USD; [input component] us-gaap:StockholdersEquity=67482000000 USD; selected amount 267000000 USD; year-end 2021-12-31; SEC accession 0001099219-22-000014.",
+            "xbrl_tag": null
+          }
+        },
+        "cash_flow_statement": {
+          "kind": "insurer",
+          "cash_from_operations": {
+            "value": "12347000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInOperatingActivities=12347000000 USD; selected amount 12347000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          },
+          "cash_from_investing": {
+            "value": "-11187000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInInvestingActivities=-11187000000 USD; selected amount -11187000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          },
+          "cash_from_financing": {
+            "value": "-1126000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:NetCashProvidedByUsedInFinancingActivities=-1126000000 USD; selected amount -1126000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          },
+          "dividends_paid": {
+            "value": "1647000000",
+            "source": "xbrl",
+            "confidence": 1.0,
+            "source_quote": "cash_flow_statement reported amount: Dividends on common stock. Primary-statement presentation membership, annual entity context and SEC company-facts corroboration. [input component] us-gaap:PaymentsOfDividendsCommonStock=1647000000 USD; selected amount 1647000000 USD; 2021-01-01 to 2021-12-31; SEC accession 0001099219-24-000035.",
+            "xbrl_tag": "us-gaap:PaymentsOfDividendsCommonStock"
+          },
+          "depreciation_amortization": null,
+          "capital_expenditures": null
+        },
+        "standardized_measure": null
+      }
+    ],
+    "extraction_flags": [],
+    "share_count_label": null,
+    "operating_income_label": null,
+    "valuation_note": "Source-only SEC statement extraction; optional rows without established scope are left unavailable. No AI backfill was used. Historical parent equity can come from an explicitly dimensioned equity-statement column. Its parent and noncontrolling amounts must reconcile to the same filed consolidated total; this does not assert that all older accounting periods were restated uniformly.",
+    "qualification": {
+      "method": "reusable_statement_rules",
+      "ruleset": "annual-statement-evidence-v1",
+      "status": "qualified",
+      "policy_version": "filing-inputs-v1-615973a172a5",
+      "record_digest": "58f32e5fc5537fc39758b816d284ba9d96b86794542a38b883a3fcb09d24f044",
+      "filing_accession": "0001099219-26-000013",
+      "checked_at": "2026-10-27T19:35:59.778145+00:00",
+      "issues": [],
+      "disclosures": [
+        "Historical parent equity can come from an explicitly dimensioned equity-statement column. Its parent and noncontrolling amounts must reconcile to the same filed consolidated total; this does not assert that all older accounting periods were restated uniformly.",
+        "Inputs were checked by reusable SEC statement rules for this filing and record. This is not a human review, extraction-accuracy score or validation of the valuation model.",
+        "Capex uses the filed cash-investment row and may exclude other reinvestment. Revenue segments and supplementary disclosures are unavailable unless separately extracted.",
+        "The model projects historical ratios using fixed policy assumptions; qualification does not make it a market-price estimate.",
+        "Source-only SEC statement extraction; optional rows without established scope are left unavailable. No AI backfill was used. Historical parent equity can come from an explicitly dimensioned equity-statement column. Its parent and noncontrolling amounts must reconcile to the same filed consolidated total; this does not assert that all older accounting periods were restated uniformly.",
+        "This P/B output is a parent-equity model proxy per annual model share, not a verified common-stock price estimate. It uses parent equity and parent net income, including preferred shareholders' claims where present, with the annual diluted or equivalent share count shown in the statements. Preferred capital, preferred dividends and redemption premiums are not deducted. A zero preferred-stock par value does not establish zero preferred capital. Common-share valuation remains unverified.",
+        "FY2021 balance-sheet reconciliation is unresolved. The selected assets, liabilities and ownership amounts do not reconcile. A consistent historical accounting basis has not been established for these display rows. These figures must not be read as a reconciled same-basis balance sheet. The selected model inputs retain their separately checked source scope."
+      ],
+      "inputs": [
+        {
+          "field_path": "balance_sheet.cash_and_equivalents",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "22032000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: us-gaap:CashAndCashEquivalentsAtCarryingValue",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.insurance_reserves",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "208855000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Future policy benefits $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:LiabilityForFuturePolicyBenefits"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.investments",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "472178000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total investments",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Investments"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.noncontrolling_interests",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "523000000",
+          "unit": "USD",
+          "scope": "Noncontrolling interests including separately presented redeemable interests",
+          "basis": "Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:RedeemableNoncontrollingInterestEquityCarryingAmount",
+            "us-gaap:StockholdersEquity",
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.shareholders_equity",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "28398000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total MetLife, Inc.\u2019s stockholders\u2019 equity",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquity"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_assets",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "745166000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total assets $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Assets"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_liabilities",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "716245000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total liabilities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Liabilities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_financing",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "163000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_investing",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-15607000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_operations",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "17092000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.dividends_paid",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1509000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Dividends on common stock",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:PaymentsOfDividendsCommonStock"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.benefits_and_claims",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "49718000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Policyholder benefits and claims",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.diluted_shares_outstanding",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "673300000.0",
+          "unit": "shares",
+          "scope": "income_statement reported amount: Weighted average common stock outstanding - diluted",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_before_tax",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "4661000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Income (loss) before provision for income tax",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_tax_expense",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1258000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Provision for income tax expense (benefit)",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:IncomeTaxExpenseBenefit"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_income",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "3379000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:NetIncomeLoss"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_investment_income",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "22559000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net investment income",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:NetInvestmentIncome"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.operating_expenses",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "13860000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Other expenses",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:OperatingExpenses"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.premiums_earned",
+          "period_end": "2025-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "49779000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Premiums $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2025-01-01",
+          "concepts": [
+            "us-gaap:PremiumsEarnedNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.cash_and_equivalents",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "20068000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: us-gaap:CashAndCashEquivalentsAtCarryingValue",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.insurance_reserves",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "193646000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Future policy benefits $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:LiabilityForFuturePolicyBenefits"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.investments",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "441364000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total investments",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Investments"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.noncontrolling_interests",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "258000000",
+          "unit": "USD",
+          "scope": "Noncontrolling interests including separately presented redeemable interests",
+          "basis": "Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:RedeemableNoncontrollingInterestEquityCarryingAmount",
+            "us-gaap:StockholdersEquity",
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.shareholders_equity",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "27445000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total MetLife, Inc.\u2019s stockholders\u2019 equity",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquity"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_assets",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "677457000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total assets $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Assets"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_liabilities",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "649754000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total liabilities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:Liabilities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_financing",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-3131000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_investing",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-11493000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_operations",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "14598000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.dividends_paid",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1527000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Dividends on common stock",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:PaymentsOfDividendsCommonStock"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.benefits_and_claims",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "44728000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Policyholder benefits and claims",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.diluted_shares_outstanding",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "711100000.0",
+          "unit": "shares",
+          "scope": "income_statement reported amount: Weighted average common stock outstanding - diluted",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_before_tax",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "5622000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Income (loss) before provision for income tax",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_tax_expense",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1178000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Provision for income tax expense (benefit)",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:IncomeTaxExpenseBenefit"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_income",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "4426000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:NetIncomeLoss"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_investment_income",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "21273000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net investment income",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:NetInvestmentIncome"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.operating_expenses",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "13017000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Other expenses",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:OperatingExpenses"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.premiums_earned",
+          "period_end": "2024-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "44945000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Premiums $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2024-01-01",
+          "concepts": [
+            "us-gaap:PremiumsEarnedNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.cash_and_equivalents",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "20639000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.insurance_reserves",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "196406000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Future policy benefits $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:LiabilityForFuturePolicyBenefits"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.investments",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "446137000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total investments",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Investments"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.noncontrolling_interests",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "238000000",
+          "unit": "USD",
+          "scope": "Noncontrolling interests including separately presented redeemable interests",
+          "basis": "Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquity",
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.shareholders_equity",
+          "period_end": "2023-12-31",
+          "display_label": "Parent shareholders' equity",
+          "is_proxy": false,
+          "value": "30015000000",
+          "unit": "USD",
+          "scope": "Parent shareholders' equity, excluding noncontrolling interests",
+          "basis": "Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_assets",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "687584000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total assets $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Assets"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_liabilities",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "657331000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total liabilities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Liabilities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_financing",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-2940000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_investing",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-10246000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_operations",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "13721000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.dividends_paid",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1566000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Dividends on common stock",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:PaymentsOfDividendsCommonStock"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.benefits_and_claims",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "44590000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Policyholder benefits and claims",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.diluted_shares_outstanding",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "762300000.0",
+          "unit": "shares",
+          "scope": "income_statement reported amount: Weighted average common stock outstanding - diluted",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_before_tax",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "2162000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Income (loss) before provision for income tax",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_tax_expense",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "560000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Provision for income tax expense (benefit)",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:IncomeTaxExpenseBenefit"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_income",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1578000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:NetIncomeLoss"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_investment_income",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "19908000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net investment income",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:NetInvestmentIncome"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.operating_expenses",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "12710000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Other expenses",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:OperatingExpenses"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.premiums_earned",
+          "period_end": "2023-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "44283000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Premiums $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-26-000013",
+          "start": "2023-01-01",
+          "concepts": [
+            "us-gaap:PremiumsEarnedNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.cash_and_equivalents",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "20195000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.insurance_reserves",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "187222000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Future policy benefits $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:LiabilityForFuturePolicyBenefits"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.investments",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "433293000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total investments",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Investments"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.noncontrolling_interests",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "244000000",
+          "unit": "USD",
+          "scope": "Noncontrolling interests including separately presented redeemable interests",
+          "basis": "Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquity",
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.shareholders_equity",
+          "period_end": "2022-12-31",
+          "display_label": "Parent shareholders' equity",
+          "is_proxy": false,
+          "value": "29881000000",
+          "unit": "USD",
+          "scope": "Parent shareholders' equity, excluding noncontrolling interests",
+          "basis": "Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit",
+          "accession": "0001099219-26-000013",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_assets",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "663072000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total assets $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Assets"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_liabilities",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "632947000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total liabilities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:Liabilities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_financing",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-9948000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_investing",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-2620000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_operations",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "13044000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.dividends_paid",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1598000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Dividends on common stock",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:PaymentsOfDividendsCommonStock"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.benefits_and_claims",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "49507000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Policyholder benefits and claims",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.diluted_shares_outstanding",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "808900000.0",
+          "unit": "shares",
+          "scope": "income_statement reported amount: Weighted average common stock outstanding - diluted",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_before_tax",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "6364000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Income (loss) before provision for income tax",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_tax_expense",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1062000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Provision for income tax expense (benefit)",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:IncomeTaxExpenseBenefit"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_income",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "5284000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:NetIncomeLoss"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_investment_income",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "15916000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net investment income",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:NetInvestmentIncome"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.operating_expenses",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "11859000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Other expenses",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:OperatingExpenses"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.premiums_earned",
+          "period_end": "2022-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "48510000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Premiums $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2022-01-01",
+          "concepts": [
+            "us-gaap:PremiumsEarnedNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.cash_and_equivalents",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "20047000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Cash and cash equivalents, principally at estimated fair value",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-22-000014",
+          "start": null,
+          "concepts": [
+            "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.investments",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "494821000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total investments",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-22-000014",
+          "start": null,
+          "concepts": [
+            "us-gaap:Investments"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.noncontrolling_interests",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "267000000",
+          "unit": "USD",
+          "scope": "Noncontrolling interests including separately presented redeemable interests",
+          "basis": "Inclusive equity minus parent equity, plus separately presented redeemable noncontrolling interests; monetary top-level rollup reconciles",
+          "accession": "0001099219-22-000014",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquity",
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.shareholders_equity",
+          "period_end": "2021-12-31",
+          "display_label": "Parent shareholders' equity",
+          "is_proxy": false,
+          "value": "49746000000",
+          "unit": "USD",
+          "scope": "Parent shareholders' equity, excluding noncontrolling interests",
+          "basis": "Explicit parent equity column; parent plus noncontrolling column equals filed consolidated equity in the same period and unit",
+          "accession": "0001099219-24-000035",
+          "start": null,
+          "concepts": [
+            "us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_assets",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "759708000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total assets $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-22-000014",
+          "start": null,
+          "concepts": [
+            "us-gaap:Assets"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "balance_sheet.total_liabilities",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "691959000000",
+          "unit": "USD",
+          "scope": "balance_sheet reported amount: Total liabilities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-22-000014",
+          "start": null,
+          "concepts": [
+            "us-gaap:Liabilities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_financing",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-1126000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) financing activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInFinancingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_investing",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "-11187000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) investing activities $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInInvestingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.cash_from_operations",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "12347000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Net cash provided by (used in) operating activities",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:NetCashProvidedByUsedInOperatingActivities"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "cash_flow_statement.dividends_paid",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1647000000",
+          "unit": "USD",
+          "scope": "cash_flow_statement reported amount: Dividends on common stock",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:PaymentsOfDividendsCommonStock"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.benefits_and_claims",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "43118000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Policyholder benefits and claims",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:PolicyholderBenefitsAndClaimsIncurredNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.diluted_shares_outstanding",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "869400000.0",
+          "unit": "shares",
+          "scope": "income_statement reported amount: Weighted average common stock outstanding - diluted",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_before_tax",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "8518000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Income (loss) before provision for income tax",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.income_tax_expense",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "1642000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Provision for income tax expense (benefit)",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:IncomeTaxExpenseBenefit"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_income",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "6855000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net income (loss) attributable to MetLife, Inc.",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:NetIncomeLoss"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.net_investment_income",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "21395000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Net investment income",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:NetInvestmentIncome"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.operating_expenses",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "12018000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Other expenses",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:OperatingExpenses"
+          ],
+          "operands": [],
+          "dimensions": {}
+        },
+        {
+          "field_path": "income_statement.premiums_earned",
+          "period_end": "2021-12-31",
+          "display_label": null,
+          "is_proxy": false,
+          "value": "41152000000",
+          "unit": "USD",
+          "scope": "income_statement reported amount: Premiums $",
+          "basis": "Primary-statement presentation membership, annual entity context and SEC company-facts corroboration",
+          "accession": "0001099219-24-000035",
+          "start": "2021-01-01",
+          "concepts": [
+            "us-gaap:PremiumsEarnedNet"
+          ],
+          "operands": [],
+          "dimensions": {}
+        }
+      ],
+      "evidence_digest": "878cf04c726e42ec6ea7c0245b7f4dcf7ea91d6783c4b65cb801530492b89c26",
+      "latest_filing_checked": "0001099219-26-000013",
+      "value_scope": {
+        "kind": "parent_equity_proxy",
+        "common_share_valuation_verified": false,
+        "preferred_claims_deducted": false,
+        "share_basis": "Annual diluted common shares",
+        "description": "This P/B output is a parent-equity model proxy per annual model share, not a verified common-stock price estimate. It uses parent equity and parent net income, including preferred shareholders' claims where present, with the annual diluted or equivalent share count shown in the statements. Preferred capital, preferred dividends and redemption premiums are not deducted. A zero preferred-stock par value does not establish zero preferred capital. Common-share valuation remains unverified."
+      },
+      "statement_warnings": [
+        {
+          "code": "historical_balance_unreconciled",
+          "fiscal_year": 2021,
+          "period_end": "2021-12-31",
+          "message": "FY2021 balance-sheet reconciliation is unresolved. The selected assets, liabilities and ownership amounts do not reconcile. A consistent historical accounting basis has not been established for these display rows. These figures must not be read as a reconciled same-basis balance sheet. The selected model inputs retain their separately checked source scope.",
+          "difference": "17736000000",
+          "field_paths": [
+            "balance_sheet.total_assets",
+            "balance_sheet.total_liabilities",
+            "balance_sheet.shareholders_equity",
+            "balance_sheet.noncontrolling_interests"
+          ],
+          "source_accessions": {
+            "balance_sheet.total_assets": "0001099219-22-000014",
+            "balance_sheet.total_liabilities": "0001099219-22-000014",
+            "balance_sheet.shareholders_equity": "0001099219-24-000035",
+            "balance_sheet.noncontrolling_interests": "0001099219-22-000014"
+          }
+        }
+      ]
+    }
+  },
+  "defaults": {
+    "revenue_growth": 0.0,
+    "operating_margin": 0.12949275167368954,
+    "terminal_growth": 0.03,
+    "wacc": 0.09,
+    "tax_rate": 0.21961939947292622,
+    "capex_ratio": 0.0,
+    "da_ratio": 0.0,
+    "working_capital_ratio": 0.0
+  },
+  "valuation": {
+    "source_record_digest": "58f32e5fc5537fc39758b816d284ba9d96b86794542a38b883a3fcb09d24f044",
+    "source_filing_accession": "0001099219-26-000013",
+    "qualification_policy": "filing-inputs-v1-aa182e7012e7",
+    "projection": {
+      "assumptions": {
+        "revenue_growth": 0.0,
+        "operating_margin": 0.12949275167368954,
+        "terminal_growth": 0.03,
+        "wacc": 0.09,
+        "tax_rate": 0.21961939947292622,
+        "capex_ratio": 0.0,
+        "da_ratio": 0.0,
+        "working_capital_ratio": 0.0
+      },
+      "base_year": 2025,
+      "base_revenue": 0.0,
+      "years": [],
+      "terminal_value": 47089919367.15726,
+      "enterprise_value": 47089919367.15726,
+      "net_debt": 0.0,
+      "equity_value": 47089919367.15726,
+      "diluted_shares": 673300000.0,
+      "fair_value_per_share": 69.93898613865626,
+      "ffo_per_share": null,
+      "affo_per_share": null,
+      "smog_per_share": null
+    },
+    "monte_carlo": {
+      "iterations_completed": 9800,
+      "mean": 72.44861451472879,
+      "median": 71.12457996510707,
+      "std_dev": 33.86166178628691,
+      "p10": 28.87103202732913,
+      "p25": 48.46860430598124,
+      "p75": 94.74321142879002,
+      "p90": 116.77967191868913,
+      "histogram": [
+        [
+          0.03764089757657477,
+          87
+        ],
+        [
+          5.1140055923599625,
+          145
+        ],
+        [
+          10.19037028714335,
+          156
+        ],
+        [
+          15.266734981926739,
+          197
+        ],
+        [
+          20.34309967671013,
+          220
+        ],
+        [
+          25.419464371493515,
+          268
+        ],
+        [
+          30.495829066276904,
+          331
+        ],
+        [
+          35.57219376106029,
+          370
+        ],
+        [
+          40.64855845584368,
+          418
+        ],
+        [
+          45.72492315062706,
+          483
+        ],
+        [
+          50.80128784541045,
+          488
+        ],
+        [
+          55.87765254019384,
+          565
+        ],
+        [
+          60.95401723497723,
+          571
+        ],
+        [
+          66.03038192976062,
+          600
+        ],
+        [
+          71.10674662454402,
+          602
+        ],
+        [
+          76.1831113193274,
+          559
+        ],
+        [
+          81.25947601411079,
+          526
+        ],
+        [
+          86.33584070889418,
+          449
+        ],
+        [
+          91.41220540367756,
+          484
+        ],
+        [
+          96.48857009846095,
+          403
+        ],
+        [
+          101.56493479324433,
+          345
+        ],
+        [
+          106.64129948802773,
+          295
+        ],
+        [
+          111.71766418281112,
+          259
+        ],
+        [
+          116.7940288775945,
+          218
+        ],
+        [
+          121.87039357237789,
+          179
+        ],
+        [
+          126.94675826716129,
+          144
+        ],
+        [
+          132.02312296194467,
+          93
+        ],
+        [
+          137.09948765672806,
+          95
+        ],
+        [
+          142.17585235151145,
+          74
+        ],
+        [
+          147.25221704629485,
+          32
+        ],
+        [
+          152.3285817410782,
+          35
+        ],
+        [
+          157.4049464358616,
+          36
+        ],
+        [
+          162.481311130645,
+          15
+        ],
+        [
+          167.5576758254284,
+          21
+        ],
+        [
+          172.63404052021178,
+          9
+        ],
+        [
+          177.71040521499515,
+          7
+        ],
+        [
+          182.78676990977854,
+          7
+        ],
+        [
+          187.86313460456194,
+          5
+        ],
+        [
+          192.93949929934533,
+          1
+        ],
+        [
+          198.01586399412872,
+          2
+        ],
+        [
+          203.0922286889121,
+          2
+        ],
+        [
+          208.16859338369548,
+          3
+        ],
+        [
+          213.24495807847887,
+          0
+        ],
+        [
+          218.32132277326227,
+          0
+        ],
+        [
+          223.39768746804566,
+          0
+        ],
+        [
+          228.47405216282905,
+          0
+        ],
+        [
+          233.55041685761242,
+          0
+        ],
+        [
+          238.6267815523958,
+          0
+        ],
+        [
+          243.7031462471792,
+          0
+        ],
+        [
+          248.7795109419626,
+          1
+        ]
+      ],
+      "central_histogram": {
+        "lower_bound": 28.87103202732913,
+        "upper_bound": 116.77967191868913,
+        "histogram": [
+          [
+            28.87103202732913,
+            124
+          ],
+          [
+            31.06874802461313,
+            154
+          ],
+          [
+            33.26646402189713,
+            137
+          ],
+          [
+            35.46418001918113,
+            150
+          ],
+          [
+            37.66189601646513,
+            171
+          ],
+          [
+            39.85961201374913,
+            168
+          ],
+          [
+            42.05732801103313,
+            193
+          ],
+          [
+            44.25504400831713,
+            176
+          ],
+          [
+            46.45276000560113,
+            215
+          ],
+          [
+            48.65047600288513,
+            209
+          ],
+          [
+            50.84819200016913,
+            229
+          ],
+          [
+            53.04590799745313,
+            215
+          ],
+          [
+            55.24362399473713,
+            207
+          ],
+          [
+            57.44133999202113,
+            263
+          ],
+          [
+            59.63905598930513,
+            222
+          ],
+          [
+            61.83677198658913,
+            242
+          ],
+          [
+            64.03448798387313,
+            274
+          ],
+          [
+            66.23220398115713,
+            263
+          ],
+          [
+            68.42991997844112,
+            246
+          ],
+          [
+            70.62763597572513,
+            252
+          ],
+          [
+            72.82535197300913,
+            277
+          ],
+          [
+            75.02306797029313,
+            238
+          ],
+          [
+            77.22078396757712,
+            254
+          ],
+          [
+            79.41849996486113,
+            247
+          ],
+          [
+            81.61621596214513,
+            228
+          ],
+          [
+            83.81393195942913,
+            219
+          ],
+          [
+            86.01164795671312,
+            205
+          ],
+          [
+            88.20936395399713,
+            186
+          ],
+          [
+            90.40707995128113,
+            222
+          ],
+          [
+            92.60479594856513,
+            192
+          ],
+          [
+            94.80251194584912,
+            202
+          ],
+          [
+            97.00022794313313,
+            181
+          ],
+          [
+            99.19794394041713,
+            163
+          ],
+          [
+            101.39565993770114,
+            158
+          ],
+          [
+            103.59337593498512,
+            145
+          ],
+          [
+            105.79109193226913,
+            154
+          ],
+          [
+            107.98880792955313,
+            126
+          ],
+          [
+            110.18652392683714,
+            112
+          ],
+          [
+            112.38423992412112,
+            105
+          ],
+          [
+            114.58195592140513,
+            117
+          ]
+        ],
+        "below_count": 980,
+        "above_count": 979
+      }
+    },
+    "sensitivity": {
+      "revenue_growth_axis": [
+        -0.05,
+        -0.03333333333333334,
+        -0.01666666666666667,
+        6.938893903907228e-18,
+        0.016666666666666663,
+        0.033333333333333326,
+        0.05000000000000002
+      ],
+      "operating_margin_axis": [
+        0.07949275167368954,
+        0.09615941834035621,
+        0.11282608500702287,
+        0.12949275167368954,
+        0.14615941834035623,
+        0.1628260850070229,
+        0.17949275167368955
+      ],
+      "values": [
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ],
+        [
+          34.791206545607096,
+          46.5071330766235,
+          58.223059607639875,
+          69.93898613865626,
+          81.65491266967267,
+          93.37083920068906,
+          105.08676573170544
+        ]
+      ]
+    },
+    "value_kind": "parent_equity_proxy",
+    "value_scope": {
+      "kind": "parent_equity_proxy",
+      "common_share_valuation_verified": false,
+      "preferred_claims_deducted": false,
+      "share_basis": "Annual diluted common shares",
+      "description": "This P/B output is a parent-equity model proxy per annual model share, not a verified common-stock price estimate. It uses parent equity and parent net income, including preferred shareholders' claims where present, with the annual diluted or equivalent share count shown in the statements. Preferred capital, preferred dividends and redemption premiums are not deducted. A zero preferred-stock par value does not establish zero preferred capital. Common-share valuation remains unverified."
+    }
+  }
+}

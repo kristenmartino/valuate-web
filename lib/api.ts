@@ -218,6 +218,24 @@ export type ExtractionFlag = {
   suggested_value: string | null;
 };
 
+export type ValueScope = {
+  kind: 'parent_equity_proxy';
+  common_share_valuation_verified: false;
+  preferred_claims_deducted: false;
+  share_basis: string;
+  description: string;
+};
+
+export type StatementWarning = {
+  code: 'historical_balance_unreconciled' | 'historical_ownership_incomplete';
+  fiscal_year: number;
+  period_end: string;
+  message: string;
+  difference: string;
+  field_paths: string[];
+  source_accessions: Record<string, string>;
+};
+
 export type Qualification = {
   method?: 'reviewed_filing_contract' | 'reusable_statement_rules';
   ruleset?: string | null;
@@ -226,6 +244,8 @@ export type Qualification = {
   record_digest: string;
   filing_accession: string;
   checked_at: string | null;
+  value_scope?: ValueScope | null;
+  statement_warnings?: StatementWarning[];
   issues: Array<{code:string; field_path:string; period_end:string|null; message:string}>;
   disclosures: string[];
   inputs: Array<{display_label?:string|null; is_proxy?:boolean; field_path:string; period_end:string; value:string; unit:string; scope:string; basis:string; accession:string; start:string|null; concepts:string[]; operands:Array<Record<string,string>>}>;
@@ -317,6 +337,8 @@ export type ValuationResponse = {
   source_record_digest: string;
   source_filing_accession: string;
   qualification_policy: string;
+  value_kind?: 'model_estimate' | 'parent_equity_proxy';
+  value_scope?: ValueScope | null;
   projection: Projection;
   monte_carlo: MonteCarloResult | null;
   sensitivity: SensitivityGrid | null;

@@ -6,6 +6,7 @@ import { createWriteStream } from 'node:fs';
 import { chromium } from 'playwright';
 
 const fixtures = JSON.parse(await readFile(new URL('./recorded-responses.json', import.meta.url)));
+fixtures.MET = JSON.parse(await readFile(new URL('./met-response.json', import.meta.url)));
 const base = process.env.BROWSER_TEST_BASE_URL || 'http://127.0.0.1:4317';
 assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Browser fixtures must never target a public deployment');
 const artifacts = '.browser-artifacts';
@@ -75,9 +76,9 @@ async function workspace(t, ticker, options = {}) {
     await context.close();
   });
   await page.goto(`${base}/v/${ticker}`);
-  await page.getByRole('heading', { name: data.company.qualification.status === 'qualified' ? 'Filing input checks passed' : 'Valuation withheld — input review required' }).waitFor();
+  await page.getByRole('heading', { name: data.company.qualification.status === 'qualified' ? data.company.periods[0].industry === 'insurer' ? 'Parent-equity proxy input checks passed' : 'Filing input checks passed' : 'Valuation withheld — input review required' }).waitFor();
   if (data.company.qualification.status === 'qualified') {
-    await page.getByRole('heading', { name: /Estimated value per share|Model equity residual per share/ }).waitFor();
+    await page.getByRole('heading', { name: /Estimated value per share|Model equity residual per share|Parent-equity proxy per share/ }).waitFor();
   }
   return { page, calls, data };
 }
@@ -200,4 +201,49 @@ test('equity source dimensions distinguish parent and noncontrolling columns on 
   assert.match(await evidence.innerText(), /Source dimensions:.*ParentMember/);
   assert.match(await evidence.innerText(), /Source dimensions:.*NoncontrollingInterestMember/);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
+});
+
+
+test('MET exposes parent versus common ownership at the result, controls and distribution', async t => {
+  const { page, data } = await workspace(t, 'MET');
+  assert.equal(await page.getByRole('heading', { name: 'Parent-equity proxy per share', exact: true }).count(), 1);
+  assert.equal(await page.getByRole('heading', { name: 'Estimated value per share', exact: true }).count(), 0);
+  assert.match(await page.getByTestId('ownership-scope').innerText(), /Common-share valuation unverified/);
+  assert.match(await page.getByTestId('ownership-scope').innerText(), /Preferred capital, preferred dividends and redemption premiums are not deducted/);
+  assert.equal(await page.getByRole('heading', { name: 'Parent-equity proxy distribution' }).count(), 1);
+  assert.match(await page.locator('body').innerText(), /not simulated common-stock prices/);
+  assert.match(await page.locator('body').innerText(), /\$69\.94/);
+  assert.equal(data.valuation.value_scope.common_share_valuation_verified, false);
+});
+
+test('MET historic basis warnings identify the correct year, exact gap and per-cell source accessions', async t => {
+  const { page } = await workspace(t, 'MET');
+  const warning = page.getByTestId('historical-balance-warning-2021');
+  assert.match(await warning.innerText(), /\$17,736,000,000\.00/);
+  assert.equal(await warning.getAttribute('data-gap-usd'), '17736000000');
+  assert.match(await warning.innerText(), /not be read as a reconciled same-basis balance sheet/);
+  await warning.getByText('Source bases for these rows').click();
+  assert.match(await warning.innerText(), /0001099219-22-000014/);
+  assert.match(await warning.innerText(), /0001099219-24-000035/);
+  const balance = page.getByRole('table').filter({ has: page.getByRole('cell', { name: "Parent shareholders' equity", exact: true }) });
+  assert.match(await balance.getByRole('row').filter({ hasText: 'Total assets' }).innerText(), /Unreconciled historical basis.*0001099219-22-000014/s);
+  assert.match(await balance.getByRole('row').filter({ hasText: "Parent shareholders' equity" }).innerText(), /0001099219-24-000035/);
+  assert.equal(await page.getByRole('link', { name: 'No automated flags', exact: true }).count(), 0);
+});
+
+test('MET proxy and historical-warning notes remain readable at 375px', async t => {
+  const { page } = await workspace(t, 'MET', { viewport: { width: 375, height: 812 } });
+  await page.getByTestId('historical-balance-warning-2021').getByText('Source bases for these rows').click();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
+  await page.getByRole('button', { name: "Parent shareholders' equity, FY2021: Calculated source details", exact: true }).click();
+  const dialog = page.getByRole('dialog');await dialog.waitFor();
+  assert.match(await dialog.innerText(), /49746000000/);
+  assert.match(await dialog.innerText(), /ParentMember/);
+  assert.equal(await dialog.evaluate(e => e.scrollWidth <= e.clientWidth), true);
+});
+
+test('P/B fallback remains an explicit proxy when old recorded metadata omits ownership scope', async t => {
+  const { page } = await workspace(t, 'BRK-B');
+  assert.equal(await page.getByRole('heading', { name: 'Parent-equity proxy per share', exact: true }).count(), 1);
+  assert.match(await page.getByTestId('ownership-scope').innerText(), /Common-share valuation unverified/);
 });

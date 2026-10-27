@@ -162,3 +162,13 @@ test('nonpositive model residuals remain visible without stock-price or implied-
   assert.equal(equityPresentation(1.6874844690901214).title,'Estimated value per share');
   assert.equal(equityPresentation(1.6874844690901214).showImpliedMultiples,true);
 });
+
+
+test('positive parent-equity outputs cannot inherit stock-price or implied-multiple presentation', () => {
+  const display = equityPresentation(69.93898613865626, 'parent_equity_proxy');
+  assert.equal(display.title, 'Parent-equity proxy per share');
+  assert.equal(display.showImpliedMultiples, false);
+  assert.equal(display.rangeLabel, 'parent-equity proxy outputs');
+  assert.match(display.caveat, /not a verified common-stock price estimate/);
+  assert.match(display.caveat, /preferred capital and distributions are not deducted/i);
+});

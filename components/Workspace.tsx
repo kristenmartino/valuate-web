@@ -287,13 +287,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
   const combinedDa = company.cik.replace(/^0+/, "") === "858877"
     && isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization);
   const amazonDa = isAmazonCombinedDa(period.cash_flow_statement.depreciation_amortization, company.cik);
-  const equityResult = equityPresentation(valuation.projection.fair_value_per_share);
+  const parentProxy = period.industry === 'insurer';
+  const historicalWarningCount = company.qualification?.statement_warnings?.length ?? 0;
+  const equityResult = equityPresentation(valuation.projection.fair_value_per_share, parentProxy ? 'parent_equity_proxy' : undefined);
   const accretionDa = isAdobeAccretionDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const ppeDa = isAlphabetPpeDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const modelName = {
     standard: "Five-year FCFF DCF",
     bank: "Dividend discount model",
-    insurer: "Justified price-to-book",
+    insurer: "Parent-equity P/B proxy",
     reit: "Gordon growth using approximate FFO",
     energy: "Ten-year FCFF, no terminal value",
   }[period.industry];
@@ -315,8 +317,8 @@ export default function Workspace({ ticker }: { ticker: string }) {
               </span>
             </p>
           </div>
-          <a href="#review" className="text-sm font-medium text-teal-800 underline underline-offset-4 dark:text-teal-300">
-            {flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} to review` : "No automated flags"}
+          <a href={flagCount === 0 && historicalWarningCount ? '#historical-balance-warnings' : '#review'} className="text-sm font-medium text-teal-800 underline underline-offset-4 dark:text-teal-300">
+            {flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} to review` : historicalWarningCount ? `${historicalWarningCount} historical statement warning${historicalWarningCount === 1 ? '' : 's'}` : "No automated flags"}
           </a>
         </div>
         <p className="mt-2 text-xs font-medium text-teal-800 dark:text-teal-300">{modelName}</p>
@@ -454,7 +456,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
               <Stat label="Net debt" value={formatMoney(summary.net_debt)} />
             </>
           )}
-          <Stat label="Equity value" value={formatMoney(summary.equity_value)} />
+          <Stat label={parentProxy ? 'Parent-equity proxy total' : 'Equity value'} value={formatMoney(summary.equity_value)} />
         </dl>
         {period.industry === "reit" && (
           <ReitMetrics period={period} projection={valuation.projection} />
@@ -514,13 +516,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
       <section id="review" className="scroll-mt-6 border-y border-zinc-200 py-5 dark:border-zinc-800">
         <h3 className="text-lg font-semibold">Data review</h3>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} triggered automated checks.` : "No items triggered automated checks."} These checks do not verify every figure against the filing.</p>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} triggered automated checks.` : historicalWarningCount ? 'No current-period editable flags.' : "No items triggered automated checks."} These checks do not verify every figure against the filing.</p>
+        {!!historicalWarningCount && <p className="mt-2 text-sm text-amber-900 dark:text-amber-200"><a href="#historical-balance-warnings" className="underline underline-offset-4">{historicalWarningCount} historical balance-sheet warning{historicalWarningCount === 1 ? '' : 's'} require inspection of the source bases. They are not corrections to the latest year.</a></p>}
         <details className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
           <summary className="cursor-pointer py-1 text-teal-800 underline underline-offset-4 dark:text-teal-300">How sources and review flags work</summary>
           <div className="mt-3 max-w-3xl space-y-2 leading-relaxed">
             <p>SEC XBRL values come from tagged company facts or the filing’s inline XBRL. AI extraction fills gaps from filing text; calculated values use formulas; user corrections replace the saved current value.</p>
             <p>Internal XBRL scores are assigned by tag priority (1.0 for a primary tag; 0.95 for an alternate). AI scores are self-reported. Neither is a measured probability that a number is correct.</p>
-            <p>Automated checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. Reconciliation adds reported noncontrolling interests to parent equity, without counting them twice when equity already includes them. A score above the threshold, or no flags, does not establish accuracy. Open source details and check important inputs against the filing.</p>
+            <p>Current-period extraction checks flag scores below 0.80 and balance-sheet discrepancies above 0.5%. Historical statement warnings separately identify unreconciled display bases or missing ownership components. Reconciliation adds reported noncontrolling interests to parent equity, without counting them twice when equity already includes them. A score above the threshold, or no flags, does not establish accuracy. Open source details and check important inputs against the filing.</p>
           </div>
         </details>
         <div className="mt-4"><FlagsPanel ticker={ticker} flags={company.extraction_flags} company={company} onOverride={handleOverride} /></div>
@@ -538,7 +541,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         )}
 
       {comps && (comps.peers.length > 0 || comps.target_market) && (
-        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={!equityResult.showImpliedMultiples ? "Model-implied trading multiples are unavailable while the scenario has no positive equity residual." : reusableDa?.isProxy ? "The DCF-implied EV/EBITDA multiple is unavailable because at least one historical cash-flow add-back has combined coverage. The filed scope appears in the input evidence; it is not pure D&A. Market multiples retain the provider’s definitions." : amazonDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Amazon’s add-back includes content, operating lease assets and other adjustments. It is not pure D&A. Market multiples retain the provider’s definitions." : accretionDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Adobe’s cash-flow add-back includes accretion. It is a combined proxy, not pure D&A. Market multiples retain the provider’s definitions." : ppeDa ? "The DCF-implied EV/EBITDA multiple is unavailable because the add-back covers property-and-equipment depreciation only; full amortization coverage is unverified. Market multiples retain the provider’s definitions." : combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : company.operating_income_label ? "The DCF-implied EV/EBITDA multiple is unavailable because the model uses a calculated EBIT proxy that retains non-operating items. Market multiples retain the provider’s definitions." : undefined} />
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={parentProxy ? "Parent-equity proxies are not used to infer common-stock trading multiples. Provider market data is separate." : !equityResult.showImpliedMultiples ? "Model-implied trading multiples are unavailable while the scenario has no positive equity residual." : reusableDa?.isProxy ? "The DCF-implied EV/EBITDA multiple is unavailable because at least one historical cash-flow add-back has combined coverage. The filed scope appears in the input evidence; it is not pure D&A. Market multiples retain the provider’s definitions." : amazonDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Amazon’s add-back includes content, operating lease assets and other adjustments. It is not pure D&A. Market multiples retain the provider’s definitions." : accretionDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Adobe’s cash-flow add-back includes accretion. It is a combined proxy, not pure D&A. Market multiples retain the provider’s definitions." : ppeDa ? "The DCF-implied EV/EBITDA multiple is unavailable because the add-back covers property-and-equipment depreciation only; full amortization coverage is unverified. Market multiples retain the provider’s definitions." : combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : company.operating_income_label ? "The DCF-implied EV/EBITDA multiple is unavailable because the model uses a calculated EBIT proxy that retains non-operating items. Market multiples retain the provider’s definitions." : undefined} />
       )}
 
       <div
@@ -551,20 +554,20 @@ export default function Workspace({ ticker }: { ticker: string }) {
       >
         <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            Monte Carlo distribution
+            {parentProxy ? 'Parent-equity proxy distribution' : 'Monte Carlo distribution'}
           </h3>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             {period.industry === "bank"
               ? "10,000 iterations sampling cost of equity and dividend growth"
               : period.industry === "insurer"
-              ? "10,000 iterations sampling cost of equity, growth, and ROE"
+              ? "10,000 iterations sampling cost of equity, growth, and parent ROE"
               : period.industry === "reit"
               ? "10,000 iterations sampling cost of equity and approximate FFO growth"
               : period.industry === "energy"
               ? "10,000 iterations sampling revenue growth, op margin, and WACC"
               : "10,000 iterations across the 4 key drivers"}
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">The range describes simulated outputs under sampled assumptions. It is not a calibrated forecast of future stock prices.</p>
+          <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">{parentProxy ? 'The distribution describes parent-equity proxy outputs. Common-share valuation remains unverified; these are not simulated common-stock prices.' : 'The range describes simulated outputs under sampled assumptions. It is not a calibrated forecast of future stock prices.'}</p>
           <div className="mt-4">
             {valuation.monte_carlo && (
               <MonteCarloChart result={valuation.monte_carlo} />

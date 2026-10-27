@@ -89,7 +89,7 @@ const BANK_CONTEXT: ContextField[] = [
 const INSURER_DRIVERS: SliderConfig[] = [
   {
     key: "operating_margin",
-    label: "Return on equity (ROE)",
+    label: "Parent return on equity (ROE)",
     min: 0,
     max: 0.3,
     step: 0.005,
@@ -239,7 +239,7 @@ export default function AssumptionsPanel({
     return (
       <div className="space-y-8">
         <Group
-          title="Justified-P/B inputs"
+          title="Parent-equity P/B proxy inputs"
           sliders={INSURER_DRIVERS}
           value={value}
           startingValues={startingValues}
@@ -249,9 +249,12 @@ export default function AssumptionsPanel({
         <p className="text-xs text-zinc-500 dark:text-zinc-500">
           This workspace uses a simplified justified price-to-book model:{" "}
           <code>P/B = (ROE − g) / (r − g)</code>, then{" "}
-          <code>estimated value/share = book value/share × P/B</code>. The
-          estimate uses book value per share and the selected ROE, growth,
-          and cost of equity.
+          <code>proxy/share = parent equity/share × P/B</code>. Starting ROE
+          averages annual parent net income / year-end parent equity. Parent
+          inputs include preferred shareholders&apos; claims where present; preferred
+          capital and distributions are not deducted. The annual diluted or
+          equivalent share basis is shown in the statements. This is not a
+          company-reported common book value or a verified common-stock price.
         </p>
       </div>
     );
