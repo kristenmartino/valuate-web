@@ -88,7 +88,7 @@ Capex/revenue and cash-flow add-back/revenue start at equal-weight averages of a
 
 ## Implementation
 
-Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, and Recharts. The server components provide page shells; `Workspace.tsx` owns extraction, assumptions, valuation, and correction state. Valuation requests are debounced by 300 ms and guarded against stale responses. `lib/api.ts` mirrors the backend's statement variants and provides display formatters. `SourceDetails.tsx` provides the expandable provenance display.
+Next.js 16 App Router, React 19, TypeScript, Tailwind CSS, and Recharts. The server components provide page shells; `Workspace.tsx` owns extraction, assumptions, valuation, and correction state. Valuation requests are debounced by 300 ms and guarded against stale responses. `lib/api.ts` mirrors the backend's statement variants and provides display formatters. `SourceDetails.tsx` provides the expandable provenance display. On screens narrower than 640px, statement-cell source details open in a viewport-sized dialog with wrapping text and vertical scrolling. Close or Escape dismisses it and returns focus to the source control. Larger screens retain inline disclosures.
 
 `next.config.ts` rewrites `/api/*` to `NEXT_PUBLIC_VALUATE_API`. The server-side `proxy.ts` injects `VALUATE_OVERRIDE_TOKEN` for correction requests so that the bearer token is not exposed to the browser.
 

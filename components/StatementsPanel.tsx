@@ -177,7 +177,7 @@ function ProvenanceCell({ item, field, label }: { item: LineItem | null; field: 
   return (
     <div className="min-w-32 text-right">
       <div className="tabular-nums">{formatLineItem(item.value, field)}</div>
-      <SourceDetails item={item} label={label} />
+      <SourceDetails item={item} label={label} tableCell />
     </div>
   );
 }
