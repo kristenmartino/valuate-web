@@ -7,7 +7,7 @@ export function canUseValuation(company: Company | null | undefined): boolean {
 
 export function inputName(path: string): string {
   const field = path.split('.').at(-1) ?? path;
-  return ({company: 'Filing coverage', depreciation_amortization: 'Cash-flow add-back', short_term_debt: 'Current debt', long_term_debt: 'Noncurrent debt'} as Record<string,string>)[field] ?? field.replaceAll('_',' ');
+  return ({company: 'Filing coverage', common_dividends_per_share: 'Common cash dividends paid per share', depreciation_amortization: 'Cash-flow add-back', short_term_debt: 'Current debt', long_term_debt: 'Noncurrent debt'} as Record<string,string>)[field] ?? field.replaceAll('_',' ');
 }
 
 // Use machine-readable filing evidence rather than guessing scope from a

@@ -317,6 +317,10 @@ export default function StatementsPanel({ periods, shareCountLabel, operatingInc
           periods={periods}
           statement="cashflow"
         />
+        {industry === "bank" && periods.some(p => p.cash_flow_statement.kind === "bank" && p.cash_flow_statement.common_dividends_per_share) && <div>
+          <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">The following annual common-dividend note disclosure supplies the DDM directly. It is not an aggregate cash-flow statement subtotal or a declared-dividend amount.</p>
+          <StatementTable title="Supplemental dividend disclosure (DDM input)" fields={[["common_dividends_per_share", "Common cash dividends paid per share"]]} qualification={qualification} companyCik={companyCik} periods={periods} statement="cashflow" />
+        </div>}
       </div>
     </section>
   );

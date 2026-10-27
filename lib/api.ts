@@ -165,6 +165,7 @@ export type BankCashFlowStatement = {
   cash_from_investing: LineItem | null;
   cash_from_financing: LineItem | null;
   dividends_paid: LineItem | null;
+  common_dividends_per_share?: LineItem | null;
   depreciation_amortization: LineItem | null;
   capital_expenditures: LineItem | null;
 };
@@ -484,6 +485,7 @@ export function isShareField(field: string): boolean {
 }
 
 export function formatLineItem(value: number | string, field: string): string {
+  if (field.split(".").at(-1) === "common_dividends_per_share") return `${formatUSD(Number(value))} / share`;
   if (!isShareField(field)) return formatMoney(value);
   const n = Number(value);
   if (!Number.isFinite(n)) return "—";

@@ -320,6 +320,11 @@ export default function Workspace({ ticker }: { ticker: string }) {
           </a>
         </div>
         <p className="mt-2 text-xs font-medium text-teal-800 dark:text-teal-300">{modelName}</p>
+        {period.cash_flow_statement.kind === "bank" && period.cash_flow_statement.common_dividends_per_share && <div className="mt-3 text-sm">
+          <p className="font-medium">DDM dividend input: {formatUSD(Number(period.cash_flow_statement.common_dividends_per_share.value))} paid per common share for FY{period.fiscal_year}</p>
+          <p className="mt-1 text-zinc-600 dark:text-zinc-400">Filed annual per-share cash payment from the dividend note; it is used directly and is not converted into an estimated total cash outflow.</p>
+          <SourceDetails item={period.cash_flow_statement.common_dividends_per_share} label="Annual cash dividends paid per common share" />
+        </div>}
         {company.valuation_note && (
           <p className="mt-3 max-w-4xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{company.valuation_note}</p>
         )}

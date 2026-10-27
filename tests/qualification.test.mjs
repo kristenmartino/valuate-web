@@ -33,3 +33,11 @@ test('automatic combined scope is retained across historical ratios, not inferre
 test('pure automatic cash-flow evidence keeps its cash-flow basis',()=>{
  assert.deepEqual(reusableCashFlowScope({qualification:{method:'reusable_statement_rules',inputs:[{field_path:'cash_flow_statement.depreciation_amortization',is_proxy:false}]}}),{isProxy:false,label:'Filed cash-flow D&A'});
 });
+
+
+test('common cash DPS keeps its cents and per-share unit',()=>{
+ const {formatLineItem}=loadTs('../lib/api.ts');
+ assert.equal(formatLineItem('1.08','cash_flow_statement.common_dividends_per_share'),'$1.08 / share');
+ assert.equal(formatLineItem('1.00','common_dividends_per_share'),'$1.00 / share');
+ assert.equal(inputName('cash_flow_statement.common_dividends_per_share'),'Common cash dividends paid per share');
+});
