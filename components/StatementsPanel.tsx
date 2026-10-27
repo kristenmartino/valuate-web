@@ -240,7 +240,7 @@ function StatementTable({
               const distinct = new Set(labels.filter(Boolean));
               const scope = distinct.size === 0 ? fallbackScope : distinct.size === 1
                 ? { label: labels.find(Boolean) ?? fallbackScope.label, cellLabels: periods.map(() => null) }
-                : { label: `${label} (different coverage)`, cellLabels: labels };
+                : { label: `${label} (source labels vary)`, cellLabels: labels };
               return (
                 <tr
                   key={key}
