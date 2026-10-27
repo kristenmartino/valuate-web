@@ -27,6 +27,8 @@ function _detail(raw: string): string {
 
 export function parseFetchError(raw: string): FriendlyError {
   const detail = _detail(raw);
+  if (/^409\b/.test(raw)) return { title: "Saved financials changed", hint: "Reload the workspace before calculating against the updated record.", raw };
+  if (/valuation_not_qualified/.test(raw)) return { title: "Valuation withheld — input review required", hint: "This filing has not passed the publication checks. Reload to inspect its financials and coverage issues. Changing assumptions cannot bypass qualification.", raw };
 
   if (TICKER_NOT_FOUND.test(detail)) {
     return {

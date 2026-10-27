@@ -33,7 +33,7 @@ export default function TickerSearch() {
         Find a company
       </h2>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Enter a US ticker with a SEC 10-K filing. Extraction can fail when required data is missing. Banks, insurers, REITs, and energy companies use separate models; other companies use a five-year cash-flow model that may not suit their business.
+        Enter a US ticker with a SEC 10-K filing. New filings require input qualification before a valuation is available. Financials can remain available for review while a valuation is withheld. Banks, insurers, REITs, and energy companies use separate models; other companies use a five-year cash-flow model that may not suit their business.
       </p>
       <form onSubmit={submit} className="mt-4 flex items-start gap-2">
         <input

@@ -2,13 +2,26 @@
 
 Frontend for [Valuate](https://valuate.kristenmartino.ai), a portfolio prototype for reviewing SEC 10-K financials and exploring company valuations. The [backend](https://github.com/kristenmartino/valuate-api) performs extraction and valuation; the [case study](https://kristenmartino.ai/work/valuate) describes the product choices and evaluation limits.
 
+
+## Publication qualification
+
+Extraction and public valuation are separate states. A saved record or an extraction score does not establish coverage. The API returns a structured `Company.qualification` report with `qualified`, `review_required` or `unsupported` status, source evidence and reasons. Both public default-assumption and valuation endpoints require a valid report for the exact saved record, annual filing and current input/model policy. Caller-supplied assumptions, cleared flags and user corrections cannot bypass the gate. Unqualified financials remain available for inspection, but the workspace withholds estimates, assumptions, projections and simulations.
+
+Qualification requires a filing-specific scope policy plus matching annual evidence for every model-driving input. Reports retain period dates, units, source accession, concept, accounting scope, basis and calculation operands. Generic extraction no longer substitutes total debt for noncurrent debt, depreciation alone for full D&A, restricted-plus-unrestricted cash for unrestricted cash, or noncurrent operating leases for total operating leases. Missing debt remains unknown. Debt components must be non-overlapping and use a supported carrying basis. Explicit company-specific proxies retain their labels and limitations; passing checks does not mean every displayed field was manually reviewed or that the valuation predicts a market price.
+
+The report is bound to the complete saved record and a fingerprint of the financial pipeline, model code and filing policies. A changed record or policy invalidates it. Valuation responses identify their source record and filing; the frontend sends its record digest to reject calculations against changed financials. New filings require their own scope review. Saved, qualified older filings keep their displayed dates rather than silently claiming freshness.
+
+Production uses PostgreSQL and refuses to start with process-local reviewer storage. Active records, immutable prior revisions, cold candidates and raw filing-evidence snapshots are stored separately. Versioned writes reject stale updates; same-filing publication preserves saved reviewer corrections. A new filing does not inherit old reviews as if they applied to its new figures. Revisions retain prior values and notes, but the shared demo credential does not identify individual reviewers.
+
+Cold tests start with no saved record. CI replays 16 filing cases through the real extraction graph and qualification logic using selected SEC facts, inline-XBRL fixtures and recorded AI backfill responses. The expected outcomes include 11 qualified cases and five withheld cases; a safe rejection is not scored as extraction accuracy. Separate live cold runs exercise fresh retrieval and AI extraction, stage their candidates without replacing active records, and test rejection of unqualified publication. The historical May extraction baseline remains separate and has not been rerun for these mappings.
+
 ## Workspace
 
 The home page offers 18 sample companies across five model categories and a ticker search. Search requires a SEC 10-K; extraction may fail on missing required fields. The default FCFF model is not suitable for every company outside the explicitly modeled categories.
 
-Dot and hyphen share-class symbols use one canonical route: `BRK.B`, `brk.b`, and `BRK-B` resolve to `/v/BRK-B`. Direct legacy dot URLs redirect as well. Berkshire now uses filing-tagged annual average equivalent shares for the requested class, with dimensioned premiums and cash. Its workspace displays a simplified justified-P/B estimate using consolidated GAAP earnings and Berkshire shareholders' equity. This is not a sum-of-the-parts valuation; investment gains can distort ROE, and annual average shares differ from year-end shares. The share-count row and source details identify the equivalent Class A or B basis. Ticker recognition remains separate from valuation coverage: required missing data still produces an explicit unavailable state.
+Dot and hyphen share-class symbols use one canonical route: `BRK.B`, `brk.b`, and `BRK-B` resolve to `/v/BRK-B`. Direct legacy dot URLs redirect as well. Berkshire now uses filing-tagged annual average equivalent shares for the requested class, with dimensioned premiums and cash. A qualified workspace displays a simplified justified-P/B estimate using consolidated GAAP earnings and Berkshire shareholders' equity. This is not a sum-of-the-parts valuation; investment gains can distort ROE, and annual average shares differ from year-end shares. The share-count row and source details identify the equivalent Class A or B basis. Ticker recognition remains separate from valuation coverage: required missing data still produces an explicit unavailable state.
 
-At `/v/[ticker]`, the workspace shows:
+For a qualified filing, `/v/[ticker]` shows:
 
 - Company, filing period, model category, and automated review status.
 - Estimated value and assumptions first, side by side on larger screens.
@@ -19,7 +32,7 @@ Diluted shares use share units rather than currency. Missing values are shown as
 
 The displayed simulation interval is the middle 80% of outputs under sampled assumptions, not a confidence interval for future stock prices. No quoted market price is inferred from market capitalization divided by filing diluted shares.
 
-Corrections replace the current saved value and rerun validation and valuation. Reviewer identity and prior corrections are not stored. A failed valuation update leaves the last successful output visible with an explicit stale-results notice and retry action.
+Corrections replace the current saved value and rerun extraction validation. The changed record requires fresh qualification before another public valuation; the UI clears the estimate when qualification is lost. The backend retains previous revisions and correction notes without individual reviewer identity. Ordinary scenario-update failures retain an explicit previous-result notice; a failed qualification or record-version check clears the result.
 
 Assumption sliders expand their ranges to include the current and starting values. They retain full API precision, including defaults between the usual keyboard increments. **Restore starting assumptions** returns all inputs to the exact values loaded when the workspace opened and recalculates the scenario; it does not round-trip the displayed percentages or change saved financials. For example, TXN's starting capex/revenue ratio of `0.22576254758204173` (displayed 22.58%) remains selectable above the usual 20% ceiling. Keyboard arrows retain each control's configured increment; Home and End select the displayed bounds.
 

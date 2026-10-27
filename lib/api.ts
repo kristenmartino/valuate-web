@@ -217,6 +217,17 @@ export type ExtractionFlag = {
   suggested_value: string | null;
 };
 
+export type Qualification = {
+  status: 'qualified' | 'review_required' | 'unsupported';
+  policy_version: string;
+  record_digest: string;
+  filing_accession: string;
+  checked_at: string | null;
+  issues: Array<{code:string; field_path:string; period_end:string|null; message:string}>;
+  disclosures: string[];
+  inputs: Array<{field_path:string; period_end:string; value:string; unit:string; scope:string; basis:string; accession:string; start:string|null; concepts:string[]; operands:Array<Record<string,string>>}>;
+};
+
 export type Company = {
   ticker: string;
   cik: string;
@@ -227,6 +238,7 @@ export type Company = {
   share_count_label?: string | null;
   operating_income_label?: string | null;
   valuation_note?: string | null;
+  qualification?: Qualification | null;
 };
 
 export type Assumptions = {
@@ -299,6 +311,9 @@ export type SensitivityGrid = {
 };
 
 export type ValuationResponse = {
+  source_record_digest: string;
+  source_filing_accession: string;
+  qualification_policy: string;
   projection: Projection;
   monte_carlo: MonteCarloResult | null;
   sensitivity: SensitivityGrid | null;
@@ -330,6 +345,7 @@ export type CompsResponse = {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
     ...init,
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
       ...(init?.headers ?? {}),
@@ -343,7 +359,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export async function getCompany(ticker: string): Promise<Company | null> {
-  const res = await fetch(`/api/company/${ticker}`);
+  const res = await fetch(`/api/company/${ticker}`, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`${res.status} GET /company/${ticker}`);
   return res.json();
@@ -363,6 +379,7 @@ export function getDefaults(ticker: string): Promise<Assumptions> {
 export function postValue(
   ticker: string,
   body: {
+    record_digest?: string;
     assumptions: Assumptions;
     monte_carlo?: { iterations?: number; seed?: number } | null;
     sensitivity?: {

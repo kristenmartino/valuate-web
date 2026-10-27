@@ -17,6 +17,8 @@ import {
   postExtract,
   postValue,
 } from "@/lib/api";
+import QualificationPanel from "./QualificationPanel";
+import { canUseValuation } from "@/lib/qualification";
 import { parseFetchError } from "@/lib/friendlyError";
 import { assumptionIssue } from "@/lib/assumptionValidation";
 import { assumptionsChanged } from "@/lib/assumptionControls";
@@ -38,6 +40,7 @@ type LoadStatus =
   | { phase: "idle" }
   | { phase: "extracting"; message: string }
   | { phase: "ready" }
+  | { phase: "review" }
   | { phase: "error"; message: string };
 
 export default function Workspace({ ticker }: { ticker: string }) {
@@ -68,6 +71,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         }
         if (cancelled) return;
         setCompany(c);
+        if (!canUseValuation(c)) { setStatus({ phase: "review" }); return; }
 
         setStatus({ phase: "extracting", message: "Loading default assumptions..." });
         const a = await getDefaults(ticker);
@@ -77,6 +81,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
         setStatus({ phase: "extracting", message: "Computing initial valuation..." });
         const v = await postValue(ticker, {
+          record_digest: c.qualification?.record_digest,
           assumptions: a,
           monte_carlo: { iterations: 10000, seed: 42 },
           sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
@@ -117,6 +122,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   // the override flow (where the underlying line items just changed).
   async function recompute(currentAssumptions: Assumptions) {
     const requestId = ++valuationRequestId.current;
+    if (!canUseValuation(company)) { setValuation(null); setStatus({ phase: "review" }); return; }
     if (company && assumptionIssue(currentAssumptions, company.periods[0].industry)) {
       setRecomputing(false);
       setRecomputeError(null);
@@ -127,6 +133,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
     setRecomputeError(null);
     try {
       const v = await postValue(ticker, {
+        record_digest: company?.qualification?.record_digest,
         assumptions: currentAssumptions,
         monte_carlo: { iterations: 10000, seed: 42 },
         sensitivity: { revenue_growth_steps: 7, operating_margin_steps: 7 },
@@ -138,7 +145,14 @@ export default function Workspace({ ticker }: { ticker: string }) {
       }
     } catch (err) {
       if (requestId === valuationRequestId.current) {
-        setRecomputeError(err instanceof Error ? err.message : String(err));
+        const message = err instanceof Error ? err.message : String(err);
+        if (message.includes('valuation_not_qualified') || message.startsWith('409')) {
+          setValuation(null);
+          const fresh = await getCompany(ticker).catch(() => null);
+          if (fresh) setCompany(fresh);
+          setStatus(fresh && !canUseValuation(fresh) ? { phase: 'review' } : { phase: 'error', message });
+        }
+        setRecomputeError(message);
         setPendingChanges(true);
       }
     } finally {
@@ -165,6 +179,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   // so the fair value, Monte Carlo, and sensitivity all reflect the change.
   function handleOverride(updated: Company) {
     setCompany(updated);
+    if (!canUseValuation(updated)) { ++valuationRequestId.current; setValuation(null); setAssumptions(null); setStartingAssumptions(null); setStatus({ phase: "review" }); return; }
     setPendingChanges(true);
     if (assumptions) recompute(assumptions);
   }
@@ -253,6 +268,15 @@ export default function Workspace({ ticker }: { ticker: string }) {
     );
   }
 
+  if (company && !canUseValuation(company)) {
+    return <div className="space-y-6">
+      <header><h2 className="text-xl font-semibold">{company.name}</h2><p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{ticker} · annual filing {company.periods[0].filing_accession} · period ending {company.periods[0].fiscal_period_end}</p></header>
+      <QualificationPanel company={company} />
+      <FlagsPanel ticker={ticker} flags={company.extraction_flags} company={company} onOverride={handleOverride} />
+      <StatementsPanel companyCik={company.cik} periods={company.periods} shareCountLabel={company.share_count_label} operatingIncomeLabel={company.operating_income_label} />
+    </div>;
+  }
+
   if (!company || !assumptions || !startingAssumptions || !period || !valuation || !summary) {
     return null;
   }
@@ -270,6 +294,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   return (
     <div className="space-y-6">
+      <QualificationPanel company={company} />
       <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <div className="min-w-0">
