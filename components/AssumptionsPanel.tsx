@@ -195,6 +195,7 @@ export default function AssumptionsPanel({
   combinedDa = false,
   accretionDa = false,
   ppeDa = false,
+  amazonDa = false,
   operatingIncomeLabel,
 }: {
   value: Assumptions;
@@ -204,6 +205,7 @@ export default function AssumptionsPanel({
   combinedDa?: boolean;
   accretionDa?: boolean;
   ppeDa?: boolean;
+  amazonDa?: boolean;
   operatingIncomeLabel?: string | null;
 }) {
   const update = (key: keyof Assumptions, n: number) => {
@@ -311,7 +313,7 @@ export default function AssumptionsPanel({
       />
       <Group
         title="Cash-flow assumptions"
-        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && accretionDa ? { ...s, label: "D&A + accretion / revenue", description: "Starting value: average annual depreciation, amortization and accretion/revenue ratios. This is a combined cash-flow proxy, not pure D&A." } : s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
+        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && amazonDa ? { ...s, label: "Combined cash-flow add-back / revenue", description: "Starting value: average annual combined cash-flow add-back/revenue ratios. Amazon’s filed adjustment includes property/equipment and content amortization, operating lease assets and other items; it is not pure D&A." } : s.key === "da_ratio" && accretionDa ? { ...s, label: "D&A + accretion / revenue", description: "Starting value: average annual depreciation, amortization and accretion/revenue ratios. This is a combined cash-flow proxy, not pure D&A." } : s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
         value={value}
         startingValues={startingValues}
         update={update}

@@ -12,6 +12,10 @@ export function isAlphabetPpeDa(item: LineItem | null | undefined, cik?: string)
   return cik?.replace(/^0+/, "") === "1652044" && item?.source === "xbrl" && item.xbrl_tag === "us-gaap:Depreciation";
 }
 
+export function isAmazonCombinedDa(item: LineItem | null | undefined, cik?: string) {
+  return cik?.replace(/^0+/, "") === "1018724" && !!item;
+}
+
 const COMPONENT_LABELS: Record<string, Record<string, string>> = {
   accounts_payable: {
     "us-gaap:AccountsPayableCurrent": "Accounts payable",
@@ -43,6 +47,16 @@ const UNSPECIFIED_LABELS: Record<string, string> = {
 // These schema slots accept both totals and components. A shared row label
 // must not imply equal coverage when periods use different source concepts.
 export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>, context?: { cik?: string; legacyDebt?: boolean[]; statement?: "income" | "balance" | "cashflow" }) {
+  const cik = context?.cik?.replace(/^0+/, "");
+  if (cik === "1018724" || cik === "1341439") {
+    if (field === "depreciation_amortization" && context?.statement === "cashflow") {
+      return { label: cik === "1018724" ? "Depreciation, content/lease amortization and other" : "D&A (sum of filed cash-flow components)", cellLabels: items.map(() => null) };
+    }
+    if (field === "short_term_debt" || field === "long_term_debt") {
+      const maturity = field === "short_term_debt" ? "Current" : "Noncurrent";
+      return { label: cik === "1018724" ? `${maturity} debt, finance leases and financing obligations` : `${maturity} notes/borrowings + finance leases`, cellLabels: items.map(() => null) };
+    }
+  }
   if (context?.cik?.replace(/^0+/, "") === "829224") {
     if (field === "depreciation_amortization" && ["income", "cashflow"].includes(context.statement ?? "")) {
       const expected = context.statement === "income" ? "us-gaap:DepreciationAndAmortization" : "us-gaap:DepreciationDepletionAndAmortization";

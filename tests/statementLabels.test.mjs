@@ -10,7 +10,7 @@ loadTs.extensions['.ts'] = (module, filename) => {
   });
   module._compile(outputText, filename);
 };
-const { statementRowLabels, isCiscoCombinedDa, isAdobeAccretionDa } = loadTs('../lib/statementLabels.ts');
+const { statementRowLabels, isCiscoCombinedDa, isAdobeAccretionDa, isAmazonCombinedDa } = loadTs('../lib/statementLabels.ts');
 const item = (tag, source = 'xbrl') => ({ value: '17816000000', source, xbrl_tag: `us-gaap:${tag}` });
 
 test('Cisco cash-flow adjustment retains its combined scope, including mixed history', () => {
@@ -138,4 +138,27 @@ test('Starbucks distinguishes cash-flow totals from operating expense D&A', () =
   assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationDepletionAndAmortization')],{...context,statement:'cashflow'}).label,'D&A (cash-flow total)');
   assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationAndAmortization','user_override')],context).label,'D&A (see source details)');
   assert.equal(statementRowLabels('cost_of_revenue','Cost of revenue',[{...item('unused','llm_html'),source_quote:'Product and distribution costs 11,658.2'}],context).label,'Product and distribution costs (component)');
+});
+
+test('Amazon combined scope survives a reviewer-origin change without labeling another filer', () => {
+  const da = item('DepreciationDepletionAndAmortization');
+  assert.equal(isAmazonCombinedDa(da,'0001018724'),true);
+  assert.equal(isAmazonCombinedDa({...da,source:'user_override'},'1018724'),true);
+  assert.equal(isAmazonCombinedDa(da,'1341439'),false);
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[da],{cik:'1018724',statement:'cashflow'}).label,'Depreciation, content/lease amortization and other');
+});
+test('reviewed debt rows name finance leases and recognized financing obligations', () => {
+  assert.equal(statementRowLabels('long_term_debt','Long-term debt',[item('unused','derived')],{cik:'1018724'}).label,'Noncurrent debt, finance leases and financing obligations');
+  assert.equal(statementRowLabels('short_term_debt','Current debt',[item('unused','derived')],{cik:'1341439'}).label,'Current notes/borrowings + finance leases');
+});
+const { equityPresentation } = loadTs('../lib/equityPresentation.ts');
+test('nonpositive model residuals remain visible without stock-price or implied-multiple claims', () => {
+  for (const value of [-25.233442807652324,0]) {
+    const display=equityPresentation(value);
+    assert.equal(display.title,'Model equity residual per share');
+    assert.equal(display.showImpliedMultiples,false);
+    assert.match(display.caveat,/no positive equity value/);
+  }
+  assert.equal(equityPresentation(1.6874844690901214).title,'Estimated value per share');
+  assert.equal(equityPresentation(1.6874844690901214).showImpliedMultiples,true);
 });
