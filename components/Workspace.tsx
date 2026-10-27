@@ -517,7 +517,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       <section id="review" className="scroll-mt-6 border-y border-zinc-200 py-5 dark:border-zinc-800">
         <h3 className="text-lg font-semibold">Data review</h3>
         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{flagCount > 0 ? `${flagCount} item${flagCount === 1 ? "" : "s"} triggered automated checks.` : historicalWarningCount ? 'No current-period editable flags.' : "No items triggered automated checks."} These checks do not verify every figure against the filing.</p>
-        {!!historicalWarningCount && <p className="mt-2 text-sm text-amber-900 dark:text-amber-200"><a href="#historical-balance-warnings" className="underline underline-offset-4">{historicalWarningCount} historical balance-sheet warning{historicalWarningCount === 1 ? '' : 's'} require inspection of the source bases. They are not corrections to the latest year.</a></p>}
+        {!!historicalWarningCount && <p className="mt-2 text-sm text-amber-900 dark:text-amber-200"><a href="#historical-balance-warnings" className="underline underline-offset-4">{historicalWarningCount} historical balance-sheet warning{historicalWarningCount === 1 ? '' : 's'} {historicalWarningCount === 1 ? 'requires' : 'require'} inspection of the source bases. Editing the latest year will not resolve a historical basis.</a></p>}
         <details className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
           <summary className="cursor-pointer py-1 text-teal-800 underline underline-offset-4 dark:text-teal-300">How sources and review flags work</summary>
           <div className="mt-3 max-w-3xl space-y-2 leading-relaxed">
