@@ -218,6 +218,8 @@ export type ExtractionFlag = {
 };
 
 export type Qualification = {
+  method?: 'reviewed_filing_contract' | 'reusable_statement_rules';
+  ruleset?: string | null;
   status: 'qualified' | 'review_required' | 'unsupported';
   policy_version: string;
   record_digest: string;
@@ -225,7 +227,7 @@ export type Qualification = {
   checked_at: string | null;
   issues: Array<{code:string; field_path:string; period_end:string|null; message:string}>;
   disclosures: string[];
-  inputs: Array<{field_path:string; period_end:string; value:string; unit:string; scope:string; basis:string; accession:string; start:string|null; concepts:string[]; operands:Array<Record<string,string>>}>;
+  inputs: Array<{display_label?:string|null; is_proxy?:boolean; field_path:string; period_end:string; value:string; unit:string; scope:string; basis:string; accession:string; start:string|null; concepts:string[]; operands:Array<Record<string,string>>}>;
 };
 
 export type Company = {

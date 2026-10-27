@@ -1,11 +1,12 @@
 "use client";
 
-import { type FinancialPeriod, type LineItem, formatLineItem } from "@/lib/api";
+import { type FinancialPeriod, type LineItem, type Qualification, formatLineItem } from "@/lib/api";
 
 import SourceDetails from "./SourceDetails";
 import { statementRowLabels } from "@/lib/statementLabels";
 
 type Props = {
+  qualification?: Qualification | null;
   companyCik?: string;
   periods: FinancialPeriod[]; // newest-first; all share the same industry
   shareCountLabel?: string | null;
@@ -47,6 +48,7 @@ const STANDARD_FIELDS: {
     ["short_term_debt", "Current debt"],
     ["total_current_liabilities", "Total current liabilities"],
     ["long_term_debt", "Long-term debt"],
+    ["operating_lease_liabilities", "Operating-lease liabilities"],
     ["total_liabilities", "Total liabilities"],
     ["shareholders_equity", "Shareholders' equity"],
     ["noncontrolling_interests", "Noncontrolling interests"],
@@ -203,12 +205,14 @@ function StatementTable({
   periods,
   statement,
   companyCik,
+  qualification,
 }: {
   title: string;
   fields: Array<[string, string]>;
   periods: FinancialPeriod[];
   statement: "income" | "balance" | "cashflow";
   companyCik?: string;
+  qualification?: Qualification | null;
 }) {
   return (
     <div>
@@ -230,7 +234,13 @@ function StatementTable({
           <tbody>
             {fields.map(([key, label]) => {
               const items = periods.map(p => pickItem(p, statement, key));
-              const scope = statementRowLabels(key, label, items, { cik: companyCik, statement, legacyDebt: periods.map(p => p.balance_sheet.kind === "standard" && p.balance_sheet.long_term_debt?.xbrl_tag === "us-gaap:LongTermDebtAndCapitalLeaseObligations") });
+              const fallbackScope = statementRowLabels(key, label, items, { cik: companyCik, statement, legacyDebt: periods.map(p => p.balance_sheet.kind === "standard" && p.balance_sheet.long_term_debt?.xbrl_tag === "us-gaap:LongTermDebtAndCapitalLeaseObligations") });
+              const group = { income: 'income_statement', balance: 'balance_sheet', cashflow: 'cash_flow_statement' }[statement];
+              const labels = periods.map(p => qualification?.inputs.find(i => i.field_path === `${group}.${key}` && i.period_end === p.fiscal_period_end)?.display_label ?? null);
+              const distinct = new Set(labels.filter(Boolean));
+              const scope = distinct.size === 0 ? fallbackScope : distinct.size === 1
+                ? { label: labels.find(Boolean) ?? fallbackScope.label, cellLabels: periods.map(() => null) }
+                : { label: `${label} (different coverage)`, cellLabels: labels };
               return (
                 <tr
                   key={key}
@@ -255,7 +265,7 @@ function StatementTable({
   );
 }
 
-export default function StatementsPanel({ periods, shareCountLabel, operatingIncomeLabel, companyCik }: Props) {
+export default function StatementsPanel({ periods, shareCountLabel, operatingIncomeLabel, companyCik, qualification }: Props) {
   if (periods.length === 0) return null;
   const industry = periods[0].industry;
   const fields =
@@ -286,6 +296,7 @@ export default function StatementsPanel({ periods, shareCountLabel, operatingInc
         <StatementTable
           title={incomeTitle}
           fields={fields.income.map(([key, label]) => [key, key === "diluted_shares_outstanding" && shareCountLabel ? shareCountLabel : key === "operating_income" && operatingIncomeLabel ? operatingIncomeLabel : label])}
+          qualification={qualification}
           companyCik={companyCik}
           periods={periods}
           statement="income"
@@ -293,6 +304,7 @@ export default function StatementsPanel({ periods, shareCountLabel, operatingInc
         <StatementTable
           title={balanceTitle}
           fields={fields.balance}
+          qualification={qualification}
           companyCik={companyCik}
           periods={periods}
           statement="balance"
@@ -300,6 +312,7 @@ export default function StatementsPanel({ periods, shareCountLabel, operatingInc
         <StatementTable
           title="Cash flow statement"
           fields={fields.cashflow}
+          qualification={qualification}
           companyCik={companyCik}
           periods={periods}
           statement="cashflow"

@@ -192,6 +192,7 @@ export default function AssumptionsPanel({
   startingValues,
   onChange,
   industry = "standard",
+  reusableDa,
   combinedDa = false,
   accretionDa = false,
   ppeDa = false,
@@ -202,6 +203,7 @@ export default function AssumptionsPanel({
   startingValues: Assumptions;
   onChange: (next: Assumptions) => void;
   industry?: Industry;
+  reusableDa?: {label: string; isProxy: boolean} | null;
   combinedDa?: boolean;
   accretionDa?: boolean;
   ppeDa?: boolean;
@@ -313,7 +315,7 @@ export default function AssumptionsPanel({
       />
       <Group
         title="Cash-flow assumptions"
-        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && amazonDa ? { ...s, label: "Combined cash-flow add-back / revenue", description: "Starting value: average annual combined cash-flow add-back/revenue ratios. Amazon’s filed adjustment includes property/equipment and content amortization, operating lease assets and other items; it is not pure D&A." } : s.key === "da_ratio" && accretionDa ? { ...s, label: "D&A + accretion / revenue", description: "Starting value: average annual depreciation, amortization and accretion/revenue ratios. This is a combined cash-flow proxy, not pure D&A." } : s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
+        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && reusableDa ? { ...s, label: `${reusableDa.label} / revenue`, description: reusableDa.isProxy ? "Starting value: average annual filed cash-flow add-back/revenue ratios. Combined coverage in at least one year includes items beyond pure D&A; inspect each year’s filing evidence." : "Starting value: average annual source-checked cash-flow D&A/revenue ratios. This is a cash-flow adjustment, not a separately reported income expense." } : s.key === "da_ratio" && amazonDa ? { ...s, label: "Combined cash-flow add-back / revenue", description: "Starting value: average annual combined cash-flow add-back/revenue ratios. Amazon’s filed adjustment includes property/equipment and content amortization, operating lease assets and other items; it is not pure D&A." } : s.key === "da_ratio" && accretionDa ? { ...s, label: "D&A + accretion / revenue", description: "Starting value: average annual depreciation, amortization and accretion/revenue ratios. This is a combined cash-flow proxy, not pure D&A." } : s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
         value={value}
         startingValues={startingValues}
         update={update}

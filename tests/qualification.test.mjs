@@ -8,7 +8,7 @@ loadTs.extensions['.ts']=(module,filename)=>{
  const {outputText}=ts.transpileModule(fs.readFileSync(filename,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}});
  module._compile(outputText,filename);
 };
-const {canUseValuation,inputName}=loadTs('../lib/qualification.ts');
+const {canUseValuation,inputName,reusableCashFlowScope}=loadTs('../lib/qualification.ts');
 const {parseFetchError}=loadTs('../lib/friendlyError.ts');
 
 test('only explicit qualified status allows a valuation workspace',()=>{
@@ -22,4 +22,14 @@ test('unqualified API responses explain withholding and do not suggest assumptio
  const r=parseFetchError('422 /value/TEST: {"detail":{"code":"valuation_not_qualified","qualification":{"status":"review_required"}}}');
  assert.match(r.title,/Valuation withheld/);assert.match(r.hint,/cannot bypass qualification/);
  assert.equal(inputName('cash_flow_statement.depreciation_amortization'),'Cash-flow add-back');
+});
+
+test('automatic combined scope is retained across historical ratios, not inferred from issuer names',()=>{
+ const inputs=[{field_path:'cash_flow_statement.depreciation_amortization',is_proxy:false},{field_path:'cash_flow_statement.depreciation_amortization',is_proxy:true}];
+ assert.deepEqual(reusableCashFlowScope({qualification:{method:'reusable_statement_rules',inputs}}),{isProxy:true,label:'Combined cash-flow add-back'});
+ assert.equal(reusableCashFlowScope({qualification:{method:'reviewed_filing_contract',inputs}}),null);
+ assert.equal(reusableCashFlowScope(null),null);
+});
+test('pure automatic cash-flow evidence keeps its cash-flow basis',()=>{
+ assert.deepEqual(reusableCashFlowScope({qualification:{method:'reusable_statement_rules',inputs:[{field_path:'cash_flow_statement.depreciation_amortization',is_proxy:false}]}}),{isProxy:false,label:'Filed cash-flow D&A'});
 });

@@ -41,7 +41,7 @@ export default function Home() {
         <TickerSearch />
         <RecentlyViewed />
         <h2 className="mt-10 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Sample companies</h2>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">18 examples across five model categories. Valuation availability depends on the exact filing passing input qualification; appearing here does not establish approval.</p>
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">18 examples across five model categories. You can also enter a SEC 10-K ticker. New filings are checked from their source statements; valuation is withheld when required coverage cannot be established.</p>
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {TICKERS.map(({ ticker, name, sector }) => (
