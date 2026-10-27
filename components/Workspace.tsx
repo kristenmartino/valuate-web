@@ -23,6 +23,7 @@ import { parseFetchError } from "@/lib/friendlyError";
 import { assumptionIssue } from "@/lib/assumptionValidation";
 import { assumptionsChanged } from "@/lib/assumptionControls";
 import { recordTickerVisit } from "@/lib/recentlyViewed";
+import { hasNegativeSimulations, scenarioOutputPresentation } from "@/lib/scenarioOutputs";
 import { equityPresentation } from "@/lib/equityPresentation";
 import { isAdobeAccretionDa, isAlphabetPpeDa, isCiscoCombinedDa, isAmazonCombinedDa } from "@/lib/statementLabels";
 
@@ -289,6 +290,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
   const amazonDa = isAmazonCombinedDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const parentProxy = period.industry === 'insurer';
   const historicalWarningCount = company.qualification?.statement_warnings?.length ?? 0;
+  const simulationOutput = valuation.monte_carlo ? scenarioOutputPresentation(hasNegativeSimulations(valuation.monte_carlo), parentProxy ? 'parent_equity_proxy' : undefined) : null;
   const equityResult = equityPresentation(valuation.projection.fair_value_per_share, parentProxy ? 'parent_equity_proxy' : undefined);
   const accretionDa = isAdobeAccretionDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const ppeDa = isAlphabetPpeDa(period.cash_flow_statement.depreciation_amortization, company.cik);
@@ -429,12 +431,13 @@ export default function Workspace({ ticker }: { ticker: string }) {
         </div>
         {summary.mc_p10 !== null && summary.mc_p90 !== null && (
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Middle 80% of {equityResult.rangeLabel}: {formatUSD(summary.mc_p10)} –{" "}
+            Middle 80% of {simulationOutput?.rangeLabel ?? equityResult.rangeLabel}: {formatUSD(summary.mc_p10)} –{" "}
             {formatUSD(summary.mc_p90)} (median{" "}
             {summary.mc_median !== null ? formatUSD(summary.mc_median) : "—"})
           </p>
         )}
         <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{equityResult.caveat}</p>
+        {simulationOutput?.caveat && <p data-testid="summary-residual-note" className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">{simulationOutput.caveat} This applies to the full simulation, including outputs outside the middle 80%.</p>}
         {(pendingChanges || recomputing) && (
           <p role="status" className="mt-4 border-l-2 border-amber-500 pl-3 text-sm text-amber-800 dark:text-amber-300">
             {inputIssue ? "Adjust the inputs to recalculate. Displayed results reflect the previous successful calculation." : recomputeError ? "Update failed. Displayed results reflect the previous successful calculation." : "Updating. Displayed results reflect the previous successful calculation."}
@@ -570,7 +573,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
           <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">{parentProxy ? 'The distribution describes parent-equity proxy outputs. Common-share valuation remains unverified; these are not simulated common-stock prices.' : 'The range describes simulated outputs under sampled assumptions. It is not a calibrated forecast of future stock prices.'}</p>
           <div className="mt-4">
             {valuation.monte_carlo && (
-              <MonteCarloChart result={valuation.monte_carlo} />
+              <MonteCarloChart result={valuation.monte_carlo} basis={parentProxy ? 'parent_equity_proxy' : undefined} />
             )}
           </div>
         </section>
@@ -584,9 +587,6 @@ export default function Workspace({ ticker }: { ticker: string }) {
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               Sensitivity (revenue growth × {company.operating_income_label ? `${company.operating_income_label} margin` : "operating margin"})
             </h3>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {equityResult.showImpliedMultiples ? "Estimated value per share at each combination" : "Model equity residual per share at each combination"}
-            </p>
             <div className="mt-4">
               {valuation.sensitivity && (
                 <SensitivityHeatmap grid={valuation.sensitivity} operatingIncomeLabel={company.operating_income_label} />

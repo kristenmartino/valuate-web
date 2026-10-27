@@ -4,3 +4,5 @@ Recorded public responses from the preserved October 27, 2026 release. These are
 
 
 `met-response.json` retains the captured public MET financials, notes, defaults and numeric results. Its qualification metadata was independently recomputed from the pinned source fixtures for this policy, exposing the parent-equity proxy and FY2021 display warning. Operands are omitted for size; source quotes and warning accessions remain intact. These browser cases establish presentation and requests, not a common-share valuation or fresh source accuracy.
+
+`cost-response.json` records the live source-only FY2026 COST response from October 27, 2026, including its positive headline and percentile window, negative sensitivity cells and a negative full-range simulation tail. Tests require independent residual disclosures for each output set, signed cells and accessible labels, disclosure retention across chart toggles, no mobile overflow, and preserved parent-proxy ownership scope. Synthetic positive-only/proxy-tail variants are explicitly marked in the tests; recorded fixtures do not establish current extraction accuracy.

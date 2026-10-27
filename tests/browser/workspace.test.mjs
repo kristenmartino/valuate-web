@@ -6,6 +6,7 @@ import { createWriteStream } from 'node:fs';
 import { chromium } from 'playwright';
 
 const fixtures = JSON.parse(await readFile(new URL('./recorded-responses.json', import.meta.url)));
+fixtures.COST = JSON.parse(await readFile(new URL('./cost-response.json', import.meta.url)));
 fixtures.MET = JSON.parse(await readFile(new URL('./met-response.json', import.meta.url)));
 const base = process.env.BROWSER_TEST_BASE_URL || 'http://127.0.0.1:4317';
 assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Browser fixtures must never target a public deployment');
@@ -41,7 +42,9 @@ after(async () => { await browser?.close(); server?.kill(); });
 async function workspace(t, ticker, options = {}) {
   const data = structuredClone(fixtures[ticker]);
   options.mutate?.(data.company);
+  options.mutateValuation?.(data.valuation);
   const context = await browser.newContext({ viewport: options.viewport || { width: 1440, height: 1000 } });
+  context.setDefaultTimeout(15000);
   const page = await context.newPage();
   const calls = [], errors = [], external = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -247,3 +250,73 @@ test('P/B fallback remains an explicit proxy when old recorded metadata omits ow
   assert.equal(await page.getByRole('heading', { name: 'Parent-equity proxy per share', exact: true }).count(), 1);
   assert.match(await page.getByTestId('ownership-scope').innerText(), /Common-share valuation unverified/);
 });
+
+
+test('positive COST headline cannot hide negative grid cells or full-simulation tails', async t => {
+  const { page, calls, data } = await workspace(t, 'COST');
+  assert.ok(data.valuation.projection.fair_value_per_share > 0);
+  assert.ok(data.valuation.monte_carlo.p10 > 0);
+  assert.equal(await page.getByRole('heading', { name: 'Estimated value per share', exact: true }).count(), 1);
+  assert.match(await page.getByTestId('sensitivity-outputs').innerText(), /Model equity outputs per share at each combination/);
+  const cell = page.getByRole('cell', { name: '-$232.89 per share; unfloored model equity residual', exact: true });
+  assert.match(await cell.innerText(), /-\$232\.89†/);
+  assert.match(await page.getByTestId('sensitivity-residual-note').innerText(), /not negative stock-price estimates/);
+  assert.match(await page.getByTestId('summary-residual-note').innerText(), /unfloored model equity residuals/);
+  const note = page.getByTestId('simulation-residual-note');
+  assert.match(await note.innerText(), /including tails outside the percentile view/);
+  await page.getByRole('button', { name: 'Full range', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: 'Full range', exact: true }).getAttribute('aria-pressed'), 'true');
+  assert.match(await note.innerText(), /unfloored model equity residuals/);
+  await page.getByRole('button', { name: '10th–90th percentile view', exact: true }).click();
+  assert.equal(await note.isVisible(), true);
+  assert.match(await page.locator('body').innerText(), /Middle 80% of simulated model equity outputs/);
+  assert.deepEqual(calls.filter(c => c.method === 'POST').at(-1).body.assumptions, data.defaults);
+  await page.screenshot({ path: `${artifacts}/positive-headline-negative-scenarios.png`, fullPage: true });
+});
+
+test('negative scenario labels wrap at 375px without widening the page', async t => {
+  const { page } = await workspace(t, 'COST', { viewport: { width: 375, height: 812 } });
+  assert.match(await page.getByTestId('sensitivity-residual-note').innerText(), /Signed calculations are retained/);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
+  await page.getByRole('button', { name: 'Full range', exact: true }).click();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
+  assert.equal(await page.getByTestId('simulation-residual-note').count(), 1);
+});
+
+test('all-positive outputs do not inherit a residual warning from another display', async t => {
+  const { page } = await workspace(t, 'COST', { mutateValuation: v => {
+    // Synthetic positive-output scenario, not a financial claim about COST.
+    v.sensitivity.values = [[1, 2], [3, null]];
+    v.sensitivity.revenue_growth_axis = [0.01, 0.02];
+    v.sensitivity.operating_margin_axis = [0.03, 0.04];
+    v.monte_carlo.histogram = [[1, 5000], [2, 5000]];
+  }});
+  assert.equal(await page.getByTestId('sensitivity-residual-note').count(), 0);
+  assert.equal(await page.getByTestId('simulation-residual-note').count(), 0);
+  assert.equal(await page.getByTestId('summary-residual-note').count(), 0);
+  assert.match(await page.getByTestId('sensitivity-outputs').innerText(), /Estimated value per share at each combination/);
+});
+
+test('negative proxy simulations retain parent ownership scope', async t => {
+  const { page } = await workspace(t, 'MET', { mutateValuation: v => {
+    // Synthetic negative tail exercises scope rendering, not MET's actual samples.
+    v.monte_carlo.histogram[0] = [-1, 1];
+  }});
+  assert.match(await page.getByTestId('simulation-residual-note').innerText(), /unfloored parent-equity proxy residuals/);
+  assert.match(await page.getByTestId('simulation-residual-note').innerText(), /common-share valuation is unverified/);
+  assert.equal(await page.getByRole('heading', { name: 'Parent-equity proxy per share', exact: true }).count(), 1);
+});
+
+
+for (const negativeSet of ['grid', 'simulation']) {
+  test(`negative ${negativeSet} outputs do not change the other display's scope`, async t => {
+    const { page } = await workspace(t, 'COST', { mutateValuation: v => {
+      // Synthetic independent-output variants; not COST valuation claims.
+      if (negativeSet === 'grid') v.monte_carlo.histogram = [[1, 5000], [2, 5000]];
+      else v.sensitivity.values = v.sensitivity.values.map(row => row.map(n => n === null ? null : Math.abs(n)));
+    }});
+    assert.equal(await page.getByTestId('sensitivity-residual-note').count(), negativeSet === 'grid' ? 1 : 0);
+    assert.equal(await page.getByTestId('simulation-residual-note').count(), negativeSet === 'simulation' ? 1 : 0);
+    assert.equal(await page.getByTestId('summary-residual-note').count(), negativeSet === 'simulation' ? 1 : 0);
+  });
+}
