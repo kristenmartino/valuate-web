@@ -193,6 +193,7 @@ export default function AssumptionsPanel({
   onChange,
   industry = "standard",
   combinedDa = false,
+  accretionDa = false,
   ppeDa = false,
   operatingIncomeLabel,
 }: {
@@ -201,6 +202,7 @@ export default function AssumptionsPanel({
   onChange: (next: Assumptions) => void;
   industry?: Industry;
   combinedDa?: boolean;
+  accretionDa?: boolean;
   ppeDa?: boolean;
   operatingIncomeLabel?: string | null;
 }) {
@@ -309,7 +311,7 @@ export default function AssumptionsPanel({
       />
       <Group
         title="Cash-flow assumptions"
-        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
+        sliders={STANDARD_RATIOS.map(s => s.key === "da_ratio" && accretionDa ? { ...s, label: "D&A + accretion / revenue", description: "Starting value: average annual depreciation, amortization and accretion/revenue ratios. This is a combined cash-flow proxy, not pure D&A." } : s.key === "da_ratio" && ppeDa ? { ...s, label: "PP&E depreciation / revenue", description: "Starting value: average available annual property-and-equipment depreciation/revenue ratios. This is a proxy; full amortization coverage is unverified. The model adds no unverified amortization." } : s.key === "da_ratio" && combinedDa ? { ...s, label: "D&A + other / revenue" } : s)}
         value={value}
         startingValues={startingValues}
         update={update}

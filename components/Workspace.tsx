@@ -23,7 +23,7 @@ import { parseFetchError } from "@/lib/friendlyError";
 import { assumptionIssue } from "@/lib/assumptionValidation";
 import { assumptionsChanged } from "@/lib/assumptionControls";
 import { recordTickerVisit } from "@/lib/recentlyViewed";
-import { isAlphabetPpeDa, isCiscoCombinedDa } from "@/lib/statementLabels";
+import { isAdobeAccretionDa, isAlphabetPpeDa, isCiscoCombinedDa } from "@/lib/statementLabels";
 
 import AssumptionsPanel from "./AssumptionsPanel";
 import CompsPanel from "./CompsPanel";
@@ -232,7 +232,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
       enterprise_value: p.enterprise_value,
       pe_ratio: ni > 0 ? p.equity_value / ni : null,
       ev_revenue: rev > 0 ? p.enterprise_value / rev : null,
-      ev_ebitda: !company?.operating_income_label && !isAlphabetPpeDa(period.cash_flow_statement.depreciation_amortization, company?.cik) && !isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization) && ebitda > 0 ? p.enterprise_value / ebitda : null,
+      ev_ebitda: !company?.operating_income_label && !isAlphabetPpeDa(period.cash_flow_statement.depreciation_amortization, company?.cik) && !isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization) && !isAdobeAccretionDa(period.cash_flow_statement.depreciation_amortization, company?.cik) && ebitda > 0 ? p.enterprise_value / ebitda : null,
     };
   }, [period, valuation, company?.operating_income_label, company?.cik]);
 
@@ -283,6 +283,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
 
   const combinedDa = company.cik.replace(/^0+/, "") === "858877"
     && isCiscoCombinedDa(period.cash_flow_statement.depreciation_amortization);
+  const accretionDa = isAdobeAccretionDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const ppeDa = isAlphabetPpeDa(period.cash_flow_statement.depreciation_amortization, company.cik);
   const modelName = {
     standard: "Five-year FCFF DCF",
@@ -483,6 +484,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <div className="mt-6">
           <AssumptionsPanel
             combinedDa={combinedDa}
+            accretionDa={accretionDa}
             ppeDa={ppeDa}
             operatingIncomeLabel={company.operating_income_label}
             value={assumptions}
@@ -524,7 +526,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         )}
 
       {comps && (comps.peers.length > 0 || comps.target_market) && (
-        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={ppeDa ? "The DCF-implied EV/EBITDA multiple is unavailable because the add-back covers property-and-equipment depreciation only; full amortization coverage is unverified. Market multiples retain the provider’s definitions." : combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : company.operating_income_label ? "The DCF-implied EV/EBITDA multiple is unavailable because the model uses a calculated EBIT proxy that retains non-operating items. Market multiples retain the provider’s definitions." : undefined} />
+        <CompsPanel comps={comps} dcfImplied={dcfImplied} impliedEbitdaNote={accretionDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Adobe’s cash-flow add-back includes accretion. It is a combined proxy, not pure D&A. Market multiples retain the provider’s definitions." : ppeDa ? "The DCF-implied EV/EBITDA multiple is unavailable because the add-back covers property-and-equipment depreciation only; full amortization coverage is unverified. Market multiples retain the provider’s definitions." : combinedDa ? "The DCF-implied EV/EBITDA multiple is unavailable because Cisco’s cash-flow add-back includes other adjustments. Market multiples retain the provider’s definitions." : company.operating_income_label ? "The DCF-implied EV/EBITDA multiple is unavailable because the model uses a calculated EBIT proxy that retains non-operating items. Market multiples retain the provider’s definitions." : undefined} />
       )}
 
       <div
@@ -584,6 +586,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {valuation.projection.years.length}-year projection
         </h3>
+        {accretionDa && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">The add-back uses Adobe’s filed depreciation, amortization and accretion as a combined cash-flow proxy. It is not pure D&amp;A. Its historical ratio is projected against revenue.</p>}
         {ppeDa && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">The add-back projects Alphabet’s filed property-and-equipment depreciation as a proxy. Full D&amp;A coverage is unverified; no unverified amortization is added.</p>}
         {combinedDa && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">The add-back uses Cisco’s filed depreciation, amortization and other cash-flow adjustment as a combined proxy. It is not pure D&amp;A. Its historical ratio is projected against revenue.</p>}
         <div className="mt-4 overflow-x-auto">
@@ -595,7 +598,7 @@ export default function Workspace({ ticker }: { ticker: string }) {
                 <th className="py-2 pr-4 font-medium">{company.operating_income_label ?? "Op income"}</th>
                 <th className="py-2 pr-4 font-medium">{company.operating_income_label ? "After-tax proxy" : "NOPAT"}</th>
                 <th className="py-2 pr-4 font-medium">Capex</th>
-                <th className="py-2 pr-4 font-medium">{ppeDa ? "PP&E depreciation (proxy)" : combinedDa ? "D&A + other" : "D&A"}</th>
+                <th className="py-2 pr-4 font-medium">{accretionDa ? "D&A + accretion" : ppeDa ? "PP&E depreciation (proxy)" : combinedDa ? "D&A + other" : "D&A"}</th>
                 <th className="py-2 pr-4 font-medium">FCFF</th>
               </tr>
             </thead>

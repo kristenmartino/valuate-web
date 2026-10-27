@@ -10,7 +10,7 @@ loadTs.extensions['.ts'] = (module, filename) => {
   });
   module._compile(outputText, filename);
 };
-const { statementRowLabels, isCiscoCombinedDa } = loadTs('../lib/statementLabels.ts');
+const { statementRowLabels, isCiscoCombinedDa, isAdobeAccretionDa } = loadTs('../lib/statementLabels.ts');
 const item = (tag, source = 'xbrl') => ({ value: '17816000000', source, xbrl_tag: `us-gaap:${tag}` });
 
 test('Cisco cash-flow adjustment retains its combined scope, including mixed history', () => {
@@ -108,4 +108,26 @@ test('an inclusive or face-value debt concept never claims verified noncurrent c
   const labels=statementRowLabels('long_term_debt','Long-term debt',[item('LongTermDebt'),item('LongTermDebtNoncurrent')]);
   assert.equal(labels.label,'Debt amounts (different coverage)');
   assert.deepEqual(labels.cellLabels,['Debt amount (basis/current split unverified)','Noncurrent debt']);
+});
+
+test('Adobe noncurrent debt requires the scoped filing provenance and never relabels an unreviewed total', () => {
+  const verified = { ...item('LongTermDebt'), source_quote: 'Noncurrent debt, excluding current maturities. Adobe balance-sheet noncurrent carrying debt.' };
+  assert.equal(statementRowLabels('long_term_debt', 'Long-term debt', [verified], { cik: '0000796343' }).label, 'Noncurrent debt (filed carrying amount)');
+  assert.equal(statementRowLabels('long_term_debt', 'Long-term debt', [item('LongTermDebt')], { cik: '0000796343' }).label, 'Debt amount (basis/current split unverified)');
+  assert.equal(statementRowLabels('long_term_debt', 'Long-term debt', [verified], { cik: '97476' }).label, 'Debt amount (basis/current split unverified)');
+});
+
+test('EOG cash-flow add-back names depletion explicitly without relabeling other filers', () => {
+  const i = item('DepreciationDepletionAndAmortization');
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [i], { cik: '0000821189' }).label, 'Depreciation, depletion and amortization');
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [i], { cik: '77476' }).label, 'D&A');
+});
+
+
+test('Adobe cash-flow accretion remains explicit and never becomes pure D&A', () => {
+  const i = item('DepreciationDepletionAndAmortization');
+  assert.equal(isAdobeAccretionDa(i, '0000796343'), true);
+  assert.equal(isAdobeAccretionDa(i, '77476'), false);
+  assert.equal(isAdobeAccretionDa({ ...i, source: 'user_override' }, '796343'), false);
+  assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [i], { cik: '796343' }).label, 'Depreciation, amortization and accretion');
 });
