@@ -183,3 +183,21 @@ test('qualification loss during a scenario clears the previously displayed estim
   assert.equal(await page.getByRole('heading', { name: 'Estimated value per share' }).count(), 0);
   assert.equal(await page.getByRole('slider').count(), 0);
 });
+
+
+test('equity source dimensions distinguish parent and noncontrolling columns on mobile', async t => {
+  const { page } = await workspace(t, 'NVDA', { viewport: { width: 375, height: 812 }, mutate: c => {
+    // Synthetic ownership operands exercise rendering; these are not NVDA facts.
+    c.qualification.inputs[0].operands = ['ParentMember', 'NoncontrollingInterestMember'].map((member, i) => ({
+      concept: 'us-gaap:StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest',
+      value: i ? '3' : '100', unit: 'USD', end: '2024-12-31', accession: 'UI_TEST_ONLY',
+      dimensions: JSON.stringify({ 'us-gaap:StatementEquityComponentsAxis': 'us-gaap:' + member }),
+    }));
+  }});
+  await page.locator('[data-testid="qualification-gate"] summary').filter({ hasText: 'Filing evidence for' }).click();
+  await page.locator('[data-testid="qualification-gate"] summary').filter({ hasText: 'Calculation operands' }).first().click();
+  const evidence = page.locator('[data-testid="qualification-gate"]');
+  assert.match(await evidence.innerText(), /Source dimensions:.*ParentMember/);
+  assert.match(await evidence.innerText(), /Source dimensions:.*NoncontrollingInterestMember/);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 375);
+});
