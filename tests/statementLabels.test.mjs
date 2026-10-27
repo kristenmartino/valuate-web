@@ -131,3 +131,11 @@ test('Adobe cash-flow accretion remains explicit and never becomes pure D&A', ()
   assert.equal(isAdobeAccretionDa({ ...i, source: 'user_override' }, '796343'), false);
   assert.equal(statementRowLabels('depreciation_amortization', 'D&A', [i], { cik: '796343' }).label, 'Depreciation, amortization and accretion');
 });
+
+test('Starbucks distinguishes cash-flow totals from operating expense D&A', () => {
+  const context = { cik: '0000829224', statement: 'income' };
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationAndAmortization')],context).label,'D&A (operating expense line)');
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationDepletionAndAmortization')],{...context,statement:'cashflow'}).label,'D&A (cash-flow total)');
+  assert.equal(statementRowLabels('depreciation_amortization','D&A',[item('DepreciationAndAmortization','user_override')],context).label,'D&A (see source details)');
+  assert.equal(statementRowLabels('cost_of_revenue','Cost of revenue',[{...item('unused','llm_html'),source_quote:'Product and distribution costs 11,658.2'}],context).label,'Product and distribution costs (component)');
+});

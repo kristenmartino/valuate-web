@@ -42,7 +42,23 @@ const UNSPECIFIED_LABELS: Record<string, string> = {
 
 // These schema slots accept both totals and components. A shared row label
 // must not imply equal coverage when periods use different source concepts.
-export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>, context?: { cik?: string; legacyDebt?: boolean[] }) {
+export function statementRowLabels(field: string, fallback: string, items: Array<LineItem | null>, context?: { cik?: string; legacyDebt?: boolean[]; statement?: "income" | "balance" | "cashflow" }) {
+  if (context?.cik?.replace(/^0+/, "") === "829224") {
+    if (field === "depreciation_amortization" && ["income", "cashflow"].includes(context.statement ?? "")) {
+      const expected = context.statement === "income" ? "us-gaap:DepreciationAndAmortization" : "us-gaap:DepreciationDepletionAndAmortization";
+      const scoped = context.statement === "income" ? "D&A (operating expense line)" : "D&A (cash-flow total)";
+      const labels = items.map(item => !item ? null : item.source === "xbrl" && item.xbrl_tag === expected ? scoped : "D&A (see source details)");
+      return new Set(labels.filter(Boolean)).size <= 1
+        ? { label: labels.find(Boolean) ?? fallback, cellLabels: items.map(() => null) }
+        : { label: "D&A (different coverage)", cellLabels: labels };
+    }
+    if (field === "cost_of_revenue") {
+      const labels = items.map(item => !item ? null : item.source_quote?.startsWith("Product and distribution costs") ? "Product and distribution costs (component)" : "Cost amount (coverage unspecified)");
+      return new Set(labels.filter(Boolean)).size <= 1
+        ? { label: labels.find(Boolean) ?? fallback, cellLabels: items.map(() => null) }
+        : { label: "Cost amounts (different coverage)", cellLabels: labels };
+    }
+  }
   if (field === "depreciation_amortization" && items.some(item => isAdobeAccretionDa(item, context?.cik))) {
     const labels = items.map(item => !item ? null : isAdobeAccretionDa(item, context?.cik) ? "Depreciation, amortization and accretion" : "Add-back (coverage unspecified)");
     return new Set(labels.filter(Boolean)).size <= 1

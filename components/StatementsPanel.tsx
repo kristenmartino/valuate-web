@@ -230,7 +230,7 @@ function StatementTable({
           <tbody>
             {fields.map(([key, label]) => {
               const items = periods.map(p => pickItem(p, statement, key));
-              const scope = statementRowLabels(key, label, items, { cik: companyCik, legacyDebt: periods.map(p => p.balance_sheet.kind === "standard" && p.balance_sheet.long_term_debt?.xbrl_tag === "us-gaap:LongTermDebtAndCapitalLeaseObligations") });
+              const scope = statementRowLabels(key, label, items, { cik: companyCik, statement, legacyDebt: periods.map(p => p.balance_sheet.kind === "standard" && p.balance_sheet.long_term_debt?.xbrl_tag === "us-gaap:LongTermDebtAndCapitalLeaseObligations") });
               return (
                 <tr
                   key={key}
