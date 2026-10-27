@@ -12,7 +12,7 @@ export type FriendlyError = {
 const TICKER_NOT_FOUND = /not found in SEC database/i;
 const RATE_LIMITED = /too many extracts/i;
 const NO_FILING = /no 10-?K found/i;
-const COMPOSITION = /required fields still missing/i;
+const COMPOSITION = /required fields still missing|annual filing evidence is incomplete/i;
 const UNAUTHORIZED = /^401\b/;
 
 function _detail(raw: string): string {
@@ -40,14 +40,14 @@ export function parseFetchError(raw: string): FriendlyError {
   if (RATE_LIMITED.test(detail) || /\b429\b/.test(raw)) {
     return {
       title: "Rate-limited",
-      hint: "Extracts are capped at 10/hour per IP because each call invokes Claude. Try again in a few minutes — or pick a ticker from the curated grid that's already cached.",
+      hint: "Extraction is rate-limited to protect source retrieval and potential AI usage. Wait for the limit to reset, then retry. A saved company may still be available.",
       raw,
     };
   }
   if (NO_FILING.test(detail)) {
     return {
-      title: "No recent 10-K found for this filer",
-      hint: "Some filers (newly listed, foreign private issuers, or companies in transition) don't have a 10-K in SEC's recent-filings window. Try the curated grid instead.",
+      title: "No available 10-K found for this filer",
+      hint: "A 10-K was not found in the available SEC filing history. Newly listed or foreign filers may use other forms. Check the ticker and filing type, or try another company.",
       raw,
     };
   }

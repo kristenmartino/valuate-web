@@ -47,3 +47,15 @@ jobs:
           # construct a destination during the build phase. The actual
           # value is overridden by Vercel's production env.
           NEXT_PUBLIC_VALUATE_API: https://example.com
+
+      - name: Install browser for contract regressions
+        run: npx playwright install --with-deps chromium
+
+      - name: Exercise rendered workspace contracts without external APIs
+        run: npm run test:browser
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workspace-browser-contracts
+          path: .browser-artifacts/

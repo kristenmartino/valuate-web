@@ -75,6 +75,7 @@ const BANK_DRIVERS: SliderConfig[] = [
     min: 0.0,
     max: 0.1,
     step: 0.001,
+    description: "Starting value: average eligible annual parent ROE × (1 − latest common-dividend payout ratio, limited to 0–100%). Positive sustainable growth is capped at 8% under the 10% starting cost of equity; nonpositive sustainable growth uses 4%. This is a model assumption.",
   },
 ];
 

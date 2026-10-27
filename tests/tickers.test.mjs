@@ -13,6 +13,16 @@ loadTs.extensions['.ts'] = (module, filename) => {
 const { normalizeTicker, isValidTicker } = loadTs('../lib/tickers.ts');
 const { parseFetchError } = loadTs('../lib/friendlyError.ts');
 
+test('source-only errors and rate limits do not claim every extraction calls AI or every sample is cached', () => {
+  const limited = parseFetchError('429 /extract: too many extracts');
+  assert.equal(limited.title, 'Rate-limited');
+  assert.doesNotMatch(limited.hint, /each call invokes|already cached|10\/hour/);
+  const source = parseFetchError('422 /extract: {"detail":"Annual filing evidence is incomplete: carrying debt scope unresolved. Valuation is withheld; no AI fallback was used."}');
+  assert.equal(source.title, 'Ticker recognized; valuation unavailable');
+  const missing = parseFetchError('422 /extract: {"detail":"No 10-K found in available bounded SEC filings"}');
+  assert.equal(missing.title, 'No available 10-K found for this filer');
+});
+
 test('dot and hyphen share classes have one canonical workspace ticker', () => {
   for (const input of ['BRK.B', 'BRK-B', ' brk.b ', 'brk-b']) {
     assert.equal(normalizeTicker(input), 'BRK-B');

@@ -5,7 +5,7 @@ export default function QualificationPanel({ company }: { company: Company }) {
   const q = company.qualification;
   const qualified = canUseValuation(company);
   return (
-    <section data-testid="qualification-gate" className={`rounded-lg border p-4 sm:p-6 ${qualified ? 'border-teal-200 bg-teal-50 dark:border-teal-900 dark:bg-teal-950/30' : 'border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30'}`}>
+    <section data-testid="qualification-gate" className={`min-w-0 rounded-lg border p-4 sm:p-6 [overflow-wrap:anywhere] ${qualified ? 'border-teal-200 bg-teal-50 dark:border-teal-900 dark:bg-teal-950/30' : 'border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30'}`}>
       <h3 className="font-semibold">{qualified ? 'Filing input checks passed' : 'Valuation withheld — input review required'}</h3>
       <p className="mt-2 text-sm">{qualified ? 'The saved inputs passed the coverage checks for this specific annual filing and simplified model. This does not mean every displayed figure was manually reviewed or that the valuation predicts a market price.' : 'The financials are available for inspection. This filing has not passed all required coverage and source checks, so estimates, assumptions and simulations are unavailable.'}</p>
       {q?.method === 'reusable_statement_rules' && <p className="mt-2 text-sm">Checked automatically against SEC statement relationships and annual source contexts. This is not a manual filing review.</p>}
